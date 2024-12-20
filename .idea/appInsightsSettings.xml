@@ -8,10 +8,10 @@
             <InsightsFilterSettings>
               <option name="connection">
                 <ConnectionSetting>
-                  <option name="appId" value="PLACEHOLDER" />
-                  <option name="mobileSdkAppId" value="" />
-                  <option name="projectId" value="" />
-                  <option name="projectNumber" value="" />
+                  <option name="appId" value="com.example.vapeshop" />
+                  <option name="mobileSdkAppId" value="1:51142590712:android:6098d1b938086e58773b0d" />
+                  <option name="projectId" value="vape-shop-ca393" />
+                  <option name="projectNumber" value="51142590712" />
                 </ConnectionSetting>
               </option>
               <option name="signal" value="SIGNAL_UNSPECIFIED" />
