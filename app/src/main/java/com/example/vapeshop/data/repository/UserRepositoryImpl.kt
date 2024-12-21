@@ -5,7 +5,10 @@ import com.example.vapeshop.domain.model.User
 import com.google.firebase.auth.FirebaseAuth
 import javax.inject.Inject
 
-class UserRepositoryImpl @Inject constructor(private val firebaseAuth: FirebaseAuth) :
+class UserRepositoryImpl @Inject constructor(
+    private val firebaseAuth: FirebaseAuth,
+    private val userDao: UserDao
+) :
     UserRepository {
 
     override suspend fun getCurrentUser(): User? {
@@ -15,7 +18,15 @@ class UserRepositoryImpl @Inject constructor(private val firebaseAuth: FirebaseA
     }
 
     override suspend fun saveUser(user: User) {
-        TODO("Saving to room database")
+        userDao.insertUser(
+            UserEntity(
+                id = user.id,
+                name = user.name,
+                email = user.email,
+                phone = user.phone
+            )
+        )
+
     }
 
 }
