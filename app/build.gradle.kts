@@ -58,6 +58,7 @@ dependencies {
     implementation(libs.room.runtime)
     ksp(libs.room.compiler)
     implementation(libs.room.ktx)
+    implementation(libs.lifecycle.viewmodel.ktx)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
