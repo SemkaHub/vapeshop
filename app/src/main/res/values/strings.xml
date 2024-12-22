@@ -4,4 +4,8 @@
     <string name="hint_password">Пароль</string>
     <string name="login_button">Войти</string>
     <string name="register_button">Зарегистрироваться</string>
+    
+    <string name="error_invalid_email">Неправильный формат email адреса</string>
+    <string name="error_password_short">Длина пароля должна быть не менее 6 символов</string>
+    <string name="error_default">При работе с данными произошла ошибка</string>
 </resources>

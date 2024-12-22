@@ -1,5 +1,7 @@
 package com.example.vapeshop.data.repository
 
+import com.example.vapeshop.data.local.UserDao
+import com.example.vapeshop.data.local.UserEntity
 import com.example.vapeshop.domain.UserRepository
 import com.example.vapeshop.domain.model.User
 import com.google.firebase.auth.FirebaseAuth

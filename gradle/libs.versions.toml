@@ -14,7 +14,7 @@ firebaseBom = "33.7.0"
 androidHilt = "2.53.1"
 ksp = "2.1.0-1.0.29"
 room = "2.6.1"
-lifecycle = "2.6.2"
+lifecycle = "2.8.7"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
