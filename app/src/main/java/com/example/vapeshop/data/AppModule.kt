@@ -4,9 +4,12 @@ import android.content.Context
 import androidx.room.Room
 import com.example.vapeshop.data.local.AppDatabase
 import com.example.vapeshop.data.local.UserDao
+import com.example.vapeshop.data.repository.CategoryRepositoryImpl
 import com.example.vapeshop.data.repository.UserRepositoryImpl
+import com.example.vapeshop.domain.CategoryRepository
 import com.example.vapeshop.domain.UserRepository
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -24,8 +27,17 @@ class AppModule {
 
     @Provides
     @Singleton
+    fun provideFirebaseFirestore(): FirebaseFirestore = FirebaseFirestore.getInstance()
+
+    @Provides
+    @Singleton
     fun provideUserRepository(firebaseAuth: FirebaseAuth, userDao: UserDao): UserRepository =
         UserRepositoryImpl(firebaseAuth, userDao)
+
+    @Provides
+    @Singleton
+    fun provideCategoryRepository(firestore: FirebaseFirestore): CategoryRepository =
+        CategoryRepositoryImpl(firestore)
 
     @Provides
     @Singleton

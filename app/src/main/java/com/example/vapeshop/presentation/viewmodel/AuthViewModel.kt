@@ -140,5 +140,4 @@ class AuthViewModel @Inject constructor(
         PASSWORD_SHORT,
         GENERIC_ERROR
     }
-
 }

@@ -8,4 +8,10 @@
     <string name="error_invalid_email">Неправильный формат email адреса</string>
     <string name="error_password_short">Длина пароля должна быть не менее 6 символов</string>
     <string name="error_default">При работе с данными произошла ошибка</string>
+    <string name="hint_search">Поиск</string>
+
+    <string name="category_name">Название категории</string>
+    <string name="bottom_menu_shop">Магазин</string>
+    <string name="bottom_menu_cart">Корзина</string>
+    <string name="bottom_menu_profile">Профиль</string>
 </resources>

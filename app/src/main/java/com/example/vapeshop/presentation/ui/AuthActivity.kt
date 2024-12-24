@@ -38,6 +38,10 @@ class AuthActivity : AppCompatActivity() {
             register()
         }
 
+        initObservers()
+    }
+
+    private fun initObservers() {
         viewModel.authUiState.observe(this) {
             when (it) {
                 is AuthViewModel.AuthUiState.Initial -> {
