@@ -1,9 +1,12 @@
 package com.example.vapeshop.presentation.adapter
 
+import android.graphics.Rect
 import android.graphics.drawable.Drawable
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
@@ -11,8 +14,10 @@ import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
 import com.example.vapeshop.databinding.ItemCategoryBinding
 import com.example.vapeshop.domain.model.Category
+import kotlin.math.roundToInt
 
-class CategoryAdapter : RecyclerView.Adapter<CategoryAdapter.CategoryViewHolder>() {
+class CategoryAdapter(private val cardWidth: Int) :
+    RecyclerView.Adapter<CategoryAdapter.CategoryViewHolder>() {
 
     private var categories: List<Category> = emptyList()
 
@@ -22,6 +27,11 @@ class CategoryAdapter : RecyclerView.Adapter<CategoryAdapter.CategoryViewHolder>
     ): CategoryViewHolder {
         val binding =
             ItemCategoryBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val params = binding.root.layoutParams
+        params.width = cardWidth
+        params.height =
+            (cardWidth * 1.5).roundToInt() // The height of the card is 1.5 times its width.
+        binding.root.layoutParams = params
         return CategoryViewHolder(binding)
     }
 
@@ -49,7 +59,6 @@ class CategoryAdapter : RecyclerView.Adapter<CategoryAdapter.CategoryViewHolder>
             Glide.with(itemView.context)
                 .load(category.imageUrl)
                 .listener(object : RequestListener<Drawable> {
-
                     override fun onLoadFailed(
                         e: GlideException?,
                         model: Any?,
@@ -57,6 +66,8 @@ class CategoryAdapter : RecyclerView.Adapter<CategoryAdapter.CategoryViewHolder>
                         isFirstResource: Boolean
                     ): Boolean {
                         binding.progressBar.visibility = View.GONE
+                        binding.imageView.setImageResource(android.R.drawable.stat_notify_error)
+                        Log.d("CategoryAdapter", "onLoadFailed: ${e?.message}")
                         return false
                     }
 
@@ -72,6 +83,29 @@ class CategoryAdapter : RecyclerView.Adapter<CategoryAdapter.CategoryViewHolder>
                     }
                 })
                 .into(binding.imageView)
+        }
+    }
+
+    class MyItemDecoration(private val spacing: Int) :
+        RecyclerView.ItemDecoration() {
+        override fun getItemOffsets(
+            outRect: Rect,
+            view: View,
+            parent: RecyclerView,
+            state: RecyclerView.State
+        ) {
+            val position = parent.getChildAdapterPosition(view)
+            val spanCount = (parent.layoutManager as GridLayoutManager).spanCount
+            val column = position % spanCount
+
+            outRect.left = spacing * (spanCount - column) / spanCount
+            outRect.right = spacing * (column + 1) / spanCount
+
+            if (position >= spanCount) {
+                outRect.top = spacing
+            } else {
+                outRect.top = spacing / 2
+            }
         }
     }
 }
