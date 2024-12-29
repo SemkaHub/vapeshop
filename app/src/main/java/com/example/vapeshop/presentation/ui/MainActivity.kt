@@ -7,7 +7,9 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
+import com.example.vapeshop.R
 import com.example.vapeshop.databinding.ActivityMainBinding
 import com.example.vapeshop.presentation.adapter.CategoryAdapter
 import com.example.vapeshop.presentation.viewmodel.MainViewModel
@@ -32,13 +34,47 @@ class MainActivity : AppCompatActivity() {
             insets
         }
 
+        setupBottomNavigationView()
+        setupRecyclerView()
+        initObservers()
+    }
+
+    private fun setupBottomNavigationView() {
+        binding.bottomNavigationView.setOnItemSelectedListener { item ->
+            when (item.itemId) {
+                R.id.menu_shop -> {
+                    replaceFragment(ShopFragment())
+                    true
+                }
+
+                R.id.menu_cart -> {
+                    replaceFragment(CartFragment())
+                    true
+                }
+
+                R.id.menu_profile -> {
+                    replaceFragment(ProfileFragment())
+                    true
+                }
+
+                else -> false
+            }
+        }
+    }
+
+    private fun replaceFragment(fragment: Fragment) {
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.fragmentContainer, fragment)
+            .commit()
+    }
+
+    private fun setupRecyclerView() {
         val spacing =
             (16 * resources.displayMetrics.density).roundToInt()   // Отступы между карточками
         val spanCount = calculateSpanCount(spacing)            // Вычисление количества колонок
         val cardWidth = calculateCardWidth(spanCount, spacing)  // Вычисление ширины карточки
 
         initRecyclerView(spanCount, spacing, cardWidth)
-        initObservers()
     }
 
     private fun calculateSpanCount(spacing: Int): Int {

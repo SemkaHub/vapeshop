@@ -60,6 +60,7 @@ dependencies {
     implementation(libs.room.ktx)
     implementation(libs.lifecycle.viewmodel.ktx)
     implementation(libs.glide)
+    implementation(libs.fragment.ktx)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
