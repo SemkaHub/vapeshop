@@ -7,7 +7,9 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.example.vapeshop.databinding.FragmentProfileBinding
 import com.example.vapeshop.utils.viewBinding
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class ProfileFragment : Fragment() {
 
     private val binding by viewBinding(FragmentProfileBinding::bind)

@@ -111,10 +111,25 @@ class MainActivity : AppCompatActivity() {
 
     private fun initRecyclerView(spanCount: Int, spacing: Int, cardWidth: Int) {
         binding.categoriesRecyclerView.apply {
-            categoryAdapter = CategoryAdapter(cardWidth)
+            categoryAdapter = CategoryAdapter(cardWidth) { categoryId ->
+                openProductsByCategory(categoryId)
+            }
             adapter = categoryAdapter
             layoutManager = GridLayoutManager(context, spanCount)
             addItemDecoration(CategoryAdapter.MyItemDecoration(spacing))
         }
+    }
+
+    private fun openProductsByCategory(categoryId: String) {
+        val productListFragment = ProductListFragment().apply {
+            arguments = Bundle().apply {
+                putString("categoryId", categoryId)
+            }
+        }
+
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.fragmentContainer, productListFragment)
+            .addToBackStack(null)
+            .commit()
     }
 }

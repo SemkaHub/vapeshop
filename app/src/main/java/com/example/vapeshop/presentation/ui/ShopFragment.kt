@@ -7,7 +7,9 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.example.vapeshop.databinding.FragmentShopBinding
 import com.example.vapeshop.utils.viewBinding
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class ShopFragment : Fragment() {
 
     private val binding by viewBinding(FragmentShopBinding::bind)

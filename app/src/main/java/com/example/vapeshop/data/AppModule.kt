@@ -5,8 +5,10 @@ import androidx.room.Room
 import com.example.vapeshop.data.local.AppDatabase
 import com.example.vapeshop.data.local.UserDao
 import com.example.vapeshop.data.repository.CategoryRepositoryImpl
+import com.example.vapeshop.data.repository.ProductRepositoryImpl
 import com.example.vapeshop.data.repository.UserRepositoryImpl
 import com.example.vapeshop.domain.CategoryRepository
+import com.example.vapeshop.domain.ProductRepository
 import com.example.vapeshop.domain.UserRepository
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -38,6 +40,11 @@ class AppModule {
     @Singleton
     fun provideCategoryRepository(firestore: FirebaseFirestore): CategoryRepository =
         CategoryRepositoryImpl(firestore)
+
+    @Provides
+    @Singleton
+    fun provideProductRepository(firestore: FirebaseFirestore): ProductRepository =
+        ProductRepositoryImpl(firestore)
 
     @Provides
     @Singleton

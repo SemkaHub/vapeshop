@@ -16,7 +16,10 @@ import com.example.vapeshop.databinding.ItemCategoryBinding
 import com.example.vapeshop.domain.model.Category
 import kotlin.math.roundToInt
 
-class CategoryAdapter(private val cardWidth: Int) :
+class CategoryAdapter(
+    private val cardWidth: Int,
+    private val onItemClick: ((String) -> Unit)? = null
+) :
     RecyclerView.Adapter<CategoryAdapter.CategoryViewHolder>() {
 
     private var categories: List<Category> = emptyList()
@@ -50,7 +53,7 @@ class CategoryAdapter(private val cardWidth: Int) :
         notifyDataSetChanged()
     }
 
-    class CategoryViewHolder(private val binding: ItemCategoryBinding) :
+    inner class CategoryViewHolder(private val binding: ItemCategoryBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(category: Category) {
@@ -83,6 +86,12 @@ class CategoryAdapter(private val cardWidth: Int) :
                     }
                 })
                 .into(binding.imageView)
+
+            itemView.setOnClickListener {
+                category.id?.let {
+                    onItemClick?.invoke(it)
+                }
+            }
         }
     }
 
