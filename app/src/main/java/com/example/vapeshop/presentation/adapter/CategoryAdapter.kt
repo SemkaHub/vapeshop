@@ -1,12 +1,10 @@
 package com.example.vapeshop.presentation.adapter
 
-import android.graphics.Rect
 import android.graphics.drawable.Drawable
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
@@ -19,8 +17,7 @@ import kotlin.math.roundToInt
 class CategoryAdapter(
     private val cardWidth: Int,
     private val onItemClick: ((String) -> Unit)? = null
-) :
-    RecyclerView.Adapter<CategoryAdapter.CategoryViewHolder>() {
+) : RecyclerView.Adapter<CategoryAdapter.CategoryViewHolder>() {
 
     private var categories: List<Category> = emptyList()
 
@@ -91,29 +88,6 @@ class CategoryAdapter(
                 category.id?.let {
                     onItemClick?.invoke(it)
                 }
-            }
-        }
-    }
-
-    class MyItemDecoration(private val spacing: Int) :
-        RecyclerView.ItemDecoration() {
-        override fun getItemOffsets(
-            outRect: Rect,
-            view: View,
-            parent: RecyclerView,
-            state: RecyclerView.State
-        ) {
-            val position = parent.getChildAdapterPosition(view)
-            val spanCount = (parent.layoutManager as GridLayoutManager).spanCount
-            val column = position % spanCount
-
-            outRect.left = spacing * (spanCount - column) / spanCount
-            outRect.right = spacing * (column + 1) / spanCount
-
-            if (position >= spanCount) {
-                outRect.top = spacing
-            } else {
-                outRect.top = spacing / 2
             }
         }
     }

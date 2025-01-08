@@ -27,14 +27,14 @@ class MainActivity : AppCompatActivity() {
         }
 
         setupBottomNavigationView()
-        replaceFragment(ShopFragment())
+        replaceFragment(CategoryFragment())
     }
 
     private fun setupBottomNavigationView() {
         binding.bottomNavigationView.setOnItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.menu_shop -> {
-                    replaceFragment(ShopFragment())
+                    replaceFragment(CategoryFragment())
                     true
                 }
 

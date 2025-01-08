@@ -10,10 +10,9 @@
     <string name="error_default">При работе с данными произошла ошибка</string>
     <string name="hint_search">Поиск</string>
 
-    <string name="category_name">Название категории</string>
     <string name="bottom_menu_shop">Магазин</string>
     <string name="bottom_menu_cart">Корзина</string>
     <string name="bottom_menu_profile">Профиль</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="not_available_product">Нет в наличии</string>
 </resources>

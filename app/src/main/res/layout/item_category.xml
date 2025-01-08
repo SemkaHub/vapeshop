@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
     app:cardCornerRadius="8dp"
     app:cardElevation="4dp">
 
@@ -31,7 +32,7 @@
             android:layout_gravity="bottom|center_horizontal"
             android:background="@color/black"
             android:gravity="center"
-            android:text="@string/category_name"
+            tools:text="Название категории"
             android:textColor="@color/white"
             android:textSize="16sp" />
 

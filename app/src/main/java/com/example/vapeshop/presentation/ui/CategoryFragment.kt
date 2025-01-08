@@ -10,16 +10,18 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.example.vapeshop.R
 import com.example.vapeshop.databinding.FragmentShopBinding
 import com.example.vapeshop.presentation.adapter.CategoryAdapter
-import com.example.vapeshop.presentation.viewmodel.MainViewModel
+import com.example.vapeshop.presentation.viewmodel.CategoryViewModel
+import com.example.vapeshop.utils.GridConfigCalculator
+import com.example.vapeshop.utils.SpacingItemDecoration
 import com.example.vapeshop.utils.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlin.math.roundToInt
 
 @AndroidEntryPoint
-class ShopFragment : Fragment() {
+class CategoryFragment : Fragment() {
 
     private val binding by viewBinding(FragmentShopBinding::bind)
-    private val viewModel: MainViewModel by viewModels()
+    private val viewModel: CategoryViewModel by viewModels()
     private lateinit var categoryAdapter: CategoryAdapter
 
     override fun onCreateView(
@@ -31,7 +33,7 @@ class ShopFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setupRecyclerView()
+        initRecyclerView()
         initObservers()
     }
 
@@ -41,23 +43,27 @@ class ShopFragment : Fragment() {
         }
     }
 
-    private fun setupRecyclerView() {
+    private fun initRecyclerView() {
+        // Отступы между карточками
         val spacing =
-            (16 * resources.displayMetrics.density).roundToInt()   // Отступы между карточками
-        val spanCount = calculateSpanCount(spacing)            // Вычисление количества колонок
-        val cardWidth = calculateCardWidth(spanCount, spacing)  // Вычисление ширины карточки
+            (16 * resources.displayMetrics.density).roundToInt()
 
-        initRecyclerView(spanCount, spacing, cardWidth)
-    }
+        val screenWidth = requireActivity().windowManager.currentWindowMetrics.bounds.width()
+        val density = resources.displayMetrics.density
+        val calculator = GridConfigCalculator(density = density, screenWidth = screenWidth)
 
-    private fun initRecyclerView(spanCount: Int, spacing: Int, cardWidth: Int) {
+        // Вычисление количества колонок
+        val spanCount = calculator.calculateSpanCount(spacing)
+        // Вычисление ширины карточки
+        val cardWidth = calculator.calculateCardWidth(spanCount, spacing)
+
         binding.categoriesRecyclerView.apply {
             categoryAdapter = CategoryAdapter(cardWidth) { categoryId ->
                 openProductsByCategory(categoryId)
             }
             adapter = categoryAdapter
             layoutManager = GridLayoutManager(context, spanCount)
-            addItemDecoration(CategoryAdapter.MyItemDecoration(spacing))
+            addItemDecoration(SpacingItemDecoration(spacing, spanCount))
         }
     }
 
@@ -72,27 +78,5 @@ class ShopFragment : Fragment() {
             .replace(R.id.fragmentContainer, productListFragment)
             .addToBackStack(null)
             .commit()
-    }
-
-    private fun calculateSpanCount(spacing: Int): Int {
-        // Нужна реальная ширина экрана. Метод resources.displayMetrics.widthPixels не подходит, так
-        // как не учитывает место, зарезервиванное системой, из-за чего отступы у карточек будут разными.
-        val screenWidth = requireActivity().windowManager.currentWindowMetrics.bounds.width()
-        var spanCount = 1
-        val range =
-            (150 * resources.displayMetrics.density).roundToInt()..
-                    (300 * resources.displayMetrics.density).roundToInt()
-
-        // if card width in 150..300 in dp
-        for (i in 2..6) {
-            if (screenWidth / i - spacing * (i + 1) in range) spanCount = i
-        }
-        return spanCount
-    }
-
-    private fun calculateCardWidth(spanCount: Int, spacing: Int): Int {
-        val screenWidth = requireActivity().windowManager.currentWindowMetrics.bounds.width()
-        val totalSpacing = (spanCount + 1) * spacing
-        return ((screenWidth - totalSpacing) / spanCount.toFloat()).roundToInt()
     }
 }

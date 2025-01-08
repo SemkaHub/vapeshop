@@ -1,5 +1,6 @@
 package com.example.vapeshop.data.repository
 
+import android.util.Log
 import com.example.vapeshop.domain.ProductRepository
 import com.example.vapeshop.domain.model.Product
 import com.google.firebase.firestore.FirebaseFirestore
@@ -13,7 +14,7 @@ class ProductRepositoryImpl @Inject constructor(
     override suspend fun getProducts(categoryId: String): List<Product> {
         return try {
             val snapshot =
-                firestore.collection("products").whereEqualTo("categoryId", categoryId).get()
+                firestore.collection("categories").document(categoryId).collection("products").get()
                     .await()
             snapshot.documents.map { document ->
                 Product(
@@ -22,10 +23,11 @@ class ProductRepositoryImpl @Inject constructor(
                     description = document.getString("description"),
                     price = document.getDouble("price"),
                     imageUrl = document.getString("imageUrl"),
-                    categoryId = document.getString("categoryId")
+                    isAvailable = document.getBoolean("isAvailable") != false
                 )
             }
         } catch (e: Exception) {
+            Log.e("Products", "Error fetching products", e)
             emptyList()
         }
     }

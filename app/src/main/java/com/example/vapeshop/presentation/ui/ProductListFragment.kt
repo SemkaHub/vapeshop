@@ -6,13 +6,16 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.GridLayoutManager
 import com.example.vapeshop.R
 import com.example.vapeshop.databinding.FragmentProductListBinding
 import com.example.vapeshop.presentation.adapter.ProductAdapter
 import com.example.vapeshop.presentation.viewmodel.ProductViewModel
+import com.example.vapeshop.utils.GridConfigCalculator
+import com.example.vapeshop.utils.SpacingItemDecoration
 import com.example.vapeshop.utils.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
+import kotlin.math.roundToInt
 
 @AndroidEntryPoint
 class ProductListFragment : Fragment() {
@@ -31,15 +34,30 @@ class ProductListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val categoryId = arguments?.getString("categoryId") ?: ""
+
         initRecyclerView()
         initObservers(categoryId)
     }
 
     private fun initRecyclerView() {
-        productAdapter = ProductAdapter()
+        // Отступы между карточками
+        val spacing =
+            (16 * resources.displayMetrics.density).roundToInt()
+
+        val screenWidth = requireActivity().windowManager.currentWindowMetrics.bounds.width()
+        val density = resources.displayMetrics.density
+        val calculator = GridConfigCalculator(density = density, screenWidth = screenWidth)
+
+        // Вычисление количества колонок
+        val spanCount = calculator.calculateSpanCount(spacing)
+        // Вычисление ширины карточки
+        val cardWidth = calculator.calculateCardWidth(spanCount, spacing)
+
+        productAdapter = ProductAdapter(cardWidth)
         binding.productsRecyclerView.apply {
             adapter = productAdapter
-            layoutManager = LinearLayoutManager(requireContext())
+            layoutManager = GridLayoutManager(context, spanCount)
+            addItemDecoration(SpacingItemDecoration(spacing, spanCount))
         }
     }
 

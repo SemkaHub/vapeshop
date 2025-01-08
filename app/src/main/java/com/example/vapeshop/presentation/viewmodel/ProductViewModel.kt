@@ -1,5 +1,6 @@
 package com.example.vapeshop.presentation.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -21,6 +22,7 @@ class ProductViewModel @Inject constructor(
     fun getProducts(categoryId: String) {
         viewModelScope.launch {
             val productList = productRepository.getProducts(categoryId)
+            Log.d("Products", "getProducts: $productList")
             _products.value = productList
         }
     }
