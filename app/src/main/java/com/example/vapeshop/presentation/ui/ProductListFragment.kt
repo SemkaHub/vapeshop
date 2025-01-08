@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.example.vapeshop.R
 import com.example.vapeshop.databinding.FragmentProductListBinding
 import com.example.vapeshop.presentation.adapter.ProductAdapter
+import com.example.vapeshop.presentation.viewmodel.CartViewModel
 import com.example.vapeshop.presentation.viewmodel.ProductViewModel
 import com.example.vapeshop.utils.GridConfigCalculator
 import com.example.vapeshop.utils.SpacingItemDecoration
@@ -22,6 +23,7 @@ class ProductListFragment : Fragment() {
 
     private val binding by viewBinding(FragmentProductListBinding::bind)
     private val viewModel: ProductViewModel by viewModels()
+    private val cartViewModel: CartViewModel by viewModels()
     private lateinit var productAdapter: ProductAdapter
 
     override fun onCreateView(
@@ -53,7 +55,9 @@ class ProductListFragment : Fragment() {
         // Вычисление ширины карточки
         val cardWidth = calculator.calculateCardWidth(spanCount, spacing)
 
-        productAdapter = ProductAdapter(cardWidth)
+        productAdapter = ProductAdapter(cardWidth) { productId ->
+            cartViewModel.addItemToCart(productId)
+        }
         binding.productsRecyclerView.apply {
             adapter = productAdapter
             layoutManager = GridLayoutManager(context, spanCount)

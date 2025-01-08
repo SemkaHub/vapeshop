@@ -3,10 +3,13 @@ package com.example.vapeshop.data
 import android.content.Context
 import androidx.room.Room
 import com.example.vapeshop.data.local.AppDatabase
+import com.example.vapeshop.data.local.CartDao
 import com.example.vapeshop.data.local.UserDao
+import com.example.vapeshop.data.repository.CartRepositoryImpl
 import com.example.vapeshop.data.repository.CategoryRepositoryImpl
 import com.example.vapeshop.data.repository.ProductRepositoryImpl
 import com.example.vapeshop.data.repository.UserRepositoryImpl
+import com.example.vapeshop.domain.CartRepository
 import com.example.vapeshop.domain.CategoryRepository
 import com.example.vapeshop.domain.ProductRepository
 import com.example.vapeshop.domain.UserRepository
@@ -48,7 +51,18 @@ class AppModule {
 
     @Provides
     @Singleton
+    fun provideCartRepository(
+        database: AppDatabase,
+        productRepository: ProductRepository
+    ): CartRepository = CartRepositoryImpl(database, productRepository)
+
+    @Provides
+    @Singleton
     fun provideUserDao(appDatabase: AppDatabase): UserDao = appDatabase.userDao()
+
+    @Provides
+    @Singleton
+    fun provideCartDao(appDatabase: AppDatabase): CartDao = appDatabase.cartDao()
 
     @Provides
     @Singleton
@@ -57,5 +71,7 @@ class AppModule {
             applicationContext,
             AppDatabase::class.java,
             "vape_shop_database"
-        ).build()
+        )
+            .fallbackToDestructiveMigration()
+            .build()
 }

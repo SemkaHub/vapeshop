@@ -16,7 +16,7 @@ import kotlin.math.roundToInt
 
 class ProductAdapter(
     private val cardWidth: Int,
-    private val onItemClick: ((String) -> Unit)? = null
+    private val onAddToCartClick: (String) -> Unit
 ) : RecyclerView.Adapter<ProductAdapter.ProductViewHolder>() {
 
     private var products: List<Product> = emptyList()
@@ -66,6 +66,7 @@ class ProductAdapter(
                         target: com.bumptech.glide.request.target.Target<Drawable?>,
                         isFirstResource: Boolean
                     ): Boolean {
+                        binding.progressBar.visibility = View.GONE
                         binding.imageView.setImageResource(android.R.drawable.stat_notify_error)
                         Log.d("ProductAdapter", "onLoadFailed: ${e?.message}")
                         return false
@@ -85,7 +86,9 @@ class ProductAdapter(
                 .into(binding.imageView)
 
             binding.addToCartButton.setOnClickListener {
-                // TODO: Добавить в корзину
+                product.id?.let { id ->
+                    onAddToCartClick.invoke(id)
+                }
             }
         }
     }
