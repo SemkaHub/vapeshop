@@ -3,6 +3,7 @@ package com.example.vapeshop.presentation.ui
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
@@ -34,7 +35,7 @@ class MainActivity : AppCompatActivity() {
         super.onResume()
         binding.bottomNavigationView.post {
             val layoutParams =
-                binding.fragmentContainer.layoutParams as androidx.coordinatorlayout.widget.CoordinatorLayout.LayoutParams
+                binding.fragmentContainer.layoutParams as CoordinatorLayout.LayoutParams
             layoutParams.bottomMargin = binding.bottomNavigationView.height
             binding.fragmentContainer.layoutParams = layoutParams
         }

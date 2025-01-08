@@ -9,12 +9,14 @@ import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.vapeshop.R
 import com.example.vapeshop.databinding.FragmentCategoryBinding
+import com.example.vapeshop.domain.factory.CategoryAdapterFactory
 import com.example.vapeshop.presentation.adapter.CategoryAdapter
 import com.example.vapeshop.presentation.viewmodel.CategoryViewModel
 import com.example.vapeshop.utils.GridConfigCalculator
 import com.example.vapeshop.utils.SpacingItemDecoration
 import com.example.vapeshop.utils.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 import kotlin.math.roundToInt
 
 @AndroidEntryPoint
@@ -23,6 +25,9 @@ class CategoryFragment : Fragment() {
     private val binding by viewBinding(FragmentCategoryBinding::bind)
     private val viewModel: CategoryViewModel by viewModels()
     private lateinit var categoryAdapter: CategoryAdapter
+
+    @Inject
+    lateinit var categoryAdapterFactory: CategoryAdapterFactory
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -58,7 +63,7 @@ class CategoryFragment : Fragment() {
         val cardWidth = calculator.calculateCardWidth(spanCount, spacing)
 
         binding.categoriesRecyclerView.apply {
-            categoryAdapter = CategoryAdapter(cardWidth) { categoryId ->
+            categoryAdapter = categoryAdapterFactory.create(cardWidth) { categoryId ->
                 openProductsByCategory(categoryId)
             }
             adapter = categoryAdapter

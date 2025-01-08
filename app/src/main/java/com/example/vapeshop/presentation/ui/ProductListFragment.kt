@@ -9,6 +9,7 @@ import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.vapeshop.R
 import com.example.vapeshop.databinding.FragmentProductListBinding
+import com.example.vapeshop.domain.factory.ProductAdapterFactory
 import com.example.vapeshop.presentation.adapter.ProductAdapter
 import com.example.vapeshop.presentation.viewmodel.CartViewModel
 import com.example.vapeshop.presentation.viewmodel.ProductViewModel
@@ -16,6 +17,7 @@ import com.example.vapeshop.utils.GridConfigCalculator
 import com.example.vapeshop.utils.SpacingItemDecoration
 import com.example.vapeshop.utils.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 import kotlin.math.roundToInt
 
 @AndroidEntryPoint
@@ -25,6 +27,9 @@ class ProductListFragment : Fragment() {
     private val viewModel: ProductViewModel by viewModels()
     private val cartViewModel: CartViewModel by viewModels()
     private lateinit var productAdapter: ProductAdapter
+
+    @Inject
+    lateinit var productAdapterFactory: ProductAdapterFactory
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -55,7 +60,7 @@ class ProductListFragment : Fragment() {
         // Вычисление ширины карточки
         val cardWidth = calculator.calculateCardWidth(spanCount, spacing)
 
-        productAdapter = ProductAdapter(cardWidth) { productId ->
+        productAdapter = productAdapterFactory.create(cardWidth) { productId ->
             cartViewModel.addItemToCart(productId)
         }
         binding.productsRecyclerView.apply {

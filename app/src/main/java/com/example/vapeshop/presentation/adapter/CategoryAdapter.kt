@@ -9,13 +9,16 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.bumptech.glide.request.RequestListener
 import com.example.vapeshop.databinding.ItemCategoryBinding
 import com.example.vapeshop.domain.model.Category
+import com.example.vapeshop.domain.util.ResourceProvider
 import kotlin.math.roundToInt
 
 class CategoryAdapter(
     private val cardWidth: Int,
+    private val resourceProvider: ResourceProvider,
     private val onItemClick: ((String) -> Unit)? = null
 ) : RecyclerView.Adapter<CategoryAdapter.CategoryViewHolder>() {
 
@@ -58,6 +61,8 @@ class CategoryAdapter(
             binding.progressBar.visibility = View.VISIBLE
             Glide.with(itemView.context)
                 .load(category.imageUrl)
+                .transition(DrawableTransitionOptions.withCrossFade())
+                .error(resourceProvider.getErrorImage())
                 .listener(object : RequestListener<Drawable> {
                     override fun onLoadFailed(
                         e: GlideException?,
@@ -66,7 +71,6 @@ class CategoryAdapter(
                         isFirstResource: Boolean
                     ): Boolean {
                         binding.progressBar.visibility = View.GONE
-                        binding.imageView.setImageResource(android.R.drawable.stat_notify_error)
                         Log.d("CategoryAdapter", "onLoadFailed: ${e?.message}")
                         return false
                     }
