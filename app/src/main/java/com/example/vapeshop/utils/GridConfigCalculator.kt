@@ -22,7 +22,7 @@ class GridConfigCalculator(private val screenWidth: Int, private val density: Fl
         while (i <= MAX_SPAN_COUNT) {
             // Вычисляем ширину карточки для текущего количества столбцов
             val cardWidth =
-                (screenWidth / i - spacing * (i + 1)).coerceIn(minCardWidth, maxCardWidth)
+                (screenWidth / i - spacing * (i + 1))
             // Если ширина карточки попадает в заданный диапазон, то устанавливаем количество столбцов и выходим из цикла
             if (cardWidth in range) {
                 spanCount = i
