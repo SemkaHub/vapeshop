@@ -17,11 +17,7 @@ class SpacingItemDecoration(private val spacing: Int, private val spanCount: Int
 
         outRect.left = spacing * (spanCount - column) / spanCount
         outRect.right = spacing * (column + 1) / spanCount
-
-        if (position >= spanCount) {
-            outRect.top = spacing
-        } else {
-            outRect.top = spacing / 2
-        }
+        outRect.top = spacing / 2
+        outRect.bottom = spacing / 2
     }
 }

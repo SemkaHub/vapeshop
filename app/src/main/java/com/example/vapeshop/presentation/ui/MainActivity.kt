@@ -30,6 +30,16 @@ class MainActivity : AppCompatActivity() {
         replaceFragment(CategoryFragment())
     }
 
+    override fun onResume() {
+        super.onResume()
+        binding.bottomNavigationView.post {
+            val layoutParams =
+                binding.fragmentContainer.layoutParams as androidx.coordinatorlayout.widget.CoordinatorLayout.LayoutParams
+            layoutParams.bottomMargin = binding.bottomNavigationView.height
+            binding.fragmentContainer.layoutParams = layoutParams
+        }
+    }
+
     private fun setupBottomNavigationView() {
         binding.bottomNavigationView.setOnItemSelectedListener { item ->
             when (item.itemId) {

@@ -8,7 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.vapeshop.R
-import com.example.vapeshop.databinding.FragmentShopBinding
+import com.example.vapeshop.databinding.FragmentCategoryBinding
 import com.example.vapeshop.presentation.adapter.CategoryAdapter
 import com.example.vapeshop.presentation.viewmodel.CategoryViewModel
 import com.example.vapeshop.utils.GridConfigCalculator
@@ -20,7 +20,7 @@ import kotlin.math.roundToInt
 @AndroidEntryPoint
 class CategoryFragment : Fragment() {
 
-    private val binding by viewBinding(FragmentShopBinding::bind)
+    private val binding by viewBinding(FragmentCategoryBinding::bind)
     private val viewModel: CategoryViewModel by viewModels()
     private lateinit var categoryAdapter: CategoryAdapter
 
@@ -28,7 +28,7 @@ class CategoryFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_shop, container, false)
+        return inflater.inflate(R.layout.fragment_category, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
