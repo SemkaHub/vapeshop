@@ -24,7 +24,6 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
-import dagger.hilt.android.scopes.FragmentScoped
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
@@ -73,9 +72,10 @@ class AppModule {
     @Provides
     @Singleton
     fun provideCartRepository(
-        database: AppDatabase,
-        productRepository: ProductRepository
-    ): CartRepository = CartRepositoryImpl(database, productRepository)
+        localDataSource: CartDao,
+        productRepository: ProductRepository,
+        firebaseAuth: FirebaseAuth
+    ): CartRepository = CartRepositoryImpl(localDataSource, productRepository, firebaseAuth)
 
     @Provides
     @Singleton

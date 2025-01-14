@@ -1,6 +1,7 @@
 package com.example.vapeshop.presentation.adapter.factory
 
 import com.example.vapeshop.domain.factory.ProductAdapterFactory
+import com.example.vapeshop.domain.model.Product
 import com.example.vapeshop.domain.util.ResourceProvider
 import com.example.vapeshop.presentation.adapter.ProductAdapter
 import dagger.hilt.android.scopes.FragmentScoped
@@ -13,7 +14,7 @@ class ProductAdapterFactoryImpl @Inject constructor(
 
     override fun create(
         cardWidth: Int,
-        onAddToCartClick: (String) -> Unit
+        onAddToCartClick: (Product, Int) -> Unit
     ): ProductAdapter {
         return ProductAdapter(
             cardWidth = cardWidth,

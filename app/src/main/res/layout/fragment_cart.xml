@@ -1,16 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".presentation.ui.CartFragment">
 
-    <!-- TODO: Update blank fragment layout -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/cartRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        tools:listitem="@layout/item_cart" />
+
     <TextView
-        android:id="@+id/textViewCart"
-        android:layout_gravity="center_horizontal|center_vertical"
+        android:id="@+id/totalPriceTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="CartFragment" />
+        android:layout_gravity="end"
+        android:padding="16dp"
+        android:textColor="@color/black"
+        android:textSize="18sp"
+        tools:text="Total price" />
 
-</FrameLayout>
+    <Button
+        android:id="@+id/checkoutButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/checkout" />
+</LinearLayout>

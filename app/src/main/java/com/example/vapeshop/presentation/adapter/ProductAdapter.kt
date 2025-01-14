@@ -16,10 +16,12 @@ import com.example.vapeshop.domain.model.Product
 import com.example.vapeshop.domain.util.ResourceProvider
 import kotlin.math.roundToInt
 
+const val DEFAULT_ITEM_QUANTITY = 1
+
 class ProductAdapter(
     private val cardWidth: Int,
     private val resourceProvider: ResourceProvider,
-    private val onAddToCartClick: (String) -> Unit
+    private val onAddToCartClick: (Product, Int) -> Unit
 ) : RecyclerView.Adapter<ProductAdapter.ProductViewHolder>() {
 
     private var products: List<Product> = emptyList()
@@ -89,8 +91,8 @@ class ProductAdapter(
                 .into(binding.imageView)
 
             binding.addToCartButton.setOnClickListener {
-                product.id?.let { id ->
-                    onAddToCartClick.invoke(id)
+                product.let { it ->
+                    onAddToCartClick.invoke(it, DEFAULT_ITEM_QUANTITY)
                 }
             }
         }

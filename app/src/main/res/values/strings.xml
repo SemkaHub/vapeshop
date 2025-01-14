@@ -15,4 +15,5 @@
     <string name="bottom_menu_profile">Профиль</string>
 
     <string name="not_available_product">Нет в наличии</string>
+    <string name="checkout">Оформить заказ</string>
 </resources>

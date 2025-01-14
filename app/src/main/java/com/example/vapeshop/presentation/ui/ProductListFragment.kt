@@ -60,8 +60,8 @@ class ProductListFragment : Fragment() {
         // Вычисление ширины карточки
         val cardWidth = calculator.calculateCardWidth(spanCount, spacing)
 
-        productAdapter = productAdapterFactory.create(cardWidth) { productId ->
-            cartViewModel.addItemToCart(productId)
+        productAdapter = productAdapterFactory.create(cardWidth) { product, quantity ->
+            cartViewModel.addItemToCart(product, quantity)
         }
         binding.productsRecyclerView.apply {
             adapter = productAdapter
