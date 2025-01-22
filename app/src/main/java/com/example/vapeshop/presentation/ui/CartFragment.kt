@@ -33,6 +33,11 @@ class CartFragment : Fragment() {
         initObservers()
     }
 
+    override fun onResume() {
+        super.onResume()
+        viewModel.loadCartItems()
+    }
+
     private fun initRecyclerView() {
         cartAdapter = CartAdapter(
             onIncreaseClick = { productId, quantity ->
@@ -41,6 +46,8 @@ class CartFragment : Fragment() {
             onDecreaseClick = { productId, quantity ->
                 if (quantity > 1) {
                     viewModel.decreaseItemQuantity(productId)
+                } else {
+                    viewModel.removeItemFromCart(productId)
                 }
             },
             onRemoveClick = { productId ->

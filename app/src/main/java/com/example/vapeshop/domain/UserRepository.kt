@@ -7,4 +7,5 @@ interface UserRepository {
     suspend fun getCurrentUser(): User?
 
     suspend fun saveUser(user: User)
+    suspend fun signOut()
 }

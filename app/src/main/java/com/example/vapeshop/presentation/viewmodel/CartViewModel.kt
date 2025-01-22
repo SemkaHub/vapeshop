@@ -22,11 +22,7 @@ class CartViewModel @Inject constructor(
     private val _totalPrice = MutableLiveData<Double>()
     val totalPrice: LiveData<Double> = _totalPrice
 
-    init {
-        loadCartItems()
-    }
-
-    private fun loadCartItems() {
+    fun loadCartItems() {
         viewModelScope.launch {
             val cartItems = cartRepository.getCartItems()
             _cartItems.value = cartItems

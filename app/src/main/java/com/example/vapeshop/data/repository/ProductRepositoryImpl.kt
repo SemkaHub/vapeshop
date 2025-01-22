@@ -22,7 +22,16 @@ class ProductRepositoryImpl @Inject constructor(
                     firestore.collection("categories").document(categoryId).collection("products")
                         .get()
                         .await()
-                snapshot.toObjects(Product::class.java)
+                snapshot.map { item ->
+                    Product(
+                        id = item.id,
+                        name = item.getString("name") ?: "",
+                        description = item.getString("description") ?: "",
+                        price = item.getDouble("price") ?: 0.0,
+                        imageUrl = item.getString("imageUrl") ?: "",
+                        isAvailable = item.getBoolean("isAvailable") != false
+                    )
+                }
             } catch (e: Exception) {
                 Log.e("ProductRepositoryImpl", "Error fetching products", e)
                 emptyList()
@@ -57,7 +66,7 @@ class ProductRepositoryImpl @Inject constructor(
         cartItems: List<CartItemEntity>
     ): Unit = withContext(Dispatchers.IO) {
         try {
-            val cartData = CartResponse(userId = userId, items = cartItems)
+            val cartData = CartResponse(items = cartItems)
             firestore.collection("carts")
                 .document(userId)
                 .set(cartData)

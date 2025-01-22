@@ -6,20 +6,28 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.vapeshop.domain.UserRepository
 import com.example.vapeshop.domain.model.User
+import com.example.vapeshop.domain.usecase.validation.ValidateEmailUseCase
+import com.example.vapeshop.domain.usecase.validation.ValidatePasswordUseCase
+import com.google.firebase.FirebaseNetworkException
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
+import com.google.firebase.auth.FirebaseAuthInvalidUserException
+import com.google.firebase.auth.FirebaseAuthWeakPasswordException
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
 @HiltViewModel
 class AuthViewModel @Inject constructor(
     private val userRepository: UserRepository,
-    private val firebaseAuth: FirebaseAuth
+    private val firebaseAuth: FirebaseAuth,
+    private val validateEmailUseCase: ValidateEmailUseCase,
+    private val validatePasswordUseCase: ValidatePasswordUseCase
 ) : ViewModel() {
 
     private val _authUiState = MutableLiveData<AuthUiState>(AuthUiState.Initial)
-    val authUiState: LiveData<AuthUiState>
-        get() = _authUiState
+    val authUiState: LiveData<AuthUiState> = _authUiState
 
     override fun onCleared() {
         super.onCleared()
@@ -28,100 +36,113 @@ class AuthViewModel @Inject constructor(
 
     fun loginUser(email: String, password: String) {
         if (!validate(email, password)) return
-        _authUiState.value = AuthUiState.Loading
+        setLoadingState()
 
         viewModelScope.launch {
             try {
-                firebaseAuth.signInWithEmailAndPassword(email, password)
-                    .addOnCompleteListener {
-                        if (it.isSuccessful) {
-                            firebaseAuth.currentUser?.let {
-                                saveUser(
-                                    User(
-                                        id = it.uid,
-                                        name = it.displayName,
-                                        email = it.email,
-                                        phone = it.phoneNumber
-                                    )
-                                )
-                            }
-                            _authUiState.value = AuthUiState.Success
-                        } else {
-                            _authUiState.value =
-                                AuthUiState.Error(message = AuthErrorType.GENERIC_ERROR)
-                        }
-                    }
+                val result = firebaseAuth.signInWithEmailAndPassword(email, password).await()
+                result.user?.let { firebaseUser ->
+                    saveUser(
+                        User(
+                            id = firebaseUser.uid,
+                            name = firebaseUser.displayName,
+                            email = firebaseUser.email,
+                            phone = firebaseUser.phoneNumber
+
+                        )
+                    )
+                    _authUiState.value = AuthUiState.Success
+                } ?: run {
+                    _authUiState.value = AuthUiState.Error(message = AuthErrorType.GENERIC_ERROR)
+                }
             } catch (e: Exception) {
-                _authUiState.value = AuthUiState.Error(message = AuthErrorType.GENERIC_ERROR)
+                handleAuthError(e)
             }
         }
     }
 
     fun registerUser(email: String, password: String) {
         if (!validate(email, password)) return
-        _authUiState.value = AuthUiState.Loading
+        setLoadingState()
 
         viewModelScope.launch {
             try {
-                firebaseAuth.createUserWithEmailAndPassword(email, password)
-                    .addOnCompleteListener {
-                        if (it.isSuccessful) {
-                            firebaseAuth.currentUser?.let {
-                                saveUser(
-                                    User(
-                                        id = it.uid,
-                                        name = it.displayName,
-                                        email = it.email,
-                                        phone = it.phoneNumber
-                                    )
-                                )
-                            }
-                            _authUiState.value = AuthUiState.Success
-                        } else {
-                            _authUiState.value =
-                                AuthUiState.Error(message = AuthErrorType.GENERIC_ERROR)
-                        }
-                    }
-            } catch (_: Exception) {
-                _authUiState.value = AuthUiState.Error(message = AuthErrorType.GENERIC_ERROR)
+                val result = firebaseAuth.createUserWithEmailAndPassword(email, password).await()
+                result.user?.let { firebaseUser ->
+                    saveUser(
+                        User(
+                            id = firebaseUser.uid,
+                            name = firebaseUser.displayName,
+                            email = firebaseUser.email,
+                            phone = firebaseUser.phoneNumber
+                        )
+                    )
+                    _authUiState.value = AuthUiState.Success
+                } ?: run {
+                    _authUiState.value = AuthUiState.Error(message = AuthErrorType.GENERIC_ERROR)
+                }
+            } catch (e: Exception) {
+                handleAuthError(e)
             }
         }
     }
 
     private fun saveUser(user: User) = viewModelScope.launch {
-        userRepository.saveUser(user)
+        try {
+            userRepository.saveUser(user)
+        } catch (e: Exception) {
+            _authUiState.value = AuthUiState.Error(message = AuthErrorType.SAVE_USER_ERROR)
+        }
     }
 
     private fun validate(email: String, password: String): Boolean {
-        var isValid = true
+        val emailResult = validateEmailUseCase(email)
+        val passwordResult = validatePasswordUseCase(password)
 
-        if (!isValidEmail(email)) {
-            _authUiState.value = AuthUiState.Error(emailError = AuthErrorType.INVALID_EMAIL)
-            isValid = false
-        }
-
-        if (!isValidPassword(password)) {
-            if (!isValid) {
-                _authUiState.value =
-                    AuthUiState.Error(
-                        passwordError = AuthErrorType.PASSWORD_SHORT,
-                        emailError = AuthErrorType.INVALID_EMAIL
-                    )
-            } else {
-                _authUiState.value =
-                    AuthUiState.Error(passwordError = AuthErrorType.PASSWORD_SHORT)
-                isValid = false
+        return when {
+            !emailResult.isValid && !passwordResult.isValid -> {
+                _authUiState.value = AuthUiState.Error(
+                    emailError = AuthErrorType.INVALID_EMAIL,
+                    passwordError = AuthErrorType.PASSWORD_SHORT
+                )
+                false
             }
+
+            !emailResult.isValid -> {
+                _authUiState.value = AuthUiState.Error(emailError = AuthErrorType.INVALID_EMAIL)
+                false
+            }
+
+            !passwordResult.isValid -> {
+                _authUiState.value = AuthUiState.Error(passwordError = AuthErrorType.PASSWORD_SHORT)
+                false
+            }
+
+            else -> true
         }
-        return isValid
     }
 
-    private fun isValidEmail(email: String): Boolean {
-        return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()
+    private fun handleAuthError(exception: Exception) {
+        val errorType = when (exception) {
+            is FirebaseAuthInvalidCredentialsException ->
+                AuthErrorType.INVALID_CREDENTIALS
+
+            is FirebaseAuthInvalidUserException ->
+                AuthErrorType.USER_NOT_FOUND
+
+            is FirebaseAuthWeakPasswordException ->
+                AuthErrorType.PASSWORD_SHORT
+
+            is FirebaseNetworkException ->
+                AuthErrorType.NETWORK_ERROR
+
+            else -> AuthErrorType.GENERIC_ERROR
+        }
+        _authUiState.value = AuthUiState.Error(message = errorType)
     }
 
-    private fun isValidPassword(password: String): Boolean {
-        return password.length >= 6
+    private fun setLoadingState() {
+        _authUiState.value = AuthUiState.Loading
     }
 
     sealed class AuthUiState {
@@ -137,7 +158,11 @@ class AuthViewModel @Inject constructor(
 
     enum class AuthErrorType {
         INVALID_EMAIL,
+        INVALID_CREDENTIALS,
         PASSWORD_SHORT,
+        USER_NOT_FOUND,
+        NETWORK_ERROR,
+        SAVE_USER_ERROR,
         GENERIC_ERROR
     }
 }

@@ -9,7 +9,10 @@ import com.example.vapeshop.domain.model.CartItem
 import com.example.vapeshop.domain.model.Product
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
@@ -19,44 +22,58 @@ class CartRepositoryImpl @Inject constructor(
     private val firebaseAuth: FirebaseAuth
 ) : CartRepository {
 
+    private var syncJob: Job? = null
+
     override suspend fun addToCart(product: Product, quantity: Int) =
         withContext(Dispatchers.IO) {
-            // Текущее состояние товара
-            val currentCartItem = localDataSource.getCartItemById(product.id)
+            syncJob?.cancel()
 
-            if (currentCartItem != null) {
-                // Если товар уже в корзине, то увеличиваем количество
-                val updatedQuantity = currentCartItem.quantity + quantity
-                localDataSource.updateQuantity(product.id, updatedQuantity)
-            } else {
-                // Добавляем новый товар в корзину
-                val newCartItem = CartItemEntity(
-                    productId = product.id,
-                    name = product.name,
-                    price = product.price,
-                    imageUrl = product.imageUrl,
-                    quantity = quantity
-                )
-                localDataSource.insertCartItem(newCartItem)
-            }
+            // Локальное обновление корзины
+            updateLocalCart(product, quantity)
 
-            // Синхронизируем изменения с сервером
-            syncCartWithServer()
+            // Создаем новую отложенную синхронизацию
+            delaySyncWithServer()
         }
 
+    private suspend fun updateLocalCart(product: Product, quantity: Int) {
+        // Текущее состояние товара
+        val currentCartItem = localDataSource.getCartItemById(product.id)
+
+        if (currentCartItem != null) {
+            // Если товар уже в корзине, то увеличиваем количество
+            val updatedQuantity = currentCartItem.quantity + quantity
+            localDataSource.updateQuantity(product.id, updatedQuantity)
+        } else {
+            // Добавляем новый товар в корзину
+            val newCartItem = CartItemEntity(
+                productId = product.id,
+                name = product.name,
+                price = product.price,
+                imageUrl = product.imageUrl,
+                quantity = quantity
+            )
+            localDataSource.insertCartItem(newCartItem)
+        }
+    }
+
     override suspend fun getCartItems(): List<CartItem> = withContext(Dispatchers.IO) {
-        // Получаем локальную корзину
-        val localCart = async { localDataSource.getCartItems() }
-        // Получаем корзину с сервера
-        val serverUpdate = async {
+        try {
+            // Получаем корзину с сервера
             if (firebaseAuth.currentUser != null) {
                 updateCartFromServer()
             }
-        }
 
-        serverUpdate.await()
-        // Обновляем локальную корзину
-        localCart.await().map { cartItemEntity ->
+            // Обновляем локальную корзину
+            getLocalCart()
+        } catch (e: Exception) {
+            // Если не удалось получить данные с сервера, возвращаем локальные данные
+            Log.e("CartSync", "Failed to sync with server, using local data: ${e.message}")
+            getLocalCart()
+        }
+    }
+
+    private suspend fun getLocalCart(): List<CartItem> = withContext(Dispatchers.IO) {
+        localDataSource.getCartItems().map { cartItemEntity ->
             CartItem(
                 product = Product(
                     id = cartItemEntity.productId,
@@ -69,17 +86,22 @@ class CartRepositoryImpl @Inject constructor(
         }
     }
 
+
     override suspend fun increaseQuantity(productId: String) = withContext(Dispatchers.IO) {
+        syncJob?.cancel()
+
         val cartItem = localDataSource.getCartItemById(productId)
         if (cartItem != null) {
             localDataSource.updateQuantity(productId, cartItem.quantity + 1)
 
             // Синхронизируем изменения с сервером
-            syncCartWithServer()
+            delaySyncWithServer()
         }
     }
 
     override suspend fun decreaseQuantity(productId: String) = withContext(Dispatchers.IO) {
+        syncJob?.cancel()
+
         val cartItem = localDataSource.getCartItemById(productId)
         if (cartItem != null) {
             if (cartItem.quantity > 1) {
@@ -91,7 +113,16 @@ class CartRepositoryImpl @Inject constructor(
             }
 
             // Синхронизируем изменения с сервером
-            syncCartWithServer()
+            delaySyncWithServer()
+        }
+    }
+
+    private suspend fun delaySyncWithServer() {
+        syncJob = coroutineScope {
+            launch {
+                delay(1500) // Ожидаем 1.5 секунды перед синхронизацией
+                syncCartWithServer()
+            }
         }
     }
 
@@ -119,17 +150,8 @@ class CartRepositoryImpl @Inject constructor(
         if (userId != null) {
             try {
                 val remoteCart = remoteDataSource.getCart(userId)
-                localDataSource.clearCart()
                 remoteCart.forEach { remoteItem ->
-                    localDataSource.insertCartItem(
-                        CartItemEntity(
-                            productId = remoteItem.productId,
-                            quantity = remoteItem.quantity,
-                            name = remoteItem.name,
-                            imageUrl = remoteItem.imageUrl,
-                            price = remoteItem.price
-                        )
-                    )
+                    localDataSource.insertCartItem(remoteItem)
                 }
             } catch (e: Exception) {
                 Log.e("CartUpdate", "Failed to update cart with server: ${e.message}")

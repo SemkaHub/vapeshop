@@ -1,6 +1,7 @@
 package com.example.vapeshop.data.local
 
 import androidx.room.Dao
+import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
@@ -12,5 +13,8 @@ interface UserDao {
     suspend fun insertUser(user: UserEntity)
 
     @Query("SELECT * FROM users WHERE id = :userId")
-    suspend fun getUser(userId: String): UserEntity?
+    suspend fun getUserById(userId: String): UserEntity?
+
+    @Query("DELETE FROM users")
+    suspend fun deleteAllUsers()
 }

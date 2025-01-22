@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_main"
+    app:startDestination="@id/categoryFragment">
+
+    <fragment
+        android:id="@+id/categoryFragment"
+        android:name="com.example.vapeshop.presentation.ui.CategoryFragment"
+        tools:layout="@layout/fragment_category">
+        <action
+            android:id="@+id/action_category_to_productList"
+            app:destination="@id/productListFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/productListFragment"
+        android:name="com.example.vapeshop.presentation.ui.ProductListFragment"
+        tools:layout="@layout/fragment_product_list">
+        <argument
+            android:name="categoryId"
+            app:argType="string" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/cartFragment"
+        android:name="com.example.vapeshop.presentation.ui.CartFragment" />
+
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="com.example.vapeshop.presentation.ui.ProfileFragment" />
+</navigation>

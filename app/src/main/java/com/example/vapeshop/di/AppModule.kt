@@ -1,7 +1,8 @@
-package com.example.vapeshop.data
+package com.example.vapeshop.di
 
 import android.content.Context
 import androidx.room.Room
+import com.example.vapeshop.data.ResourceProviderImpl
 import com.example.vapeshop.data.local.AppDatabase
 import com.example.vapeshop.data.local.CartDao
 import com.example.vapeshop.data.local.UserDao

@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.vapeshop.R
 import com.example.vapeshop.databinding.FragmentCategoryBinding
@@ -18,6 +19,7 @@ import com.example.vapeshop.utils.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 import kotlin.math.roundToInt
+
 
 @AndroidEntryPoint
 class CategoryFragment : Fragment() {
@@ -73,15 +75,8 @@ class CategoryFragment : Fragment() {
     }
 
     private fun openProductsByCategory(categoryId: String) {
-        val productListFragment = ProductListFragment().apply {
-            arguments = Bundle().apply {
-                putString("categoryId", categoryId)
-            }
-        }
-
-        parentFragmentManager.beginTransaction()
-            .replace(R.id.fragmentContainer, productListFragment)
-            .addToBackStack(null)
-            .commit()
+        findNavController().navigate(
+            CategoryFragmentDirections.actionCategoryToProductList(categoryId)
+        )
     }
 }

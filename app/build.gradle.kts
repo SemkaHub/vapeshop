@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.google.services)
     alias(libs.plugins.android.hilt)
     alias(libs.plugins.ksp)
+    alias(libs.plugins.save.args)
 }
 
 android {
@@ -43,7 +44,6 @@ android {
 }
 
 dependencies {
-
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
@@ -61,6 +61,10 @@ dependencies {
     implementation(libs.lifecycle.viewmodel.ktx)
     implementation(libs.glide)
     implementation(libs.fragment.ktx)
+    implementation(libs.swipe.refresh.layout)
+    implementation(libs.nav.fragment.ktx)
+    implementation(libs.nav.ui.ktx)
+   // implementation(libs.save.args)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

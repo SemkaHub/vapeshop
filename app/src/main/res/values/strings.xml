@@ -7,7 +7,12 @@
 
     <string name="error_invalid_email">Неправильный формат email адреса</string>
     <string name="error_password_short">Длина пароля должна быть не менее 6 символов</string>
-    <string name="error_default">При работе с данными произошла ошибка</string>
+    <string name="error_default">Произошла непредвиденная ошибка</string>
+    <string name="error_network">Ошибка сетевого подключения</string>
+    <string name="error_invalid_credentials">Неверный адрес электронной почты или пароль</string>
+    <string name="error_user_not_found">Пользователь не найден</string>
+    <string name="error_save_user">Не удалось сохранить данные пользователя.</string>
+
     <string name="hint_search">Поиск</string>
 
     <string name="bottom_menu_shop">Магазин</string>
