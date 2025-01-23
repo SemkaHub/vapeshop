@@ -69,19 +69,24 @@ class MainActivity : AppCompatActivity() {
         binding.bottomNavigationView.setupWithNavController(navController)
 
         // Обработка выбора пункта меню
-        binding.bottomNavigationView.setOnItemReselectedListener { item ->
+        binding.bottomNavigationView.setOnItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.categoryFragment -> {
-                    navController.popBackStack(R.id.categoryFragment, false)
+                    navController.navigate(R.id.categoryFragment)
+                    true
                 }
 
                 R.id.cartFragment -> {
-                    navController.popBackStack(R.id.cartFragment, false)
+                    navController.navigate(R.id.cartFragment)
+                    true
                 }
 
                 R.id.profileFragment -> {
-                    navController.popBackStack(R.id.profileFragment, false)
+                    navController.navigate(R.id.profileFragment)
+                    true
                 }
+
+                else -> false
             }
         }
 
