@@ -1,4 +1,4 @@
-package com.example.vapeshop.presentation.ui
+package com.example.vapeshop.presentation.ui.fragment
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -76,7 +76,7 @@ class CategoryFragment : Fragment() {
 
     private fun openProductsByCategory(categoryId: String) {
         findNavController().navigate(
-            CategoryFragmentDirections.actionCategoryFragmentToProductListFragment(categoryId)
+            CategoryFragmentDirections.Companion.actionCategoryFragmentToProductListFragment(categoryId)
         )
     }
 }

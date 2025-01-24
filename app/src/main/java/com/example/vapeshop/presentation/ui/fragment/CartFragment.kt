@@ -1,4 +1,4 @@
-package com.example.vapeshop.presentation.ui
+package com.example.vapeshop.presentation.ui.fragment
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.vapeshop.R
 import com.example.vapeshop.databinding.FragmentCartBinding
 import com.example.vapeshop.presentation.adapter.CartAdapter
 import com.example.vapeshop.presentation.viewmodel.CartViewModel
@@ -24,7 +25,7 @@ class CartFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(com.example.vapeshop.R.layout.fragment_cart, container, false)
+        return inflater.inflate(R.layout.fragment_cart, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

@@ -1,4 +1,4 @@
-package com.example.vapeshop.presentation.ui
+package com.example.vapeshop.presentation.ui.fragment
 
 import android.content.Intent
 import android.os.Bundle
@@ -20,6 +20,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import com.example.vapeshop.R
 import com.example.vapeshop.databinding.FragmentProfileBinding
 import com.example.vapeshop.domain.model.User
+import com.example.vapeshop.presentation.ui.activity.AuthActivity
 import com.example.vapeshop.presentation.utils.viewBinding
 import com.example.vapeshop.presentation.viewmodel.ProfileViewModel
 import com.example.vapeshop.presentation.viewmodel.ProfileViewModel.ProfileUiState
