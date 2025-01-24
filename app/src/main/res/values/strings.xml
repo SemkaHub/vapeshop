@@ -5,6 +5,7 @@
     <string name="login_button">Войти</string>
     <string name="register_button">Зарегистрироваться</string>
 
+
     <string name="error_invalid_email">Неправильный формат email адреса</string>
     <string name="error_password_short">Длина пароля должна быть не менее 6 символов</string>
     <string name="error_default">Произошла непредвиденная ошибка</string>
@@ -14,6 +15,13 @@
     <string name="error_save_user">Не удалось сохранить данные пользователя.</string>
 
     <string name="hint_search">Поиск</string>
+
+    <string name="hint_logout">Выход</string>
+    <string name="sign_out_title">Выход из аккаунта</string>
+    <string name="sign_out_message">Вы уверены, что хотите выйти из аккаунта?</string>
+
+    <string name="confirm">Подтвердить</string>
+    <string name="cancel">Отменить</string>
 
     <string name="bottom_menu_shop">Магазин</string>
     <string name="bottom_menu_cart">Корзина</string>

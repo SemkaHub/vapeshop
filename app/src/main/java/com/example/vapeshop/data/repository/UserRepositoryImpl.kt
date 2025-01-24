@@ -1,6 +1,7 @@
 package com.example.vapeshop.data.repository
 
 import android.util.Log
+import com.example.vapeshop.data.local.CartDao
 import com.example.vapeshop.data.local.UserDao
 import com.example.vapeshop.data.mapper.toEntity
 import com.example.vapeshop.data.mapper.toUser
@@ -13,7 +14,8 @@ import javax.inject.Inject
 
 class UserRepositoryImpl @Inject constructor(
     private val firebaseAuth: FirebaseAuth,
-    private val userDao: UserDao
+    private val userDao: UserDao,
+    private val cartDao: CartDao
 ) : UserRepository {
 
     override suspend fun getCurrentUser(): User? = withContext(Dispatchers.IO) {
@@ -48,6 +50,7 @@ class UserRepositoryImpl @Inject constructor(
         try {
             firebaseAuth.signOut()
             userDao.deleteAllUsers()
+            cartDao.clearCart()
         } catch (e: Exception) {
             throw Exception("Failed to sign out", e)
         }

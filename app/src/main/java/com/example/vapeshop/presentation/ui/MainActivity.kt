@@ -84,10 +84,14 @@ class MainActivity : AppCompatActivity() {
             // Обновляем выбранный пункт в BottomNavigationView
             when (destination.id) {
                 R.id.categoryFragment,
-                R.id.cartFragment,
-                R.id.profileFragment -> {
+                R.id.cartFragment -> {
                     binding.bottomNavigationView.menu.findItem(destination.id)?.isChecked = true
                     binding.toolbar.visibility = View.GONE
+                }
+
+                R.id.profileFragment -> {
+                    binding.bottomNavigationView.menu.findItem(destination.id)?.isChecked = true
+                    binding.toolbar.visibility = View.VISIBLE
                 }
 
                 R.id.productListFragment -> {

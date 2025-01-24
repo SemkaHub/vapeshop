@@ -57,8 +57,12 @@ class AppModule {
 
     @Provides
     @Singleton
-    fun provideUserRepository(firebaseAuth: FirebaseAuth, userDao: UserDao): UserRepository =
-        UserRepositoryImpl(firebaseAuth, userDao)
+    fun provideUserRepository(
+        firebaseAuth: FirebaseAuth,
+        userDao: UserDao,
+        cartDao: CartDao
+    ): UserRepository =
+        UserRepositoryImpl(firebaseAuth, userDao, cartDao)
 
     @Provides
     @Singleton
