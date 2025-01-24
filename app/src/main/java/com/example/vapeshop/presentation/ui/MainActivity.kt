@@ -1,6 +1,7 @@
 package com.example.vapeshop.presentation.ui
 
 import android.os.Bundle
+import android.view.View
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.coordinatorlayout.widget.CoordinatorLayout
@@ -8,8 +9,6 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
-import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.vapeshop.R
 import com.example.vapeshop.databinding.ActivityMainBinding
@@ -26,10 +25,11 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         enableEdgeToEdge()
         setContentView(binding.root)
+        setupWindowInsets()
         setSupportActionBar(binding.toolbar)
+        supportActionBar?.setDisplayShowTitleEnabled(false)
 
         setupNavigation()
-        setupWindowInsets()
     }
 
 
@@ -55,16 +55,6 @@ class MainActivity : AppCompatActivity() {
         val navHostFragment =
             supportFragmentManager.findFragmentById(R.id.fragmentContainer) as NavHostFragment
         navController = navHostFragment.navController
-
-        // Настройка AppBar
-        val appBarConfiguration = AppBarConfiguration(
-            setOf(
-                R.id.categoryFragment,
-                R.id.cartFragment,
-                R.id.profileFragment
-            )
-        )
-        setupActionBarWithNavController(navController, appBarConfiguration)
 
         binding.bottomNavigationView.setupWithNavController(navController)
 
@@ -97,6 +87,13 @@ class MainActivity : AppCompatActivity() {
                 R.id.cartFragment,
                 R.id.profileFragment -> {
                     binding.bottomNavigationView.menu.findItem(destination.id)?.isChecked = true
+                    binding.toolbar.visibility = View.GONE
+                }
+
+                R.id.productListFragment -> {
+                    binding.bottomNavigationView.menu.findItem(R.id.categoryFragment)?.isChecked =
+                        true
+                    binding.toolbar.visibility = View.VISIBLE
                 }
             }
         }

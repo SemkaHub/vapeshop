@@ -15,7 +15,7 @@ import com.example.vapeshop.databinding.FragmentProfileBinding
 import com.example.vapeshop.domain.model.User
 import com.example.vapeshop.presentation.viewmodel.ProfileViewModel
 import com.example.vapeshop.presentation.viewmodel.ProfileViewModel.ProfileUiState
-import com.example.vapeshop.utils.viewBinding
+import com.example.vapeshop.presentation.utils.viewBinding
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch

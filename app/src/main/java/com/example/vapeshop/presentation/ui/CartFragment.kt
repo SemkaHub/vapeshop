@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.vapeshop.databinding.FragmentCartBinding
 import com.example.vapeshop.presentation.adapter.CartAdapter
 import com.example.vapeshop.presentation.viewmodel.CartViewModel
-import com.example.vapeshop.utils.viewBinding
+import com.example.vapeshop.presentation.utils.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

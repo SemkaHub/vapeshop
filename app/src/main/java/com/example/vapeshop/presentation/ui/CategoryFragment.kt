@@ -13,9 +13,9 @@ import com.example.vapeshop.databinding.FragmentCategoryBinding
 import com.example.vapeshop.domain.factory.CategoryAdapterFactory
 import com.example.vapeshop.presentation.adapter.CategoryAdapter
 import com.example.vapeshop.presentation.viewmodel.CategoryViewModel
-import com.example.vapeshop.utils.GridConfigCalculator
-import com.example.vapeshop.utils.SpacingItemDecoration
-import com.example.vapeshop.utils.viewBinding
+import com.example.vapeshop.presentation.utils.GridConfigCalculator
+import com.example.vapeshop.presentation.utils.SpacingItemDecoration
+import com.example.vapeshop.presentation.utils.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 import kotlin.math.roundToInt
@@ -76,7 +76,7 @@ class CategoryFragment : Fragment() {
 
     private fun openProductsByCategory(categoryId: String) {
         findNavController().navigate(
-            CategoryFragmentDirections.actionCategoryToProductList(categoryId)
+            CategoryFragmentDirections.actionCategoryFragmentToProductListFragment(categoryId)
         )
     }
 }
