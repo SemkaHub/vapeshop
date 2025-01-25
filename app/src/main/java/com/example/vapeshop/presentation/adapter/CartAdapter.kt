@@ -2,10 +2,12 @@ package com.example.vapeshop.presentation.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.vapeshop.databinding.ItemCartBinding
 import com.example.vapeshop.domain.model.CartItem
+import com.example.vapeshop.presentation.adapter.CartAdapter.MyDiffCallback
 
 class CartAdapter(
     private val onIncreaseClick: (String, Int) -> Unit,
@@ -14,6 +16,29 @@ class CartAdapter(
 ) : RecyclerView.Adapter<CartAdapter.CartViewHolder>() {
 
     private var cartItems: List<CartItem> = emptyList()
+
+    class MyDiffCallback(
+        private val oldList: List<CartItem>,
+        private val newList: List<CartItem>
+    ) : DiffUtil.Callback() {
+        override fun getOldListSize(): Int = oldList.size
+
+        override fun getNewListSize(): Int = newList.size
+
+        override fun areItemsTheSame(
+            oldItemPosition: Int,
+            newItemPosition: Int
+        ): Boolean {
+            return oldList[oldItemPosition].product.id == newList[newItemPosition].product.id
+        }
+
+        override fun areContentsTheSame(
+            oldItemPosition: Int,
+            newItemPosition: Int
+        ): Boolean {
+            return oldList[oldItemPosition] == newList[newItemPosition]
+        }
+    }
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -31,8 +56,10 @@ class CartAdapter(
     override fun getItemCount(): Int = cartItems.size
 
     fun setList(cartItems: List<CartItem>) {
+        val diffCallback = MyDiffCallback(this.cartItems, cartItems)
+        val diffResult = DiffUtil.calculateDiff(diffCallback)
         this.cartItems = cartItems
-        notifyDataSetChanged()
+        diffResult.dispatchUpdatesTo(this)
     }
 
     inner class CartViewHolder(private val binding: ItemCartBinding) :

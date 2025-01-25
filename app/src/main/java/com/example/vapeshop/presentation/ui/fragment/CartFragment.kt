@@ -6,13 +6,17 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.vapeshop.R
 import com.example.vapeshop.databinding.FragmentCartBinding
 import com.example.vapeshop.presentation.adapter.CartAdapter
-import com.example.vapeshop.presentation.viewmodel.CartViewModel
 import com.example.vapeshop.presentation.utils.viewBinding
+import com.example.vapeshop.presentation.viewmodel.CartViewModel
+import com.example.vapeshop.presentation.viewmodel.CartViewModel.CartState
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class CartFragment : Fragment() {
@@ -32,11 +36,19 @@ class CartFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         initRecyclerView()
         initObservers()
+        setupClickListeners()
+        setupSwipeRefresh()
     }
 
     override fun onResume() {
         super.onResume()
         viewModel.loadCartItems()
+    }
+
+    private fun setupSwipeRefresh() {
+        binding.swipeRefreshLayout.setOnRefreshListener {
+            viewModel.loadCartItems()
+        }
     }
 
     private fun initRecyclerView() {
@@ -62,13 +74,69 @@ class CartFragment : Fragment() {
     }
 
     private fun initObservers() {
-        viewModel.cartItems.observe(viewLifecycleOwner) {
-            cartAdapter.setList(it)
-        }
-
-        viewModel.totalPrice.observe(viewLifecycleOwner) { it ->
-            binding.totalPriceTextView.text = it.toString()
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.state.collect { state ->
+                when (state) {
+                    is CartState.Loading -> showLoading()
+                    is CartState.Content -> showContent(state)
+                    is CartState.Empty -> showEmptyState()
+                    is CartState.Error -> showError(state)
+                }
+            }
         }
     }
 
+    private fun showLoading() {
+        hideAllViews()
+        if (!binding.swipeRefreshLayout.isRefreshing) {
+            binding.progressBar.visibility = View.VISIBLE
+        }
+    }
+
+    private fun showContent(state: CartState.Content) {
+        hideAllViews()
+        binding.apply {
+            swipeRefreshLayout.isRefreshing = false
+            cartRecyclerView.visibility = View.VISIBLE
+            bottomBar.root.visibility = View.VISIBLE
+
+            // Обновляем сумму
+            bottomBar.totalPriceTextView.text = state.totalPrice.toString()
+
+            // Обновляем список
+            (cartRecyclerView.adapter as? CartAdapter)?.setList(state.items)
+
+            bottomBar.checkoutButton.setOnClickListener {
+                // TODO: Navigate to checkout fragment
+            }
+        }
+    }
+
+    private fun showEmptyState() {
+        hideAllViews()
+        binding.swipeRefreshLayout.isRefreshing = false
+        binding.emptyState.visibility = View.VISIBLE
+    }
+
+    private fun showError(state: CartState.Error) {
+        hideAllViews()
+        binding.swipeRefreshLayout.isRefreshing = false
+        binding.errorState.visibility = View.VISIBLE
+        binding.errorTextView.text = getString(R.string.error_load)
+    }
+
+    private fun hideAllViews() {
+        binding.progressBar.visibility = View.GONE
+        binding.cartRecyclerView.visibility = View.GONE
+        binding.emptyState.visibility = View.GONE
+        binding.errorState.visibility = View.GONE
+        binding.bottomBar.root.visibility = View.GONE
+    }
+
+    private fun setupClickListeners() {
+        binding.retryButton.setOnClickListener { viewModel.loadCartItems() }
+        binding.goToShopButton.setOnClickListener {
+            findNavController().navigate(R.id.action_cartFragment_to_categoryFragment)
+        }
+    }
 }

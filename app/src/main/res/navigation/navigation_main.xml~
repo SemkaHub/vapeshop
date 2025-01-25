@@ -27,8 +27,7 @@
 
     <fragment
         android:id="@+id/cartFragment"
-        android:name="com.example.vapeshop.presentation.ui.fragment.CartFragment"
-        tools:layout="@layout/fragment_cart">
+        android:name="com.example.vapeshop.presentation.ui.fragment.CartFragment" >
         <action
             android:id="@+id/action_cartFragment_to_categoryFragment"
             app:destination="@id/categoryFragment" />
@@ -36,6 +35,5 @@
 
     <fragment
         android:id="@+id/profileFragment"
-        android:name="com.example.vapeshop.presentation.ui.fragment.ProfileFragment"
-        tools:layout="@layout/fragment_profile" />
+        android:name="com.example.vapeshop.presentation.ui.fragment.ProfileFragment" />
 </navigation>

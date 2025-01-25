@@ -6,7 +6,7 @@
         android:title="@string/bottom_menu_shop" />
     <item
         android:id="@+id/cartFragment"
-        android:icon="@drawable/menu_cart"
+        android:icon="@drawable/cart"
         android:title="@string/bottom_menu_cart" />
     <item
         android:id="@+id/profileFragment"

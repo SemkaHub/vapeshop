@@ -63,7 +63,7 @@ class CartRepositoryImpl @Inject constructor(
                 updateCartFromServer()
             }
 
-            // Обновляем локальную корзину
+            // Получаем локальную корзину
             getLocalCart()
         } catch (e: Exception) {
             // Если не удалось получить данные с сервера, возвращаем локальные данные

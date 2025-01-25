@@ -8,6 +8,8 @@ import com.example.vapeshop.domain.CartRepository
 import com.example.vapeshop.domain.model.CartItem
 import com.example.vapeshop.domain.model.Product
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -16,19 +18,29 @@ class CartViewModel @Inject constructor(
     private val cartRepository: CartRepository
 ) : ViewModel() {
 
-    private val _cartItems = MutableLiveData<List<CartItem>>()
-    val cartItems: LiveData<List<CartItem>> = _cartItems
-
-    private val _totalPrice = MutableLiveData<Double>()
-    val totalPrice: LiveData<Double> = _totalPrice
+    private val _state = MutableStateFlow<CartState>(CartState.Loading)
+    val state: StateFlow<CartState> = _state
 
     fun loadCartItems() {
         viewModelScope.launch {
-            val cartItems = cartRepository.getCartItems()
-            _cartItems.value = cartItems
-            calculateTotalPrice(cartItems)
+            _state.value = CartState.Loading
+            try {
+                val cartItems = cartRepository.getCartItems()
+                _state.value = if (cartItems.isEmpty()) {
+                    CartState.Empty
+                } else {
+                    val totalPrice = calculateTotalPrice(cartItems)
+                    CartState.Content(cartItems, totalPrice)
+                }
+            } catch (e: Exception) {
+                _state.value =
+                    CartState.Error(
+                        message = e.message.toString(),
+                        retryAction = { loadCartItems() })
+            }
         }
     }
+
 
     fun addItemToCart(product: Product, quantity: Int) {
         viewModelScope.launch {
@@ -51,6 +63,11 @@ class CartViewModel @Inject constructor(
         }
     }
 
+    fun calculateTotalPrice(cartItems: List<CartItem>): Double {
+        return cartItems.fold(0.0) { acc, cartItem ->
+            acc + (cartItem.product.price * cartItem.quantity) }
+    }
+
     fun removeItemFromCart(productId: String) {
         viewModelScope.launch {
             cartRepository.removeFromCart(productId)
@@ -58,11 +75,10 @@ class CartViewModel @Inject constructor(
         }
     }
 
-    fun calculateTotalPrice(cartItems: List<CartItem>) {
-        var totalPrice = 0.0
-        cartItems.forEach { it ->
-            totalPrice += it.product.price * it.quantity
-        }
-        _totalPrice.value = totalPrice
+    sealed class CartState {
+        object Loading : CartState()
+        data class Content(val items: List<CartItem>, val totalPrice: Double) : CartState()
+        object Empty : CartState()
+        data class Error(val message: String, val retryAction: () -> Unit) : CartState()
     }
 }
