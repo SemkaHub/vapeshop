@@ -9,6 +9,7 @@ import androidx.fragment.app.viewModels
 import com.example.vapeshop.R
 import com.example.vapeshop.databinding.FragmentCheckoutBinding
 import com.example.vapeshop.presentation.utils.viewBinding
+import com.example.vapeshop.presentation.viewmodel.CheckoutViewModel
 
 class CheckoutFragment : Fragment() {
 

@@ -59,8 +59,6 @@ class CartFragment : Fragment() {
             onDecreaseClick = { productId, quantity ->
                 if (quantity > 1) {
                     viewModel.decreaseItemQuantity(productId)
-                } else {
-                    viewModel.removeItemFromCart(productId)
                 }
             },
             onRemoveClick = { productId ->
@@ -126,11 +124,13 @@ class CartFragment : Fragment() {
     }
 
     private fun hideAllViews() {
-        binding.progressBar.visibility = View.GONE
-        binding.cartRecyclerView.visibility = View.GONE
-        binding.emptyState.visibility = View.GONE
-        binding.errorState.visibility = View.GONE
-        binding.bottomBar.root.visibility = View.GONE
+        with(binding) {
+            progressBar.visibility = View.GONE
+            cartRecyclerView.visibility = View.GONE
+            emptyState.visibility = View.GONE
+            errorState.visibility = View.GONE
+            bottomBar.root.visibility = View.GONE
+        }
     }
 
     private fun setupClickListeners() {

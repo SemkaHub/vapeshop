@@ -66,20 +66,25 @@ class CartAdapter(
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(cartItem: CartItem) {
-            binding.cartNameTextView.text = cartItem.product.name
-            binding.cartPriceTextView.text = cartItem.product.price.toString()
-            binding.quantityTextView.text = cartItem.quantity.toString()
-            Glide.with(itemView.context).load(cartItem.product.imageUrl)
-                .into(binding.cartImageView)
+            with(binding) {
+                cartNameTextView.text = cartItem.product.name
+                cartPriceTextView.text = cartItem.product.price.toString()
+                quantityTextView.text = cartItem.quantity.toString()
+                Glide.with(itemView.context).load(cartItem.product.imageUrl)
+                    .into(cartImageView)
 
-            binding.increaseButton.setOnClickListener {
-                onIncreaseClick(cartItem.product.id.toString(), cartItem.quantity)
-            }
+                increaseButton.setOnClickListener {
+                    onIncreaseClick(cartItem.product.id.toString(), cartItem.quantity)
+                }
 
-            binding.decreaseButton.setOnClickListener {
-                onDecreaseClick(cartItem.product.id.toString(), cartItem.quantity)
+                decreaseButton.setOnClickListener {
+                    onDecreaseClick(cartItem.product.id.toString(), cartItem.quantity)
+                }
+
+                removeButton.setOnClickListener {
+                    onRemoveClick(cartItem.product.id.toString())
+                }
             }
         }
     }
-
 }

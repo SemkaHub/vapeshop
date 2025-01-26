@@ -1,4 +1,4 @@
-package com.example.vapeshop.presentation.ui.fragment
+package com.example.vapeshop.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
 
