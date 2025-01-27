@@ -73,6 +73,21 @@ class CartFragment : Fragment() {
 
     private fun initObservers() {
         viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.localCart.collect { cartItems ->
+                // Обновляем список товаров в адаптере
+                cartAdapter.setList(cartItems)
+            }
+        }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.isSyncing.collect { isSyncing ->
+                // Блокируем кнопку оформления заказа во время синхронизации
+                binding.bottomBar.root.isEnabled = !isSyncing
+                binding.bottomBar.root.alpha = if (isSyncing) 0.5f else 1f
+            }
+        }
+
+        viewLifecycleOwner.lifecycleScope.launch {
             viewModel.state.collect { state ->
                 when (state) {
                     is CartState.Loading -> showLoading()

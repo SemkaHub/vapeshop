@@ -8,10 +8,13 @@ import com.example.vapeshop.domain.ProductRepository
 import com.example.vapeshop.domain.model.CartItem
 import com.example.vapeshop.domain.model.Product
 import com.google.firebase.auth.FirebaseAuth
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
@@ -22,7 +25,11 @@ class CartRepositoryImpl @Inject constructor(
     private val firebaseAuth: FirebaseAuth
 ) : CartRepository {
 
+    private val syncStateFlow = MutableStateFlow(false)
+
     private var syncJob: Job? = null
+
+    override fun observeSyncState(): Flow<Boolean> = syncStateFlow.asStateFlow()
 
     override suspend fun addToCart(product: Product, quantity: Int) =
         withContext(Dispatchers.IO) {
@@ -32,7 +39,7 @@ class CartRepositoryImpl @Inject constructor(
             updateLocalCart(product, quantity)
 
             // Создаем новую отложенную синхронизацию
-            delaySyncWithServer()
+            startSyncJob()
         }
 
     private suspend fun updateLocalCart(product: Product, quantity: Int) {
@@ -72,7 +79,7 @@ class CartRepositoryImpl @Inject constructor(
         }
     }
 
-    private suspend fun getLocalCart(): List<CartItem> = withContext(Dispatchers.IO) {
+    override suspend fun getLocalCart(): List<CartItem> = withContext(Dispatchers.IO) {
         localDataSource.getCartItems().map { cartItemEntity ->
             CartItem(
                 product = Product(
@@ -86,52 +93,58 @@ class CartRepositoryImpl @Inject constructor(
         }
     }
 
+    override suspend fun increaseQuantity(productId: String): List<CartItem> =
+        withContext(Dispatchers.IO) {
+            // Локальное обновление
+            val cartItem = localDataSource.getCartItemById(productId)
+            if (cartItem != null) {
+                localDataSource.updateQuantity(productId, cartItem.quantity + 1)
+            }
 
-    override suspend fun increaseQuantity(productId: String) = withContext(Dispatchers.IO) {
-        syncJob?.cancel()
+            // Запуск синхронизации в фоне
+            startSyncJob()
 
-        val cartItem = localDataSource.getCartItemById(productId)
-        if (cartItem != null) {
-            localDataSource.updateQuantity(productId, cartItem.quantity + 1)
-
-            // Синхронизируем изменения с сервером
-            delaySyncWithServer()
+            // Возвращаем локальные данные
+            getLocalCart()
         }
-    }
 
-    override suspend fun decreaseQuantity(productId: String) = withContext(Dispatchers.IO) {
-        syncJob?.cancel()
-
-        val cartItem = localDataSource.getCartItemById(productId)
-        if (cartItem != null) {
-            if (cartItem.quantity > 1) {
+    override suspend fun decreaseQuantity(productId: String): List<CartItem> =
+        withContext(Dispatchers.IO) {
+            val cartItem = localDataSource.getCartItemById(productId)
+            if (cartItem != null && cartItem.quantity > 1) {
                 // Уменьшаем количество товара
                 localDataSource.updateQuantity(productId, cartItem.quantity - 1)
-            } else {
-                // Если количество равно 1, удаляем товар из корзины
-                localDataSource.deleteCartItemById(productId)
             }
 
-            // Синхронизируем изменения с сервером
-            delaySyncWithServer()
+            // Запуск синхронизации в фоне
+            startSyncJob()
+
+            // Возвращаем локальные данные
+            getLocalCart()
+        }
+
+    override suspend fun removeFromCart(productId: String): List<CartItem> =
+        withContext(Dispatchers.IO) {
+            localDataSource.deleteCartItemById(productId)
+
+            // Запуск синхронизации в фоне
+            startSyncJob()
+
+            // Возвращаем локальные данные
+            getLocalCart()
+        }
+
+    fun startSyncJob() {
+        syncJob?.cancel()   // Отменяем предыдущую синхронизацию
+        syncJob = CoroutineScope(Dispatchers.IO).launch {
+            syncStateFlow.value = true  // Начало синхронизации
+            delay(1500)     // Ожидаем 1.5 секунды перед синхронизацией
+            syncCartWithServer()
+            syncStateFlow.value = false // Конец синхронизации
         }
     }
 
-    private suspend fun delaySyncWithServer() {
-        syncJob = coroutineScope {
-            launch {
-                delay(1500) // Ожидаем 1.5 секунды перед синхронизацией
-                syncCartWithServer()
-            }
-        }
-    }
-
-    override suspend fun removeFromCart(productId: String) = withContext(Dispatchers.IO) {
-        localDataSource.deleteCartItemById(productId)
-        syncCartWithServer()
-    }
-
-    private suspend fun syncCartWithServer(): Unit = withContext(Dispatchers.IO) {
+    private suspend fun syncCartWithServer() = withContext(Dispatchers.IO) {
         val userId = firebaseAuth.currentUser?.uid
         if (userId != null) {
             val localCart = localDataSource.getCartItems()
