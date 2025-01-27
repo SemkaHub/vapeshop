@@ -1,7 +1,5 @@
 package com.example.vapeshop.presentation.viewmodel
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.vapeshop.domain.CartRepository
@@ -63,9 +61,10 @@ class CartViewModel @Inject constructor(
         }
     }
 
-    fun calculateTotalPrice(cartItems: List<CartItem>): Double {
+    private fun calculateTotalPrice(cartItems: List<CartItem>): Double {
         return cartItems.fold(0.0) { acc, cartItem ->
-            acc + (cartItem.product.price * cartItem.quantity) }
+            acc + (cartItem.product.price * cartItem.quantity)
+        }
     }
 
     fun removeItemFromCart(productId: String) {
