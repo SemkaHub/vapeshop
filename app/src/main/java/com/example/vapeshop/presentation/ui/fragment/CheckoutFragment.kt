@@ -4,7 +4,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ArrayAdapter
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
@@ -13,21 +15,28 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.vapeshop.R
 import com.example.vapeshop.databinding.FragmentCheckoutBinding
+import com.example.vapeshop.domain.model.Address
+import com.example.vapeshop.domain.model.CartItem
 import com.example.vapeshop.domain.model.DeliveryMethod
 import com.example.vapeshop.domain.model.Order
 import com.example.vapeshop.domain.model.PaymentMethod
+import com.example.vapeshop.domain.model.PaymentStatus
 import com.example.vapeshop.presentation.adapter.CheckoutAdapter
 import com.example.vapeshop.presentation.utils.viewBinding
 import com.example.vapeshop.presentation.viewmodel.CartViewModel
 import com.example.vapeshop.presentation.viewmodel.CheckoutViewModel
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
+@AndroidEntryPoint
 class CheckoutFragment : Fragment() {
 
     private val viewModel: CheckoutViewModel by viewModels()
     private val cartViewModel: CartViewModel by activityViewModels()
     private val binding by viewBinding(FragmentCheckoutBinding::bind)
     private lateinit var checkoutAdapter: CheckoutAdapter
+    private var selectedDeliveryMethod: DeliveryMethod = DeliveryMethod.COURIER
+    private var selectedPaymentMethod: PaymentMethod = PaymentMethod.ONLINE
 
 
     override fun onCreateView(
@@ -43,6 +52,9 @@ class CheckoutFragment : Fragment() {
         initRecyclerView()
         initObservers()
         setupClickListeners()
+        setupDeliveryOptions()
+        setupPaymentOptions()
+        setupPickupPoints()
     }
 
     private fun initRecyclerView() {
@@ -59,56 +71,140 @@ class CheckoutFragment : Fragment() {
                 // Обновляем список товаров в адаптере
                 checkoutAdapter.setList(cartItems)
 
-                // Рассчитываем общую сумму
-                val totalPrice = cartItems.sumOf { it.product.price * it.quantity }
-                binding.totalAmount.text =
-                    String.format(getString(R.string.total_price), totalPrice)
+                updateTotalPrice(cartItems)
             }
         }
     }
 
+    private fun updateTotalPrice(cartItems: List<CartItem>) {
+        val total = cartItems.sumOf { it.product.price * it.quantity }
+        binding.totalAmount.text = String.format(getString(R.string.total_price), total)
+    }
 
-    private fun setupClickListeners() {
-        val deliveryMethodErrorMessage = getString(R.string.delivery_method_error)
-        val paymentMethodErrorMessage = getString(R.string.payment_method_error)
-        binding.placeOrderButton.setOnClickListener {
-            // Получаем выбранные параметры
-            val deliveryMethod = when (binding.deliveryMethodGroup.checkedRadioButtonId) {
-                R.id.courierRadio -> DeliveryMethod.COURIER
-                R.id.pickupRadio -> DeliveryMethod.PICKUP
-                else -> {
-                    Toast.makeText(context, deliveryMethodErrorMessage, Toast.LENGTH_SHORT).show()
-                    return@setOnClickListener
+    private fun setupDeliveryOptions() {
+        binding.deliveryMethodGroup.setOnCheckedChangeListener { _, checkedId ->
+            when (checkedId) {
+                R.id.courierRadio -> {
+                    selectedDeliveryMethod = DeliveryMethod.COURIER
+                    binding.pickupAddressContainer.visibility = View.GONE
+                }
+
+                R.id.pickupRadio -> {
+                    selectedDeliveryMethod = DeliveryMethod.PICKUP
+                    binding.pickupAddressContainer.visibility = View.VISIBLE
                 }
             }
+        }
+    }
 
-            val paymentMethod = when (binding.paymentMethodGroup.checkedRadioButtonId) {
+    private fun setupPaymentOptions() {
+        binding.paymentMethodGroup.setOnCheckedChangeListener { _, checkedId ->
+            selectedPaymentMethod = when (checkedId) {
                 R.id.cardPayment -> PaymentMethod.ONLINE
                 R.id.cashPayment -> PaymentMethod.ON_DELIVERY
-                else -> {
-                    Toast.makeText(context, paymentMethodErrorMessage, Toast.LENGTH_SHORT).show()
-                    return@setOnClickListener
+                else -> PaymentMethod.ON_DELIVERY
+            }
+        }
+    }
+
+    private fun setupPickupPoints() {
+        val pickupPoints = listOf("Пункт 1", "Пункт 2", "Пункт 3")
+        val adapter = ArrayAdapter(
+            requireContext(),
+            android.R.layout.simple_spinner_item,
+            pickupPoints
+        ).apply {
+            setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        }
+        binding.pickupAddressSpinner.adapter = adapter
+    }
+
+    private fun validateForm(): Boolean {
+        if (cartViewModel.localCart.value.isEmpty()) {
+            val emptyCartMessage = getString(R.string.empty_cart)
+            Toast.makeText(requireContext(), emptyCartMessage, Toast.LENGTH_SHORT).show()
+            return false
+        }
+
+        if (selectedDeliveryMethod == DeliveryMethod.PICKUP &&
+            binding.pickupAddressSpinner.selectedItem == null
+        ) {
+            val errorMessage = getString(R.string.pickup_point_error)
+            Toast.makeText(requireContext(), errorMessage, Toast.LENGTH_SHORT).show()
+            return false
+        }
+
+        return true
+    }
+
+    private fun createOrder(): Order {
+        var cartItems = cartViewModel.localCart.value
+        var totalPrice = viewModel.calculateTotalPrice(cartItems)
+
+        return Order(
+            items = cartItems,
+            totalPrice = totalPrice,
+            deliveryMethod = selectedDeliveryMethod,
+            paymentMethod = selectedPaymentMethod,
+            deliveryAddress = if (selectedDeliveryMethod == DeliveryMethod.COURIER) {
+                Address("TODO", "TODO", "TODO")
+            } else null,
+            pickupPointId = if (selectedDeliveryMethod == DeliveryMethod.PICKUP) {
+                binding.pickupAddressSpinner.selectedItem.toString()
+            } else null
+        )
+    }
+
+    private fun showPaymentDialog(order: Order) {
+        val title = getString(R.string.online_payment_dialog_title)
+        val message = getString(R.string.online_payment_dialog_message)
+        val positiveButton = getString(R.string.online_payment_dialog_confirm)
+        val negativeButton = getString(R.string.cancel)
+        AlertDialog.Builder(requireContext())
+            .setTitle(title)
+            .setMessage(String.format(message, order.totalPrice))
+            .setPositiveButton(positiveButton) { _, _ ->
+                lifecycleScope.launch {
+                    completeOrder(order.copy(paymentStatus = PaymentStatus.PAID))
                 }
             }
+            .setNegativeButton(negativeButton, null)
+            .show()
+    }
 
-            val currentCart = cartViewModel.localCart.value
-            val total = currentCart.sumOf { it.product.price * it.quantity }
+    private fun completeOrder(order: Order) {
+        lifecycleScope.launch {
+            try {
+                viewModel.placeOrder(order)
+                cartViewModel.clearCart()
+                val successMessage = getString(R.string.order_success)
+                Toast.makeText(context, successMessage, Toast.LENGTH_SHORT).show()
+                findNavController().navigateUp()
+            } catch (e: Exception) {
+                val errorMessage = getString(R.string.order_failed)
+                Toast.makeText(context, errorMessage + e.message, Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
 
-            val order = Order(
-                items = currentCart,
-                totalPrice = total,
-                deliveryMethod = deliveryMethod,
-                paymentMethod = paymentMethod,
-                deliveryAddress = null, // TODO: Реализовать выбор адреса
-                pickupPointId = null // TODO: Реализовать выбор пункта
-            )
+    private fun setupClickListeners() {
+        binding.placeOrderButton.setOnClickListener {
+            if (!validateForm()) return@setOnClickListener
 
-            // TODO: Сохраняем заказ в базе данных
-            Toast.makeText(context, "Заказ сохранен", Toast.LENGTH_SHORT).show()
+            val order = createOrder()
 
-            // Очищаем корзину после успешного сохранения
-            cartViewModel.clearCart()
-            findNavController().navigateUp()
+            lifecycleScope.launch {
+                try {
+                    if (order.paymentMethod == PaymentMethod.ONLINE) {
+                        showPaymentDialog(order)
+                    } else {
+                        completeOrder(order)
+                    }
+                } catch (e: Exception) {
+                    val errorMessage = getString(R.string.order_failed)
+                    Toast.makeText(context, errorMessage + e.message, Toast.LENGTH_SHORT).show()
+                }
+            }
         }
     }
 }

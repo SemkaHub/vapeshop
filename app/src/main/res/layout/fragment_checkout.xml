@@ -37,6 +37,7 @@
                 android:id="@+id/courierRadio"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:checked="true"
                 android:text="@string/checkout_courier" />
 
             <RadioButton
@@ -85,6 +86,7 @@
                 android:id="@+id/cardPayment"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:checked="true"
                 android:text="@string/checkout_payment_online" />
 
             <RadioButton
@@ -107,8 +109,8 @@
             android:id="@+id/productsRecycler"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            tools:listitem="@layout/item_order"
-            android:layout_marginTop="@dimen/margin_small" />
+            android:layout_marginTop="@dimen/margin_small"
+            tools:listitem="@layout/item_order" />
 
         <!-- Итоговая сумма -->
         <TextView

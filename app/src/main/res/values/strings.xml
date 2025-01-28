@@ -51,4 +51,10 @@
     <string name="total_price">Итого: %1$.2f₽</string>"
     <string name="delivery_method_error">Выберите способ доставки</string>
     <string name="payment_method_error">Выберите способ оплаты</string>
+    <string name="order_success">Заказ успешно оформлен</string>
+    <string name="order_failed">Произошла ошибка при оформлении заказа: </string>
+    <string name="pickup_point_error">Выберите пункт выдачи</string>
+    <string name="online_payment_dialog_title">Оплата онлайн</string>
+    <string name="online_payment_dialog_message">Оплата на сумму: %1$.2f₽</string>
+    <string name="online_payment_dialog_confirm">Оплатить</string>
 </resources>

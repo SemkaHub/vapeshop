@@ -8,14 +8,16 @@ import com.example.vapeshop.data.local.CartDao
 import com.example.vapeshop.data.local.UserDao
 import com.example.vapeshop.data.repository.CartRepositoryImpl
 import com.example.vapeshop.data.repository.CategoryRepositoryImpl
+import com.example.vapeshop.data.repository.OrderRepositoryImpl
 import com.example.vapeshop.data.repository.ProductRepositoryImpl
 import com.example.vapeshop.data.repository.UserRepositoryImpl
-import com.example.vapeshop.domain.repository.CartRepository
-import com.example.vapeshop.domain.repository.CategoryRepository
-import com.example.vapeshop.domain.repository.ProductRepository
-import com.example.vapeshop.domain.repository.UserRepository
 import com.example.vapeshop.domain.factory.CategoryAdapterFactory
 import com.example.vapeshop.domain.factory.ProductAdapterFactory
+import com.example.vapeshop.domain.repository.CartRepository
+import com.example.vapeshop.domain.repository.CategoryRepository
+import com.example.vapeshop.domain.repository.OrderRepository
+import com.example.vapeshop.domain.repository.ProductRepository
+import com.example.vapeshop.domain.repository.UserRepository
 import com.example.vapeshop.domain.util.ResourceProvider
 import com.example.vapeshop.presentation.adapter.factory.CategoryAdapterFactoryImpl
 import com.example.vapeshop.presentation.adapter.factory.ProductAdapterFactoryImpl
@@ -81,6 +83,11 @@ class AppModule {
         productRepository: ProductRepository,
         firebaseAuth: FirebaseAuth
     ): CartRepository = CartRepositoryImpl(localDataSource, productRepository, firebaseAuth)
+
+    @Provides
+    @Singleton
+    fun provideOrderRepository(firestore: FirebaseFirestore, auth: FirebaseAuth): OrderRepository =
+        OrderRepositoryImpl(firestore, auth)
 
     @Provides
     @Singleton
