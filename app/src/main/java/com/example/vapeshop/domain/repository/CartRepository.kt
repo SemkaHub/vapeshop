@@ -1,4 +1,4 @@
-package com.example.vapeshop.domain
+package com.example.vapeshop.domain.repository
 
 import com.example.vapeshop.domain.model.CartItem
 import com.example.vapeshop.domain.model.Product
@@ -12,4 +12,5 @@ interface CartRepository {
     suspend fun removeFromCart(productId: String): List<CartItem>
     suspend fun getLocalCart(): List<CartItem>
     fun observeSyncState(): Flow<Boolean>
+    suspend fun clearCart()
 }

@@ -10,10 +10,10 @@ import com.example.vapeshop.data.repository.CartRepositoryImpl
 import com.example.vapeshop.data.repository.CategoryRepositoryImpl
 import com.example.vapeshop.data.repository.ProductRepositoryImpl
 import com.example.vapeshop.data.repository.UserRepositoryImpl
-import com.example.vapeshop.domain.CartRepository
-import com.example.vapeshop.domain.CategoryRepository
-import com.example.vapeshop.domain.ProductRepository
-import com.example.vapeshop.domain.UserRepository
+import com.example.vapeshop.domain.repository.CartRepository
+import com.example.vapeshop.domain.repository.CategoryRepository
+import com.example.vapeshop.domain.repository.ProductRepository
+import com.example.vapeshop.domain.repository.UserRepository
 import com.example.vapeshop.domain.factory.CategoryAdapterFactory
 import com.example.vapeshop.domain.factory.ProductAdapterFactory
 import com.example.vapeshop.domain.util.ResourceProvider

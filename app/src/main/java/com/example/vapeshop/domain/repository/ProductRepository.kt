@@ -1,4 +1,4 @@
-package com.example.vapeshop.domain
+package com.example.vapeshop.domain.repository
 
 import com.example.vapeshop.data.local.CartItemEntity
 import com.example.vapeshop.domain.model.Product

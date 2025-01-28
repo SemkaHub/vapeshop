@@ -6,6 +6,7 @@ import com.example.vapeshop.domain.model.CartItem
 import com.example.vapeshop.domain.model.Product
 import com.example.vapeshop.domain.usecase.cart.AddToCartUseCase
 import com.example.vapeshop.domain.usecase.cart.CalculateCartTotalUseCase
+import com.example.vapeshop.domain.usecase.cart.ClearCartUseCase
 import com.example.vapeshop.domain.usecase.cart.GetCartItemsUseCase
 import com.example.vapeshop.domain.usecase.cart.ObserveCartSyncStateUseCase
 import com.example.vapeshop.domain.usecase.cart.RemoveCartItemUseCase
@@ -24,7 +25,8 @@ class CartViewModel @Inject constructor(
     private val removeCartItemUseCase: RemoveCartItemUseCase,
     private val addToCartUseCase: AddToCartUseCase,
     private val observeCartSyncStateUseCase: ObserveCartSyncStateUseCase,
-    private val calculateCartTotalUseCase: CalculateCartTotalUseCase
+    private val calculateCartTotalUseCase: CalculateCartTotalUseCase,
+    private val clearCartUseCase: ClearCartUseCase
 ) : ViewModel() {
 
     private val _state = MutableStateFlow<CartState>(CartState.Loading)
@@ -92,6 +94,13 @@ class CartViewModel @Inject constructor(
             val updatedCart = removeCartItemUseCase(productId)
             _localCart.value = updatedCart
             updateState(updatedCart)
+        }
+    }
+
+    fun clearCart() {
+        viewModelScope.launch {
+            clearCartUseCase()
+            loadCartItems()
         }
     }
 

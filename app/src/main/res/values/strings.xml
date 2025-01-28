@@ -36,4 +36,19 @@
     <string name="go_to_shop">Перейти к покупкам</string>
     <string name="retry">Попробовать ещё раз</string>
     <string name="total">Итого:</string>
+
+
+    <string name="checkout_title">Оформление заказа</string>
+    <string name="checkout_delivery_title">Способ получения</string>
+    <string name="checkout_courier">Курьер</string>
+    <string name="checkout_pickup">Самовывоз</string>
+    <string name="checkout_pickup_address">Адрес самовывоза</string>
+    <string name="checkout_payment_title">Способ оплаты</string>
+    <string name="checkout_payment_online">Онлайн</string>
+    <string name="checkout_payment_pickup">При получении</string>
+    <string name="checkout_products_title">Товары в заказе</string>
+    <string name="checkout_place_order">Оформить заказ</string>
+    <string name="total_price">Итого: %1$.2f₽</string>"
+    <string name="delivery_method_error">Выберите способ доставки</string>
+    <string name="payment_method_error">Выберите способ оплаты</string>
 </resources>

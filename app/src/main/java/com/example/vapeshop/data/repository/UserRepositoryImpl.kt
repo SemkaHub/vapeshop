@@ -5,7 +5,7 @@ import com.example.vapeshop.data.local.CartDao
 import com.example.vapeshop.data.local.UserDao
 import com.example.vapeshop.data.mapper.toEntity
 import com.example.vapeshop.data.mapper.toUser
-import com.example.vapeshop.domain.UserRepository
+import com.example.vapeshop.domain.repository.UserRepository
 import com.example.vapeshop.domain.model.User
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.Dispatchers

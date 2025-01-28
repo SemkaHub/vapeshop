@@ -1,7 +1,7 @@
 package com.example.vapeshop.data.repository
 
 import android.util.Log
-import com.example.vapeshop.domain.CategoryRepository
+import com.example.vapeshop.domain.repository.CategoryRepository
 import com.example.vapeshop.domain.model.Category
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.tasks.await

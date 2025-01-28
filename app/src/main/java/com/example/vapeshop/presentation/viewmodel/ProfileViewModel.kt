@@ -2,7 +2,7 @@ package com.example.vapeshop.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.vapeshop.domain.UserRepository
+import com.example.vapeshop.domain.repository.UserRepository
 import com.example.vapeshop.domain.model.User
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job

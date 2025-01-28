@@ -3,8 +3,8 @@ package com.example.vapeshop.data.repository
 import android.util.Log
 import com.example.vapeshop.data.local.CartDao
 import com.example.vapeshop.data.local.CartItemEntity
-import com.example.vapeshop.domain.CartRepository
-import com.example.vapeshop.domain.ProductRepository
+import com.example.vapeshop.domain.repository.CartRepository
+import com.example.vapeshop.domain.repository.ProductRepository
 import com.example.vapeshop.domain.model.CartItem
 import com.example.vapeshop.domain.model.Product
 import com.google.firebase.auth.FirebaseAuth
@@ -142,6 +142,11 @@ class CartRepositoryImpl @Inject constructor(
             syncCartWithServer()
             syncStateFlow.value = false // Конец синхронизации
         }
+    }
+
+    override suspend fun clearCart() {
+        localDataSource.clearCart()
+        syncCartWithServer()
     }
 
     private suspend fun syncCartWithServer() = withContext(Dispatchers.IO) {

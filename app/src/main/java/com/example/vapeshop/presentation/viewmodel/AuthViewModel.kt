@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.vapeshop.domain.UserRepository
+import com.example.vapeshop.domain.repository.UserRepository
 import com.example.vapeshop.domain.model.User
 import com.example.vapeshop.domain.usecase.validation.ValidateEmailUseCase
 import com.example.vapeshop.domain.usecase.validation.ValidatePasswordUseCase

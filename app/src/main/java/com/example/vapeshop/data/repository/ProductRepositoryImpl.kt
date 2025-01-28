@@ -2,7 +2,7 @@ package com.example.vapeshop.data.repository
 
 import android.util.Log
 import com.example.vapeshop.data.local.CartItemEntity
-import com.example.vapeshop.domain.ProductRepository
+import com.example.vapeshop.domain.repository.ProductRepository
 import com.example.vapeshop.domain.model.CartResponse
 import com.example.vapeshop.domain.model.Product
 import com.google.firebase.firestore.FirebaseFirestore

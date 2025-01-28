@@ -1,13 +1,10 @@
 package com.example.vapeshop.domain.usecase.cart
 
 import com.example.vapeshop.domain.repository.CartRepository
-import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
-class ObserveCartSyncStateUseCase @Inject constructor(
+class ClearCartUseCase @Inject constructor(
     private val cartRepository: CartRepository
 ) {
-    operator fun invoke(): Flow<Boolean> {
-        return cartRepository.observeSyncState()
-    }
+    suspend operator fun invoke() = cartRepository.clearCart()
 }
