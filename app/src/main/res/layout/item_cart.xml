@@ -1,88 +1,96 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="@dimen/padding_small">
+    android:layout_margin="@dimen/margin_small"
+    app:cardCornerRadius="@dimen/corner_radius"
+    app:cardElevation="@dimen/card_elevation">
 
-    <!-- Product Image -->
-    <ImageView
-        android:id="@+id/cartImageView"
-        android:layout_width="@dimen/cart_image_size"
-        android:layout_height="@dimen/cart_image_size"
-        android:scaleType="centerCrop"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:src="@drawable/ic_launcher_background" />
-
-    <!-- Product Title -->
-    <TextView
-        android:id="@+id/cartNameTextView"
-        android:layout_width="0dp"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/margin_small"
-        android:textColor="@color/black"
-        android:textSize="@dimen/text_large"
-        app:layout_constraintEnd_toStartOf="@+id/removeButton"
-        app:layout_constraintStart_toEndOf="@+id/cartImageView"
-        app:layout_constraintTop_toTopOf="@id/cartImageView"
-        tools:text="Product Name" />
+        android:padding="@dimen/padding_small">
 
-    <!-- Price -->
-    <TextView
-        android:id="@+id/cartPriceTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/margin_small"
-        android:textColor="@color/black"
-        app:layout_constraintStart_toEndOf="@+id/cartImageView"
-        app:layout_constraintTop_toBottomOf="@+id/cartNameTextView"
-        tools:text="10500.00" />
+        <!-- Product Image -->
+        <ImageView
+            android:id="@+id/cartImageView"
+            android:layout_width="@dimen/cart_image_size"
+            android:layout_height="@dimen/cart_image_size"
+            android:scaleType="centerCrop"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:src="@drawable/ic_launcher_background" />
 
-    <LinearLayout
-        android:id="@+id/quantityControls"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/margin_small"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
-        app:layout_constraintBottom_toBottomOf="@id/cartImageView"
-        app:layout_constraintStart_toEndOf="@id/cartImageView"
-        app:layout_constraintTop_toBottomOf="@id/cartPriceTextView">
-
-        <ImageButton
-            android:id="@+id/decreaseButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@color/transparent"
-            android:src="@drawable/remove_24px" />
-
+        <!-- Product Title -->
         <TextView
-            android:id="@+id/quantityTextView"
+            android:id="@+id/cartNameTextView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_small"
+            android:textColor="@color/black"
+            android:textSize="@dimen/text_large"
+            app:layout_constraintEnd_toStartOf="@+id/removeButton"
+            app:layout_constraintStart_toEndOf="@+id/cartImageView"
+            app:layout_constraintTop_toTopOf="@id/cartImageView"
+            tools:text="Product Name" />
+
+        <!-- Price -->
+        <TextView
+            android:id="@+id/cartPriceTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:minWidth="24dp"
-            android:textAlignment="center"
-            tools:text="2" />
+            android:layout_marginStart="@dimen/margin_small"
+            android:textColor="@color/black"
+            app:layout_constraintStart_toEndOf="@+id/cartImageView"
+            app:layout_constraintTop_toBottomOf="@+id/cartNameTextView"
+            tools:text="10500.00" />
 
+        <LinearLayout
+            android:id="@+id/quantityControls"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_small"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toBottomOf="@id/cartImageView"
+            app:layout_constraintStart_toEndOf="@id/cartImageView"
+            app:layout_constraintTop_toBottomOf="@id/cartPriceTextView">
+
+            <ImageButton
+                android:id="@+id/decreaseButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/transparent"
+                android:src="@drawable/remove_24px" />
+
+            <TextView
+                android:id="@+id/quantityTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:minWidth="24dp"
+                android:textAlignment="center"
+                tools:text="2" />
+
+            <ImageButton
+                android:id="@+id/increaseButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/transparent"
+                android:src="@drawable/add_24px" />
+
+        </LinearLayout>
+
+        <!-- Remove Button -->
         <ImageButton
-            android:id="@+id/increaseButton"
+            android:id="@+id/removeButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@color/transparent"
-            android:src="@drawable/add_24px" />
-
-    </LinearLayout>
-
-    <!-- Remove Button -->
-    <ImageButton
-        android:id="@+id/removeButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@color/transparent"
-        android:src="@drawable/delete_24px"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:tint="?attr/colorError" />
-</androidx.constraintlayout.widget.ConstraintLayout>
+            android:src="@drawable/delete_24px"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:tint="?attr/colorError" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.cardview.widget.CardView>

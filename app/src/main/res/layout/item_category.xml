@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools"
-    app:cardCornerRadius="8dp"
-    app:cardElevation="4dp">
+    app:cardCornerRadius="@dimen/corner_radius"
+    app:cardElevation="@dimen/card_elevation">
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -32,9 +32,9 @@
             android:layout_gravity="bottom|center_horizontal"
             android:background="@color/black"
             android:gravity="center"
-            tools:text="Название категории"
             android:textColor="@color/white"
-            android:textSize="16sp" />
+            android:textSize="16sp"
+            tools:text="Название категории" />
 
     </FrameLayout>
 </androidx.cardview.widget.CardView>
