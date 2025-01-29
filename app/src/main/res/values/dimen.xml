@@ -13,4 +13,5 @@
     <dimen name="cart_image_size">100dp</dimen>
     <dimen name="order_image_size">50dp</dimen>
     <dimen name="profile_image_size">150dp</dimen>
+    <dimen name="toolbar_elevation">4dp</dimen>
 </resources>
