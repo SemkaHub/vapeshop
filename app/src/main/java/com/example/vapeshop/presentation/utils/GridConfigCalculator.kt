@@ -2,7 +2,7 @@ package com.example.vapeshop.presentation.utils
 
 import kotlin.math.roundToInt
 
-private const val MIN_CARD_WIDTH_DP = 150
+private const val MIN_CARD_WIDTH_DP = 100
 private const val MAX_CARD_WIDTH_DP = 300
 private const val MAX_SPAN_COUNT = 6
 

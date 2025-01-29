@@ -9,12 +9,12 @@ plugins {
 
 android {
     namespace = "com.example.vapeshop"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.example.vapeshop"
-        minSdk = 33
-        targetSdk = 34
+        minSdk = 31
+        targetSdk = 35
         versionCode = 1
         versionName = "1.0"
 
@@ -66,7 +66,7 @@ dependencies {
     implementation(libs.swipe.refresh.layout)
     implementation(libs.nav.fragment.ktx)
     implementation(libs.nav.ui.ktx)
-   // implementation(libs.save.args)
+    implementation(libs.circle.imageview)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
