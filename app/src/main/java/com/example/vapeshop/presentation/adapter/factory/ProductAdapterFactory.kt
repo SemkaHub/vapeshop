@@ -1,6 +1,5 @@
 package com.example.vapeshop.presentation.adapter.factory
 
-import com.example.vapeshop.domain.factory.ProductAdapterFactory
 import com.example.vapeshop.domain.model.Product
 import com.example.vapeshop.domain.util.ResourceProvider
 import com.example.vapeshop.presentation.adapter.ProductAdapter
@@ -8,11 +7,10 @@ import dagger.hilt.android.scopes.FragmentScoped
 import javax.inject.Inject
 
 @FragmentScoped
-class ProductAdapterFactoryImpl @Inject constructor(
+class ProductAdapterFactory @Inject constructor(
     private val resourceProvider: ResourceProvider
-) : ProductAdapterFactory {
-
-    override fun create(
+) {
+    fun create(
         cardWidth: Int,
         onAddToCartClick: (Product, Int) -> Unit
     ): ProductAdapter {

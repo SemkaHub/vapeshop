@@ -1,15 +1,13 @@
 package com.example.vapeshop.data.repository
 
 import android.util.Log
-import com.example.vapeshop.data.local.CartDao
-import com.example.vapeshop.data.local.UserDao
+import com.example.vapeshop.data.local.dao.CartDao
+import com.example.vapeshop.data.local.dao.UserDao
 import com.example.vapeshop.data.mapper.toEntity
 import com.example.vapeshop.data.mapper.toUser
-import com.example.vapeshop.domain.repository.UserRepository
 import com.example.vapeshop.domain.model.User
+import com.example.vapeshop.domain.repository.UserRepository
 import com.google.firebase.auth.FirebaseAuth
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class UserRepositoryImpl @Inject constructor(
@@ -18,8 +16,8 @@ class UserRepositoryImpl @Inject constructor(
     private val cartDao: CartDao
 ) : UserRepository {
 
-    override suspend fun getCurrentUser(): User? = withContext(Dispatchers.IO) {
-        try {
+    override suspend fun getCurrentUser(): User? {
+        return try {
             firebaseAuth.currentUser?.let { firebaseUser ->
                 // Сначала пробуем получить из локальной БД
                 userDao.getUserById(firebaseUser.uid)?.toUser()
@@ -38,7 +36,7 @@ class UserRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun saveUser(user: User) = withContext(Dispatchers.IO) {
+    override suspend fun saveUser(user: User) {
         try {
             userDao.insertUser(user.toEntity())
         } catch (e: Exception) {
@@ -46,7 +44,7 @@ class UserRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun signOut() = withContext(Dispatchers.IO) {
+    override suspend fun signOut() {
         try {
             firebaseAuth.signOut()
             userDao.deleteAllUsers()

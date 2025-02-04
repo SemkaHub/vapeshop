@@ -1,6 +1,5 @@
-package com.example.vapeshop.presentation.ui.activity
+package com.example.vapeshop.presentation.auth
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
@@ -13,9 +12,9 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.core.widget.addTextChangedListener
 import com.example.vapeshop.R
 import com.example.vapeshop.databinding.ActivityAuthBinding
-import com.example.vapeshop.presentation.viewmodel.AuthViewModel
-import com.example.vapeshop.presentation.viewmodel.AuthViewModel.AuthErrorType
-import com.example.vapeshop.presentation.viewmodel.AuthViewModel.AuthUiState
+import com.example.vapeshop.presentation.auth.AuthViewModel.AuthErrorType
+import com.example.vapeshop.presentation.auth.AuthViewModel.AuthUiState
+import com.example.vapeshop.presentation.ui.activity.MainActivity
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -157,10 +156,7 @@ class AuthActivity : AppCompatActivity() {
     }
 
     private fun navigateToMain() {
-        Intent(this, MainActivity::class.java).apply {
-            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-            startActivity(this)
-        }
+        startActivity(MainActivity.newIntent(this))
         finish()
     }
 

@@ -1,4 +1,4 @@
-package com.example.vapeshop.presentation.utils
+package com.example.vapeshop.utils
 
 import android.graphics.Rect
 import android.view.View

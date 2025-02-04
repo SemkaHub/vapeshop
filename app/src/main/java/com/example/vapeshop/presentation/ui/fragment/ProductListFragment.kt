@@ -17,13 +17,13 @@ import androidx.lifecycle.Lifecycle
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.vapeshop.R
 import com.example.vapeshop.databinding.FragmentProductListBinding
-import com.example.vapeshop.domain.factory.ProductAdapterFactory
 import com.example.vapeshop.presentation.adapter.ProductAdapter
+import com.example.vapeshop.presentation.adapter.factory.ProductAdapterFactory
 import com.example.vapeshop.presentation.viewmodel.CartViewModel
 import com.example.vapeshop.presentation.viewmodel.ProductViewModel
-import com.example.vapeshop.presentation.utils.GridConfigCalculator
-import com.example.vapeshop.presentation.utils.SpacingItemDecoration
-import com.example.vapeshop.presentation.utils.viewBinding
+import com.example.vapeshop.utils.GridConfigCalculator
+import com.example.vapeshop.utils.SpacingItemDecoration
+import com.example.vapeshop.utils.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 import kotlin.math.roundToInt

@@ -1,27 +1,24 @@
-package com.example.vapeshop.presentation.viewmodel
+package com.example.vapeshop.presentation.auth
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.vapeshop.domain.repository.UserRepository
-import com.example.vapeshop.domain.model.User
+import com.example.vapeshop.domain.usecase.user.LoginUserUseCase
+import com.example.vapeshop.domain.usecase.user.RegisterUserUseCase
 import com.example.vapeshop.domain.usecase.validation.ValidateEmailUseCase
 import com.example.vapeshop.domain.usecase.validation.ValidatePasswordUseCase
 import com.google.firebase.FirebaseNetworkException
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 import com.google.firebase.auth.FirebaseAuthInvalidUserException
-import com.google.firebase.auth.FirebaseAuthWeakPasswordException
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
 @HiltViewModel
 class AuthViewModel @Inject constructor(
-    private val userRepository: UserRepository,
-    private val firebaseAuth: FirebaseAuth,
+    private val loginUserUseCase: LoginUserUseCase,
+    private val registerUserUseCase: RegisterUserUseCase,
     private val validateEmailUseCase: ValidateEmailUseCase,
     private val validatePasswordUseCase: ValidatePasswordUseCase
 ) : ViewModel() {
@@ -39,25 +36,16 @@ class AuthViewModel @Inject constructor(
         setLoadingState()
 
         viewModelScope.launch {
-            try {
-                val result = firebaseAuth.signInWithEmailAndPassword(email, password).await()
-                result.user?.let { firebaseUser ->
-                    saveUser(
-                        User(
-                            id = firebaseUser.uid,
-                            name = firebaseUser.displayName,
-                            email = firebaseUser.email,
-                            phone = firebaseUser.phoneNumber
-
-                        )
-                    )
+            val result = loginUserUseCase(email, password)
+            result.fold(
+                onSuccess = {
                     _authUiState.value = AuthUiState.Success
-                } ?: run {
-                    _authUiState.value = AuthUiState.Error(message = AuthErrorType.GENERIC_ERROR)
+                },
+                onFailure = { throwable ->
+                    val exception = throwable as? Exception ?: Exception(throwable)
+                    handleAuthError(exception)
                 }
-            } catch (e: Exception) {
-                handleAuthError(e)
-            }
+            )
         }
     }
 
@@ -66,32 +54,16 @@ class AuthViewModel @Inject constructor(
         setLoadingState()
 
         viewModelScope.launch {
-            try {
-                val result = firebaseAuth.createUserWithEmailAndPassword(email, password).await()
-                result.user?.let { firebaseUser ->
-                    saveUser(
-                        User(
-                            id = firebaseUser.uid,
-                            name = firebaseUser.displayName,
-                            email = firebaseUser.email,
-                            phone = firebaseUser.phoneNumber
-                        )
-                    )
+            val result = registerUserUseCase(email, password)
+            result.fold(
+                onSuccess = {
                     _authUiState.value = AuthUiState.Success
-                } ?: run {
-                    _authUiState.value = AuthUiState.Error(message = AuthErrorType.GENERIC_ERROR)
+                },
+                onFailure = { throwable ->
+                    val exception = throwable as? Exception ?: Exception(throwable)
+                    handleAuthError(exception)
                 }
-            } catch (e: Exception) {
-                handleAuthError(e)
-            }
-        }
-    }
-
-    private fun saveUser(user: User) = viewModelScope.launch {
-        try {
-            userRepository.saveUser(user)
-        } catch (e: Exception) {
-            _authUiState.value = AuthUiState.Error(message = AuthErrorType.SAVE_USER_ERROR)
+            )
         }
     }
 
@@ -129,9 +101,6 @@ class AuthViewModel @Inject constructor(
 
             is FirebaseAuthInvalidUserException ->
                 AuthErrorType.USER_NOT_FOUND
-
-            is FirebaseAuthWeakPasswordException ->
-                AuthErrorType.PASSWORD_SHORT
 
             is FirebaseNetworkException ->
                 AuthErrorType.NETWORK_ERROR

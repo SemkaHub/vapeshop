@@ -12,7 +12,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.VapeShop">
         <activity
-            android:name=".presentation.ui.activity.AuthActivity"
+            android:name=".presentation.auth.AuthActivity"
             android:exported="false" />
         <activity
             android:name=".presentation.ui.activity.MainActivity"

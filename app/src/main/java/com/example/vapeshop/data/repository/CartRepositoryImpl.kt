@@ -1,12 +1,12 @@
 package com.example.vapeshop.data.repository
 
 import android.util.Log
-import com.example.vapeshop.data.local.CartDao
-import com.example.vapeshop.data.local.CartItemEntity
-import com.example.vapeshop.domain.repository.CartRepository
-import com.example.vapeshop.domain.repository.ProductRepository
+import com.example.vapeshop.data.local.dao.CartDao
+import com.example.vapeshop.data.local.entity.CartItemEntity
 import com.example.vapeshop.domain.model.CartItem
 import com.example.vapeshop.domain.model.Product
+import com.example.vapeshop.domain.repository.CartRepository
+import com.example.vapeshop.domain.repository.ProductRepository
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

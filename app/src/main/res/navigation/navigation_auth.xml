@@ -7,7 +7,7 @@
 
     <activity
         android:id="@+id/authActivity2"
-        android:name="com.example.vapeshop.presentation.ui.activity.AuthActivity"
+        android:name="com.example.vapeshop.presentation.auth.AuthActivity"
         android:label="activity_auth"
         tools:layout="@layout/activity_auth" />
 </navigation>
