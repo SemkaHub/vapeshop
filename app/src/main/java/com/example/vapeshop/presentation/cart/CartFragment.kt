@@ -116,7 +116,7 @@ class CartFragment : Fragment() {
                 String.format(Locale.getDefault(), "%.2f", state.totalPrice)
 
             // Обновляем список
-            (cartRecyclerView.adapter as? CartAdapter)?.setList(state.items)
+            cartAdapter.setList(state.items)
 
             bottomBar.checkoutButton.setOnClickListener {
                 findNavController().navigate(R.id.action_cartFragment_to_checkoutFragment)
@@ -134,7 +134,7 @@ class CartFragment : Fragment() {
         hideAllViews()
         binding.swipeRefreshLayout.isRefreshing = false
         binding.errorState.visibility = View.VISIBLE
-        binding.errorTextView.text = getString(R.string.error_load)
+        binding.retryButton.setOnClickListener { state.retryAction() }
     }
 
     private fun hideAllViews() {
@@ -148,7 +148,6 @@ class CartFragment : Fragment() {
     }
 
     private fun setupClickListeners() {
-        binding.retryButton.setOnClickListener { viewModel.loadCartItems() }
         binding.goToShopButton.setOnClickListener {
             findNavController().navigate(R.id.action_cartFragment_to_categoryFragment)
         }

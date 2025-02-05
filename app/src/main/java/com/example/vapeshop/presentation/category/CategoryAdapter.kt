@@ -1,4 +1,4 @@
-package com.example.vapeshop.presentation.adapter
+package com.example.vapeshop.presentation.category
 
 import android.graphics.drawable.Drawable
 import android.util.Log
@@ -11,14 +11,14 @@ import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.bumptech.glide.request.RequestListener
+import com.bumptech.glide.request.target.Target
 import com.example.vapeshop.databinding.ItemCategoryBinding
 import com.example.vapeshop.domain.model.Category
-import com.example.vapeshop.domain.util.ResourceProvider
 import kotlin.math.roundToInt
 
 class CategoryAdapter(
     private val cardWidth: Int,
-    private val resourceProvider: ResourceProvider,
+    private val errorDrawable: Drawable?,
     private val onItemClick: ((String) -> Unit)? = null
 ) : RecyclerView.Adapter<CategoryAdapter.CategoryViewHolder>() {
 
@@ -62,12 +62,12 @@ class CategoryAdapter(
             Glide.with(itemView.context)
                 .load(category.imageUrl)
                 .transition(DrawableTransitionOptions.withCrossFade())
-                .error(resourceProvider.getErrorImage())
+                .error(errorDrawable)
                 .listener(object : RequestListener<Drawable> {
                     override fun onLoadFailed(
                         e: GlideException?,
                         model: Any?,
-                        target: com.bumptech.glide.request.target.Target<Drawable?>,
+                        target: Target<Drawable?>,
                         isFirstResource: Boolean
                     ): Boolean {
                         binding.progressBar.visibility = View.GONE
@@ -78,7 +78,7 @@ class CategoryAdapter(
                     override fun onResourceReady(
                         resource: Drawable,
                         model: Any,
-                        target: com.bumptech.glide.request.target.Target<Drawable?>?,
+                        target: Target<Drawable?>?,
                         dataSource: DataSource,
                         isFirstResource: Boolean
                     ): Boolean {

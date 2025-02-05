@@ -25,7 +25,8 @@
             android:padding="@dimen/padding_small"
             android:visibility="gone"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            tools:listitem="@layout/item_cart" />
+            tools:listitem="@layout/item_cart"
+            tools:visibility="visible" />
 
         <!-- Empty State -->
         <LinearLayout
@@ -67,8 +68,8 @@
             android:visibility="gone">
 
             <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="@dimen/error_image_size"
+                android:layout_height="@dimen/error_image_size"
                 android:src="@drawable/error_image" />
 
             <TextView
@@ -76,6 +77,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_medium"
+                android:text="@string/error_load"
                 android:textSize="@dimen/text_title" />
 
             <Button
@@ -84,7 +86,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_medium"
                 android:text="@string/retry" />
-
         </LinearLayout>
 
         <include
