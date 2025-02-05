@@ -171,18 +171,20 @@ class CheckoutFragment : Fragment() {
     }
 
     private fun completeOrder(order: Order) {
-        try {
-            showProcessing(true)
-            viewModel.placeOrder(order)
-            cartViewModel.clearCart()
-            val successMessage = getString(R.string.order_success)
-            Toast.makeText(context, successMessage, Toast.LENGTH_SHORT).show()
-            findNavController().navigateUp()
-        } catch (e: Exception) {
-            val errorMessage = getString(R.string.order_failed)
-            Toast.makeText(context, errorMessage + e.message, Toast.LENGTH_SHORT).show()
-        } finally {
-            showProcessing(false)
+        lifecycleScope.launch {
+            try {
+                showProcessing(true)
+                viewModel.placeOrder(order)
+                cartViewModel.clearCart()
+                val successMessage = getString(R.string.order_success)
+                Toast.makeText(context, successMessage, Toast.LENGTH_SHORT).show()
+                findNavController().navigateUp()
+            } catch (e: Exception) {
+                val errorMessage = getString(R.string.order_failed)
+                Toast.makeText(context, errorMessage + e.message, Toast.LENGTH_SHORT).show()
+            } finally {
+                showProcessing(false)
+            }
         }
     }
 
