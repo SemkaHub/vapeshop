@@ -1,4 +1,4 @@
-package com.example.vapeshop.presentation.adapter
+package com.example.vapeshop.presentation.checkout
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.vapeshop.databinding.ItemOrderBinding
 import com.example.vapeshop.domain.model.CartItem
+import java.util.Locale
 
 class CheckoutAdapter : RecyclerView.Adapter<CheckoutAdapter.CheckoutViewHolder>() {
 
@@ -40,8 +41,8 @@ class CheckoutAdapter : RecyclerView.Adapter<CheckoutAdapter.CheckoutViewHolder>
             with(binding) {
                 orderNameTextView.text = item.product.name
                 val totalPrice = item.product.price * item.quantity
-                orderPriceTextView.text = totalPrice.toString()
-                quantityTextView.text = item.quantity.toString()
+                orderPriceTextView.text = String.format(Locale.getDefault(), "%.2f", totalPrice)
+                quantityTextView.text = String.format(Locale.getDefault(), "%s", item.quantity)
                 Glide.with(itemView.context).load(item.product.imageUrl)
                     .into(orderImageView)
             }

@@ -43,7 +43,7 @@
         tools:layout="@layout/fragment_profile" />
     <fragment
         android:id="@+id/checkoutFragment"
-        android:name="com.example.vapeshop.presentation.ui.fragment.CheckoutFragment"
+        android:name="com.example.vapeshop.presentation.checkout.CheckoutFragment"
         android:label="CheckoutFragment"
         tools:layout="@layout/fragment_checkout" />
 </navigation>

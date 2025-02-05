@@ -1,136 +1,157 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:padding="@dimen/padding_medium">
-
-    <LinearLayout
+    android:layout_height="match_parent">
+    <!-- Content group-->
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_height="match_parent"
+        android:padding="@dimen/padding_medium">
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/margin_medium"
-            android:gravity="center_horizontal"
-            android:text="@string/checkout_title"
-            android:textSize="@dimen/text_title"
-            android:textStyle="bold" />
-
-        <!-- Способ получения -->
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/checkout_delivery_title"
-            android:textSize="@dimen/text_large"
-            android:textStyle="bold" />
-
-        <RadioGroup
-            android:id="@+id/deliveryMethodGroup"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
-
-            <RadioButton
-                android:id="@+id/courierRadio"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:checked="true"
-                android:text="@string/checkout_courier" />
-
-            <RadioButton
-                android:id="@+id/pickupRadio"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/checkout_pickup" />
-        </RadioGroup>
-
-        <!-- Адреса самовывоза -->
-        <LinearLayout
-            android:id="@+id/pickupAddressContainer"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:visibility="gone">
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/checkout_pickup_address"
-                android:textSize="@dimen/text_medium" />
+                android:layout_marginBottom="@dimen/margin_medium"
+                android:gravity="center_horizontal"
+                android:text="@string/checkout_title"
+                android:textSize="@dimen/text_title"
+                android:textStyle="bold" />
 
-            <Spinner
-                android:id="@+id/pickupAddressSpinner"
+            <!-- Способ получения -->
+            <TextView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:text="@string/checkout_delivery_title"
+                android:textSize="@dimen/text_large"
+                android:textStyle="bold" />
+
+            <RadioGroup
+                android:id="@+id/deliveryMethodGroup"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <RadioButton
+                    android:id="@+id/courierRadio"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:checked="true"
+                    android:text="@string/checkout_courier" />
+
+                <RadioButton
+                    android:id="@+id/pickupRadio"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/checkout_pickup" />
+            </RadioGroup>
+
+            <!-- Адреса самовывоза -->
+            <LinearLayout
+                android:id="@+id/pickupAddressContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/checkout_pickup_address"
+                    android:textSize="@dimen/text_medium" />
+
+                <Spinner
+                    android:id="@+id/pickupAddressSpinner"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+
+            <!-- Способ оплаты -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_medium"
+                android:text="@string/checkout_payment_title"
+                android:textSize="@dimen/text_large"
+                android:textStyle="bold" />
+
+            <RadioGroup
+                android:id="@+id/paymentMethodGroup"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <RadioButton
+                    android:id="@+id/cardPayment"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:checked="true"
+                    android:text="@string/checkout_payment_online" />
+
+                <RadioButton
+                    android:id="@+id/cashPayment"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/checkout_payment_pickup" />
+            </RadioGroup>
+
+            <!-- Список товаров -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_medium"
+                android:text="@string/checkout_products_title"
+                android:textSize="@dimen/text_large"
+                android:textStyle="bold" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/productsRecycler"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_small"
+                tools:listitem="@layout/item_order" />
+
+            <!-- Итоговая сумма -->
+            <TextView
+                android:id="@+id/totalAmount"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_medium"
+                android:gravity="end"
+                android:textSize="@dimen/text_large"
+                android:textStyle="bold"
+                tools:text="Итого: 0 " />
+
+            <!-- Кнопка оформления -->
+            <Button
+                android:id="@+id/placeOrderButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_large"
+                android:backgroundTint="@color/black"
+                android:text="@string/checkout_place_order"
+                android:textColor="@android:color/white" />
         </LinearLayout>
+    </ScrollView>
 
-        <!-- Способ оплаты -->
-        <TextView
-            android:layout_width="match_parent"
+    <!--ProgressBar overlay-->
+    <FrameLayout
+        android:id="@+id/progressBarOverlay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/overlay_black"
+        android:clickable="true"
+        android:focusable="true"
+        android:visibility="gone">
+
+        <ProgressBar
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_medium"
-            android:text="@string/checkout_payment_title"
-            android:textSize="@dimen/text_large"
-            android:textStyle="bold" />
-
-        <RadioGroup
-            android:id="@+id/paymentMethodGroup"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <RadioButton
-                android:id="@+id/cardPayment"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:checked="true"
-                android:text="@string/checkout_payment_online" />
-
-            <RadioButton
-                android:id="@+id/cashPayment"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/checkout_payment_pickup" />
-        </RadioGroup>
-
-        <!-- Список товаров -->
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_medium"
-            android:text="@string/checkout_products_title"
-            android:textSize="@dimen/text_large"
-            android:textStyle="bold" />
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/productsRecycler"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_small"
-            tools:listitem="@layout/item_order" />
-
-        <!-- Итоговая сумма -->
-        <TextView
-            android:id="@+id/totalAmount"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_medium"
-            android:gravity="end"
-            android:textSize="@dimen/text_large"
-            android:textStyle="bold"
-            tools:text="Итого: 0 " />
-
-        <!-- Кнопка оформления -->
-        <Button
-            android:id="@+id/placeOrderButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_large"
-            android:backgroundTint="@color/black"
-            android:text="@string/checkout_place_order"
-            android:textColor="@android:color/white" />
-    </LinearLayout>
-</ScrollView>
+            android:layout_gravity="center" />
+    </FrameLayout>
+</FrameLayout>

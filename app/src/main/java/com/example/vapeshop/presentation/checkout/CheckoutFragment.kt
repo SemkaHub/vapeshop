@@ -1,4 +1,4 @@
-package com.example.vapeshop.presentation.ui.fragment
+package com.example.vapeshop.presentation.checkout
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -21,10 +21,8 @@ import com.example.vapeshop.domain.model.DeliveryMethod
 import com.example.vapeshop.domain.model.Order
 import com.example.vapeshop.domain.model.PaymentMethod
 import com.example.vapeshop.domain.model.PaymentStatus
-import com.example.vapeshop.presentation.adapter.CheckoutAdapter
-import com.example.vapeshop.utils.viewBinding
 import com.example.vapeshop.presentation.cart.CartViewModel
-import com.example.vapeshop.presentation.viewmodel.CheckoutViewModel
+import com.example.vapeshop.utils.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -173,18 +171,23 @@ class CheckoutFragment : Fragment() {
     }
 
     private fun completeOrder(order: Order) {
-        lifecycleScope.launch {
-            try {
-                viewModel.placeOrder(order)
-                cartViewModel.clearCart()
-                val successMessage = getString(R.string.order_success)
-                Toast.makeText(context, successMessage, Toast.LENGTH_SHORT).show()
-                findNavController().navigateUp()
-            } catch (e: Exception) {
-                val errorMessage = getString(R.string.order_failed)
-                Toast.makeText(context, errorMessage + e.message, Toast.LENGTH_SHORT).show()
-            }
+        try {
+            showProcessing(true)
+            viewModel.placeOrder(order)
+            cartViewModel.clearCart()
+            val successMessage = getString(R.string.order_success)
+            Toast.makeText(context, successMessage, Toast.LENGTH_SHORT).show()
+            findNavController().navigateUp()
+        } catch (e: Exception) {
+            val errorMessage = getString(R.string.order_failed)
+            Toast.makeText(context, errorMessage + e.message, Toast.LENGTH_SHORT).show()
+        } finally {
+            showProcessing(false)
         }
+    }
+
+    private fun showProcessing(isProcessing: Boolean) {
+        binding.progressBarOverlay.visibility = if (isProcessing) View.VISIBLE else View.GONE
     }
 
     private fun setupClickListeners() {
