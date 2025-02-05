@@ -23,7 +23,7 @@ import com.example.vapeshop.domain.model.PaymentMethod
 import com.example.vapeshop.domain.model.PaymentStatus
 import com.example.vapeshop.presentation.adapter.CheckoutAdapter
 import com.example.vapeshop.utils.viewBinding
-import com.example.vapeshop.presentation.viewmodel.CartViewModel
+import com.example.vapeshop.presentation.cart.CartViewModel
 import com.example.vapeshop.presentation.viewmodel.CheckoutViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch

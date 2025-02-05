@@ -1,4 +1,4 @@
-package com.example.vapeshop.presentation.ui.fragment
+package com.example.vapeshop.presentation.cart
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -11,12 +11,10 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.vapeshop.R
 import com.example.vapeshop.databinding.FragmentCartBinding
-import com.example.vapeshop.presentation.adapter.CartAdapter
 import com.example.vapeshop.utils.viewBinding
-import com.example.vapeshop.presentation.viewmodel.CartViewModel
-import com.example.vapeshop.presentation.viewmodel.CartViewModel.CartState
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import java.util.Locale
 
 @AndroidEntryPoint
 class CartFragment : Fragment() {
@@ -114,7 +112,8 @@ class CartFragment : Fragment() {
             bottomBar.root.visibility = View.VISIBLE
 
             // Обновляем сумму
-            bottomBar.totalPriceTextView.text = state.totalPrice.toString()
+            bottomBar.totalPriceTextView.text =
+                String.format(Locale.getDefault(), "%.2f", state.totalPrice)
 
             // Обновляем список
             (cartRecyclerView.adapter as? CartAdapter)?.setList(state.items)

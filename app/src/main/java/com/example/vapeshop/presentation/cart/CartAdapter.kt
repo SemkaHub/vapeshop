@@ -1,4 +1,4 @@
-package com.example.vapeshop.presentation.adapter
+package com.example.vapeshop.presentation.cart
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -7,7 +7,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.vapeshop.databinding.ItemCartBinding
 import com.example.vapeshop.domain.model.CartItem
-import com.example.vapeshop.presentation.adapter.CartAdapter.MyDiffCallback
+import com.example.vapeshop.presentation.cart.CartAdapter.MyDiffCallback
+import java.util.Locale
 
 class CartAdapter(
     private val onIncreaseClick: (String, Int) -> Unit,
@@ -68,8 +69,9 @@ class CartAdapter(
         fun bind(cartItem: CartItem) {
             with(binding) {
                 cartNameTextView.text = cartItem.product.name
-                cartPriceTextView.text = cartItem.product.price.toString()
-                quantityTextView.text = cartItem.quantity.toString()
+                cartPriceTextView.text =
+                    String.format(Locale.getDefault(), "%.2f", cartItem.product.price)
+                quantityTextView.text = String.format(Locale.getDefault(), "%s", cartItem.quantity)
                 Glide.with(itemView.context).load(cartItem.product.imageUrl)
                     .into(cartImageView)
 

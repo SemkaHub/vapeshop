@@ -23,12 +23,12 @@ class AuthViewModel @Inject constructor(
     private val validatePasswordUseCase: ValidatePasswordUseCase
 ) : ViewModel() {
 
-    private val _authUiState = MutableLiveData<AuthUiState>(AuthUiState.Initial)
-    val authUiState: LiveData<AuthUiState> = _authUiState
+    private val _authUiState = MutableLiveData<AuthState>(AuthState.Initial)
+    val authUiState: LiveData<AuthState> = _authUiState
 
     override fun onCleared() {
         super.onCleared()
-        _authUiState.value = AuthUiState.Initial
+        _authUiState.value = AuthState.Initial
     }
 
     fun loginUser(email: String, password: String) {
@@ -39,7 +39,7 @@ class AuthViewModel @Inject constructor(
             val result = loginUserUseCase(email, password)
             result.fold(
                 onSuccess = {
-                    _authUiState.value = AuthUiState.Success
+                    _authUiState.value = AuthState.Success
                 },
                 onFailure = { throwable ->
                     val exception = throwable as? Exception ?: Exception(throwable)
@@ -57,7 +57,7 @@ class AuthViewModel @Inject constructor(
             val result = registerUserUseCase(email, password)
             result.fold(
                 onSuccess = {
-                    _authUiState.value = AuthUiState.Success
+                    _authUiState.value = AuthState.Success
                 },
                 onFailure = { throwable ->
                     val exception = throwable as? Exception ?: Exception(throwable)
@@ -73,7 +73,7 @@ class AuthViewModel @Inject constructor(
 
         return when {
             !emailResult.isValid && !passwordResult.isValid -> {
-                _authUiState.value = AuthUiState.Error(
+                _authUiState.value = AuthState.Error(
                     emailError = AuthErrorType.INVALID_EMAIL,
                     passwordError = AuthErrorType.PASSWORD_SHORT
                 )
@@ -81,12 +81,12 @@ class AuthViewModel @Inject constructor(
             }
 
             !emailResult.isValid -> {
-                _authUiState.value = AuthUiState.Error(emailError = AuthErrorType.INVALID_EMAIL)
+                _authUiState.value = AuthState.Error(emailError = AuthErrorType.INVALID_EMAIL)
                 false
             }
 
             !passwordResult.isValid -> {
-                _authUiState.value = AuthUiState.Error(passwordError = AuthErrorType.PASSWORD_SHORT)
+                _authUiState.value = AuthState.Error(passwordError = AuthErrorType.PASSWORD_SHORT)
                 false
             }
 
@@ -107,31 +107,10 @@ class AuthViewModel @Inject constructor(
 
             else -> AuthErrorType.GENERIC_ERROR
         }
-        _authUiState.value = AuthUiState.Error(message = errorType)
+        _authUiState.value = AuthState.Error(message = errorType)
     }
 
     private fun setLoadingState() {
-        _authUiState.value = AuthUiState.Loading
-    }
-
-    sealed class AuthUiState {
-        object Initial : AuthUiState()
-        object Loading : AuthUiState()
-        object Success : AuthUiState()
-        data class Error(
-            val message: AuthErrorType? = null,
-            val emailError: AuthErrorType? = null,
-            val passwordError: AuthErrorType? = null
-        ) : AuthUiState()
-    }
-
-    enum class AuthErrorType {
-        INVALID_EMAIL,
-        INVALID_CREDENTIALS,
-        PASSWORD_SHORT,
-        USER_NOT_FOUND,
-        NETWORK_ERROR,
-        SAVE_USER_ERROR,
-        GENERIC_ERROR
+        _authUiState.value = AuthState.Loading
     }
 }

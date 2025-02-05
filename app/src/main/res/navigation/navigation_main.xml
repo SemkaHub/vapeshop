@@ -27,7 +27,7 @@
 
     <fragment
         android:id="@+id/cartFragment"
-        android:name="com.example.vapeshop.presentation.ui.fragment.CartFragment"
+        android:name="com.example.vapeshop.presentation.cart.CartFragment"
         tools:layout="@layout/fragment_cart">
         <action
             android:id="@+id/action_cartFragment_to_categoryFragment"

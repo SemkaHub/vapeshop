@@ -1,4 +1,4 @@
-package com.example.vapeshop.presentation.viewmodel
+package com.example.vapeshop.presentation.cart
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -113,12 +113,5 @@ class CartViewModel @Inject constructor(
                 totalPrice = calculateCartTotalUseCase(cartItems)
             )
         }
-    }
-
-    sealed class CartState {
-        object Loading : CartState()
-        data class Content(val items: List<CartItem>, val totalPrice: Double) : CartState()
-        object Empty : CartState()
-        data class Error(val message: String, val retryAction: () -> Unit) : CartState()
     }
 }

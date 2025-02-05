@@ -12,8 +12,6 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.core.widget.addTextChangedListener
 import com.example.vapeshop.R
 import com.example.vapeshop.databinding.ActivityAuthBinding
-import com.example.vapeshop.presentation.auth.AuthViewModel.AuthErrorType
-import com.example.vapeshop.presentation.auth.AuthViewModel.AuthUiState
 import com.example.vapeshop.presentation.ui.activity.MainActivity
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -65,12 +63,12 @@ class AuthActivity : AppCompatActivity() {
         viewModel.authUiState.observe(this, ::handleAuthState)
     }
 
-    private fun handleAuthState(state: AuthUiState) {
+    private fun handleAuthState(state: AuthState) {
         when (state) {
-            is AuthUiState.Initial -> resetUiState()
-            is AuthUiState.Loading -> showLoading()
-            is AuthUiState.Success -> handleSuccess()
-            is AuthUiState.Error -> handleError(state)
+            is AuthState.Initial -> resetUiState()
+            is AuthState.Loading -> showLoading()
+            is AuthState.Success -> handleSuccess()
+            is AuthState.Error -> handleError(state)
         }
     }
 
@@ -100,7 +98,7 @@ class AuthActivity : AppCompatActivity() {
         navigateToMain()
     }
 
-    private fun handleError(handleError: AuthUiState.Error) {
+    private fun handleError(handleError: AuthState.Error) {
         binding.progressBar.visibility = View.GONE
         setButtonsEnabled(true)
 

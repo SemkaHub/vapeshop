@@ -22,7 +22,6 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/margin_small"
-        android:textColor="@color/black"
         android:textSize="@dimen/text_large"
         app:layout_constraintStart_toEndOf="@+id/orderImageView"
         app:layout_constraintTop_toTopOf="@id/orderImageView"
@@ -46,7 +45,7 @@
         android:textAlignment="center"
         app:layout_constraintStart_toEndOf="@+id/orderPriceTextView"
         app:layout_constraintTop_toTopOf="@+id/orderPriceTextView"
-        android:text="x" />
+        android:text="@string/quantity_multiplier" />
 
     <TextView
         android:id="@+id/quantityTextView"

@@ -19,7 +19,7 @@ import com.example.vapeshop.R
 import com.example.vapeshop.databinding.FragmentProductListBinding
 import com.example.vapeshop.presentation.adapter.ProductAdapter
 import com.example.vapeshop.presentation.adapter.factory.ProductAdapterFactory
-import com.example.vapeshop.presentation.viewmodel.CartViewModel
+import com.example.vapeshop.presentation.cart.CartViewModel
 import com.example.vapeshop.presentation.viewmodel.ProductViewModel
 import com.example.vapeshop.utils.GridConfigCalculator
 import com.example.vapeshop.utils.SpacingItemDecoration

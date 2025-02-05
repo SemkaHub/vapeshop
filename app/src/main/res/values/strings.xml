@@ -61,4 +61,5 @@
     <string name="online_payment_dialog_title">Оплата онлайн</string>
     <string name="online_payment_dialog_message">Оплата на сумму: %1$.2f₽</string>
     <string name="online_payment_dialog_confirm">Оплатить</string>
+    <string name="quantity_multiplier">x</string>
 </resources>
