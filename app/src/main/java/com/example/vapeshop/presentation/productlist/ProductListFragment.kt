@@ -1,4 +1,4 @@
-package com.example.vapeshop.presentation.ui.fragment
+package com.example.vapeshop.presentation.productlist
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -7,6 +7,7 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.content.res.AppCompatResources.getDrawable
 import androidx.appcompat.widget.SearchView
 import androidx.appcompat.widget.SearchView.OnQueryTextListener
 import androidx.core.view.MenuHost
@@ -17,15 +18,11 @@ import androidx.lifecycle.Lifecycle
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.vapeshop.R
 import com.example.vapeshop.databinding.FragmentProductListBinding
-import com.example.vapeshop.presentation.adapter.ProductAdapter
-import com.example.vapeshop.presentation.adapter.factory.ProductAdapterFactory
 import com.example.vapeshop.presentation.cart.CartViewModel
-import com.example.vapeshop.presentation.viewmodel.ProductViewModel
 import com.example.vapeshop.utils.GridConfigCalculator
 import com.example.vapeshop.utils.SpacingItemDecoration
 import com.example.vapeshop.utils.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
 import kotlin.math.roundToInt
 
 @AndroidEntryPoint
@@ -35,9 +32,6 @@ class ProductListFragment : Fragment() {
     private val viewModel: ProductViewModel by viewModels()
     private val cartViewModel: CartViewModel by viewModels()
     private lateinit var productAdapter: ProductAdapter
-
-    @Inject
-    lateinit var productAdapterFactory: ProductAdapterFactory
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -92,8 +86,10 @@ class ProductListFragment : Fragment() {
         val spanCount = calculator.calculateSpanCount(spacing)
         // Вычисление ширины карточки
         val cardWidth = calculator.calculateCardWidth(spanCount, spacing)
+        // Изображение в случае ошибки загрузки картинки
+        val errorDrawable = getDrawable(requireContext(), R.drawable.error_image)
 
-        productAdapter = productAdapterFactory.create(cardWidth) { product, quantity ->
+        productAdapter = ProductAdapter(cardWidth, errorDrawable) { product, quantity ->
             cartViewModel.addItemToCart(product, quantity)
         }
         binding.productsRecyclerView.apply {

@@ -7,7 +7,7 @@ import com.example.vapeshop.domain.model.Product
 import com.example.vapeshop.domain.usecase.cart.AddToCartUseCase
 import com.example.vapeshop.domain.usecase.cart.CalculateCartTotalUseCase
 import com.example.vapeshop.domain.usecase.cart.ClearCartUseCase
-import com.example.vapeshop.domain.usecase.cart.GetCartItemsUseCase
+import com.example.vapeshop.domain.usecase.cart.GetCartUseCase
 import com.example.vapeshop.domain.usecase.cart.ObserveCartSyncStateUseCase
 import com.example.vapeshop.domain.usecase.cart.RemoveCartItemUseCase
 import com.example.vapeshop.domain.usecase.cart.UpdateCartItemQuantityUseCase
@@ -20,7 +20,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class CartViewModel @Inject constructor(
-    private val getCartItemsUseCase: GetCartItemsUseCase,
+    private val getCartUseCase: GetCartUseCase,
     private val updateCartItemQuantityUseCase: UpdateCartItemQuantityUseCase,
     private val removeCartItemUseCase: RemoveCartItemUseCase,
     private val addToCartUseCase: AddToCartUseCase,
@@ -54,7 +54,7 @@ class CartViewModel @Inject constructor(
         viewModelScope.launch {
             _state.value = CartState.Loading
             try {
-                val cartItems = getCartItemsUseCase()
+                val cartItems = getCartUseCase()
                 _localCart.value = cartItems
                 updateState(cartItems)
             } catch (e: Exception) {

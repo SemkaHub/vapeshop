@@ -4,10 +4,10 @@ import com.example.vapeshop.domain.repository.CartRepository
 import com.example.vapeshop.domain.model.CartItem
 import javax.inject.Inject
 
-class GetCartItemsUseCase @Inject constructor(
+class GetCartUseCase @Inject constructor(
     private val cartRepository: CartRepository
 ) {
     suspend operator fun invoke(): List<CartItem> {
-        return cartRepository.getCartItems()
+        return cartRepository.getCart()
     }
 }

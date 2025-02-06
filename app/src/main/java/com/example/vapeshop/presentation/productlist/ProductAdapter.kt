@@ -1,4 +1,4 @@
-package com.example.vapeshop.presentation.adapter
+package com.example.vapeshop.presentation.productlist
 
 import android.graphics.drawable.Drawable
 import android.view.LayoutInflater
@@ -13,14 +13,14 @@ import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 import com.example.vapeshop.databinding.ItemProductBinding
 import com.example.vapeshop.domain.model.Product
-import com.example.vapeshop.domain.util.ResourceProvider
+import java.util.Locale
 import kotlin.math.roundToInt
 
 const val DEFAULT_ITEM_QUANTITY = 1
 
 class ProductAdapter(
     private val cardWidth: Int,
-    private val resourceProvider: ResourceProvider,
+    private val errorDrawable: Drawable?,
     private val onAddToCartClick: (Product, Int) -> Unit
 ) : RecyclerView.Adapter<ProductAdapter.ProductViewHolder>() {
 
@@ -56,7 +56,7 @@ class ProductAdapter(
         fun bind(product: Product) {
             binding.progressBar.visibility = View.VISIBLE
             binding.nameTextView.text = product.name
-            binding.priceTextView.text = product.price.toString()
+            binding.priceTextView.text = String.format(Locale.getDefault(), "%.2f", product.price)
             binding.notAvailableTextView.visibility =
                 if (product.isAvailable) View.GONE else View.VISIBLE
             binding.addToCartButton.visibility =
@@ -65,7 +65,7 @@ class ProductAdapter(
             Glide.with(itemView.context)
                 .load(product.imageUrl)
                 .transition(DrawableTransitionOptions.withCrossFade())
-                .error(resourceProvider.getErrorImage())
+                .error(errorDrawable)
                 .listener(object : RequestListener<Drawable?> {
                     override fun onLoadFailed(
                         e: GlideException?,

@@ -18,7 +18,7 @@
 
     <fragment
         android:id="@+id/productListFragment"
-        android:name="com.example.vapeshop.presentation.ui.fragment.ProductListFragment"
+        android:name="com.example.vapeshop.presentation.productlist.ProductListFragment"
         tools:layout="@layout/fragment_product_list">
         <argument
             android:name="categoryId"

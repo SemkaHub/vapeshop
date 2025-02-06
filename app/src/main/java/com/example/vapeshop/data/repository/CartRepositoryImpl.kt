@@ -4,10 +4,11 @@ import android.util.Log
 import com.example.vapeshop.data.local.dao.CartDao
 import com.example.vapeshop.data.local.entity.CartItemEntity
 import com.example.vapeshop.domain.model.CartItem
+import com.example.vapeshop.domain.model.CartResponse
 import com.example.vapeshop.domain.model.Product
 import com.example.vapeshop.domain.repository.CartRepository
-import com.example.vapeshop.domain.repository.ProductRepository
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -16,13 +17,13 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
 class CartRepositoryImpl @Inject constructor(
     private val localDataSource: CartDao,
-    private val remoteDataSource: ProductRepository,
-    private val firebaseAuth: FirebaseAuth
+    private val firebaseAuth: FirebaseAuth,
+    private val firestore: FirebaseFirestore
 ) : CartRepository {
 
     private val syncStateFlow = MutableStateFlow(false)
@@ -31,16 +32,13 @@ class CartRepositoryImpl @Inject constructor(
 
     override fun observeSyncState(): Flow<Boolean> = syncStateFlow.asStateFlow()
 
-    override suspend fun addToCart(product: Product, quantity: Int) =
-        withContext(Dispatchers.IO) {
-            syncJob?.cancel()
-
-            // Локальное обновление корзины
-            updateLocalCart(product, quantity)
-
-            // Создаем новую отложенную синхронизацию
-            startSyncJob()
-        }
+    override suspend fun addToCart(product: Product, quantity: Int) {
+        syncJob?.cancel()
+        // Локальное обновление корзины
+        updateLocalCart(product, quantity)
+        // Создаем новую отложенную синхронизацию
+        startSyncJob()
+    }
 
     private suspend fun updateLocalCart(product: Product, quantity: Int) {
         // Текущее состояние товара
@@ -63,8 +61,8 @@ class CartRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun getCartItems(): List<CartItem> = withContext(Dispatchers.IO) {
-        try {
+    override suspend fun getCart(): List<CartItem> {
+        return try {
             // Получаем корзину с сервера
             if (firebaseAuth.currentUser != null) {
                 updateCartFromServer()
@@ -79,8 +77,8 @@ class CartRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun getLocalCart(): List<CartItem> = withContext(Dispatchers.IO) {
-        localDataSource.getCartItems().map { cartItemEntity ->
+    override suspend fun getLocalCart(): List<CartItem> {
+        return localDataSource.getCartItems().map { cartItemEntity ->
             CartItem(
                 product = Product(
                     id = cartItemEntity.productId,
@@ -93,48 +91,45 @@ class CartRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun increaseQuantity(productId: String): List<CartItem> =
-        withContext(Dispatchers.IO) {
-            // Локальное обновление
-            val cartItem = localDataSource.getCartItemById(productId)
-            if (cartItem != null) {
-                localDataSource.updateQuantity(productId, cartItem.quantity + 1)
-            }
-
-            // Запуск синхронизации в фоне
-            startSyncJob()
-
-            // Возвращаем локальные данные
-            getLocalCart()
+    override suspend fun increaseQuantity(productId: String): List<CartItem> {
+        // Локальное обновление
+        val cartItem = localDataSource.getCartItemById(productId)
+        if (cartItem != null) {
+            localDataSource.updateQuantity(productId, cartItem.quantity + 1)
         }
 
-    override suspend fun decreaseQuantity(productId: String): List<CartItem> =
-        withContext(Dispatchers.IO) {
-            val cartItem = localDataSource.getCartItemById(productId)
-            if (cartItem != null && cartItem.quantity > 1) {
-                // Уменьшаем количество товара
-                localDataSource.updateQuantity(productId, cartItem.quantity - 1)
-            }
+        // Запуск синхронизации в фоне
+        startSyncJob()
 
-            // Запуск синхронизации в фоне
-            startSyncJob()
+        // Возвращаем локальные данные
+        return getLocalCart()
+    }
 
-            // Возвращаем локальные данные
-            getLocalCart()
+    override suspend fun decreaseQuantity(productId: String): List<CartItem> {
+        val cartItem = localDataSource.getCartItemById(productId)
+        if (cartItem != null && cartItem.quantity > 1) {
+            // Уменьшаем количество товара
+            localDataSource.updateQuantity(productId, cartItem.quantity - 1)
         }
 
-    override suspend fun removeFromCart(productId: String): List<CartItem> =
-        withContext(Dispatchers.IO) {
-            localDataSource.deleteCartItemById(productId)
+        // Запуск синхронизации в фоне
+        startSyncJob()
 
-            // Запуск синхронизации в фоне
-            startSyncJob()
+        // Возвращаем локальные данные
+        return getLocalCart()
+    }
 
-            // Возвращаем локальные данные
-            getLocalCart()
-        }
+    override suspend fun removeFromCart(productId: String): List<CartItem> {
+        localDataSource.deleteCartItemById(productId)
 
-    fun startSyncJob() {
+        // Запуск синхронизации в фоне
+        startSyncJob()
+
+        // Возвращаем локальные данные
+        return getLocalCart()
+    }
+
+    private fun startSyncJob() {
         syncJob?.cancel()   // Отменяем предыдущую синхронизацию
         syncJob = CoroutineScope(Dispatchers.IO).launch {
             syncStateFlow.value = true  // Начало синхронизации
@@ -149,12 +144,16 @@ class CartRepositoryImpl @Inject constructor(
         syncCartWithServer()
     }
 
-    private suspend fun syncCartWithServer() = withContext(Dispatchers.IO) {
+    private suspend fun syncCartWithServer() {
         val userId = firebaseAuth.currentUser?.uid
         if (userId != null) {
             val localCart = localDataSource.getCartItems()
             try {
-                remoteDataSource.updateCart(userId, localCart)
+                val cartData = CartResponse(items = localCart)
+                firestore.collection("carts")
+                    .document(userId)
+                    .set(cartData)
+                    .await()
             } catch (e: Exception) {
                 Log.e("CartSync", "Failed to sync cart with server: ${e.message}")
             }
@@ -163,19 +162,16 @@ class CartRepositoryImpl @Inject constructor(
         }
     }
 
-    private suspend fun updateCartFromServer(): Unit = withContext(Dispatchers.IO) {
-        val userId = firebaseAuth.currentUser?.uid
-        if (userId != null) {
-            try {
-                val remoteCart = remoteDataSource.getCart(userId)
-                remoteCart.forEach { remoteItem ->
-                    localDataSource.insertCartItem(remoteItem)
-                }
-            } catch (e: Exception) {
-                Log.e("CartUpdate", "Failed to update cart with server: ${e.message}")
-            }
-        } else {
-            Log.e("CartUpdate", "User is not authenticated")
+    private suspend fun updateCartFromServer() {
+        try {
+            val userId = firebaseAuth.currentUser?.uid ?: throw Exception("User not authenticated")
+            val snapshot = firestore.collection("carts").document(userId).get().await()
+            snapshot.toObject(CartResponse::class.java)?.items?.forEach { remoteItem ->
+                localDataSource.insertCartItem(remoteItem)
+            } ?: throw Exception("Cart is empty")
+        } catch (e: Exception) {
+            Log.e("CartUpdate", "Failed to update cart with server: ${e.message}")
         }
     }
 }
+
