@@ -15,6 +15,9 @@ import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.vapeshop.R
 import com.example.vapeshop.databinding.FragmentProductListBinding
@@ -23,15 +26,16 @@ import com.example.vapeshop.utils.GridConfigCalculator
 import com.example.vapeshop.utils.SpacingItemDecoration
 import com.example.vapeshop.utils.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
 
 @AndroidEntryPoint
 class ProductListFragment : Fragment() {
 
     private val binding by viewBinding(FragmentProductListBinding::bind)
-    private val viewModel: ProductViewModel by viewModels()
+    private val viewModel: ProductListViewModel by viewModels()
     private val cartViewModel: CartViewModel by viewModels()
-    private lateinit var productAdapter: ProductAdapter
+    private lateinit var productListAdapter: ProductListAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -45,7 +49,15 @@ class ProductListFragment : Fragment() {
 
         setupSearchMenu()
         initRecyclerView()
+        setupSwipeRefresh(categoryId)
         initObservers(categoryId)
+        setupGoToShopButton()
+    }
+
+    private fun setupGoToShopButton() {
+        binding.goToShopButton.setOnClickListener {
+            findNavController().navigateUp()
+        }
     }
 
     private fun setupSearchMenu() {
@@ -87,23 +99,79 @@ class ProductListFragment : Fragment() {
         // Вычисление ширины карточки
         val cardWidth = calculator.calculateCardWidth(spanCount, spacing)
         // Изображение в случае ошибки загрузки картинки
-        val errorDrawable = getDrawable(requireContext(), R.drawable.error_image)
+        val errorDrawable = getDrawable(requireContext(), R.drawable.load_drawable_error)
 
-        productAdapter = ProductAdapter(cardWidth, errorDrawable) { product, quantity ->
+        productListAdapter = ProductListAdapter(cardWidth, errorDrawable) { product, quantity ->
             cartViewModel.addItemToCart(product, quantity)
         }
         binding.productsRecyclerView.apply {
-            adapter = productAdapter
+            adapter = productListAdapter
             layoutManager = GridLayoutManager(context, spanCount)
             addItemDecoration(SpacingItemDecoration(spacing, spanCount))
+        }
+    }
+
+    private fun setupSwipeRefresh(categoryId: String) {
+        binding.swipeRefreshLayout.setOnRefreshListener {
+            viewModel.getProducts(categoryId)
         }
     }
 
     private fun initObservers(categoryId: String) {
         viewModel.getProducts(categoryId)
 
-        viewModel.products.observe(viewLifecycleOwner) { products ->
-            productAdapter.setList(products)
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.products.collect { state ->
+                    when (state) {
+                        is ProductListState.Loading -> showLoading()
+                        is ProductListState.Content -> showContent(state)
+                        is ProductListState.Empty -> showEmptyState()
+                        is ProductListState.Error -> showError(state)
+                    }
+                }
+            }
+        }
+    }
+
+    private fun showLoading() {
+        hideAllViews()
+        if (!binding.swipeRefreshLayout.isRefreshing) {
+            binding.loadingProgressBar.visibility = View.VISIBLE
+        }
+    }
+
+    private fun showContent(state: ProductListState.Content) {
+        hideAllViews()
+        binding.apply {
+            swipeRefreshLayout.isRefreshing = false
+            productsRecyclerView.visibility = View.VISIBLE
+
+            // Обновляем список
+            productListAdapter.setList(state.products)
+        }
+    }
+
+
+    private fun showEmptyState() {
+        hideAllViews()
+        binding.swipeRefreshLayout.isRefreshing = false
+        binding.emptyState.visibility = View.VISIBLE
+    }
+
+    private fun showError(error: ProductListState.Error) {
+        hideAllViews()
+        binding.swipeRefreshLayout.isRefreshing = false
+        binding.errorState.visibility = View.VISIBLE
+        binding.retryButton.setOnClickListener { error.retryAction() }
+    }
+
+    private fun hideAllViews() {
+        with(binding) {
+            productsRecyclerView.visibility = View.GONE
+            loadingProgressBar.visibility = View.GONE
+            emptyState.visibility = View.GONE
+            errorState.visibility = View.GONE
         }
     }
 }

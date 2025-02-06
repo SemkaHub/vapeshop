@@ -106,7 +106,7 @@ class CategoryFragment : Fragment() {
         // Вычисление ширины карточки
         val cardWidth = calculator.calculateCardWidth(spanCount, spacing)
         // Изображение в случае ошибки загрузки картинки
-        val errorDrawable = getDrawable(requireContext(), R.drawable.error_image)
+        val errorDrawable = getDrawable(requireContext(), R.drawable.load_drawable_error)
 
         binding.categoriesRecyclerView.apply {
             categoryAdapter = CategoryAdapter(cardWidth, errorDrawable) { categoryId ->
@@ -120,7 +120,7 @@ class CategoryFragment : Fragment() {
 
     private fun openProductsByCategory(categoryId: String) {
         findNavController().navigate(
-            CategoryFragmentDirections.Companion.actionCategoryFragmentToProductListFragment(
+            CategoryFragmentDirections.actionCategoryFragmentToProductListFragment(
                 categoryId
             )
         )

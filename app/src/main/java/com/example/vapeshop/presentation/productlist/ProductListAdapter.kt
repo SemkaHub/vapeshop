@@ -18,11 +18,11 @@ import kotlin.math.roundToInt
 
 const val DEFAULT_ITEM_QUANTITY = 1
 
-class ProductAdapter(
+class ProductListAdapter(
     private val cardWidth: Int,
     private val errorDrawable: Drawable?,
     private val onAddToCartClick: (Product, Int) -> Unit
-) : RecyclerView.Adapter<ProductAdapter.ProductViewHolder>() {
+) : RecyclerView.Adapter<ProductListAdapter.ProductViewHolder>() {
 
     private var products: List<Product> = emptyList()
 

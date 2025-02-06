@@ -37,10 +37,12 @@
     <string name="checkout">Оформить заказ</string>
 
     <string name="empty_cart">Корзина пуста</string>
-    <string name="go_to_shop">Перейти к покупкам</string>
-    <string name="retry">Попробовать ещё раз</string>
+    <string name="button_go_to_shop">Перейти к покупкам</string>
+    <string name="button_retry">Попробовать ещё раз</string>
     <string name="total">Итого:</string>
 
+    <string name="empty_product_list">В этой категории ещё нет товаров</string>
+    <string name="button_go_back">Вернуться назад</string>
 
     <string name="checkout_title">Оформление заказа</string>
     <string name="checkout_delivery_title">Способ получения</string>
