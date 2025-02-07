@@ -6,7 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
+import com.bumptech.glide.RequestManager
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
@@ -18,6 +18,7 @@ import kotlin.math.roundToInt
 
 class CategoryAdapter(
     private val cardWidth: Int,
+    private val glide: RequestManager,
     private val errorDrawable: Drawable?,
     private val onItemClick: ((String) -> Unit)? = null
 ) : RecyclerView.Adapter<CategoryAdapter.CategoryViewHolder>() {
@@ -59,8 +60,7 @@ class CategoryAdapter(
         fun bind(category: Category) {
             binding.nameTextView.text = category.name
             binding.progressBar.visibility = View.VISIBLE
-            Glide.with(itemView.context)
-                .load(category.imageUrl)
+            glide.load(category.imageUrl)
                 .transition(DrawableTransitionOptions.withCrossFade())
                 .error(errorDrawable)
                 .listener(object : RequestListener<Drawable> {

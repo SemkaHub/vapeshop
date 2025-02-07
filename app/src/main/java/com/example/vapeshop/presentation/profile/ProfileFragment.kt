@@ -1,4 +1,4 @@
-package com.example.vapeshop.presentation.ui.fragment
+package com.example.vapeshop.presentation.profile
 
 import android.content.Intent
 import android.os.Bundle
@@ -17,24 +17,26 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import com.bumptech.glide.RequestManager
 import com.example.vapeshop.R
 import com.example.vapeshop.databinding.FragmentProfileBinding
 import com.example.vapeshop.domain.model.User
 import com.example.vapeshop.presentation.auth.AuthActivity
-import com.example.vapeshop.utils.viewBinding
-import com.example.vapeshop.presentation.viewmodel.ProfileViewModel
-import com.example.vapeshop.presentation.viewmodel.ProfileViewModel.ProfileUiState
+import com.example.vapeshop.presentation.common.utils.viewBinding
+import com.example.vapeshop.presentation.profile.ProfileViewModel.ProfileUiState
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class ProfileFragment : Fragment() {
 
+    @Inject
+    lateinit var glide: RequestManager
+
     private val binding by viewBinding(FragmentProfileBinding::bind)
     private val viewModel: ProfileViewModel by viewModels()
-
-    private val viewLifecycleScope by lazy { lifecycleScope }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -89,7 +91,7 @@ class ProfileFragment : Fragment() {
     }
 
     private fun initObservers() {
-        viewLifecycleScope.launch {
+        lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.profileUiState.collect { state ->
                     renderState(state)

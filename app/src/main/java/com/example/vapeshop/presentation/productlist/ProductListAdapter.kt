@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.RequestManager
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
@@ -20,6 +21,7 @@ const val DEFAULT_ITEM_QUANTITY = 1
 
 class ProductListAdapter(
     private val cardWidth: Int,
+    private val glide: RequestManager,
     private val errorDrawable: Drawable?,
     private val onAddToCartClick: (Product, Int) -> Unit
 ) : RecyclerView.Adapter<ProductListAdapter.ProductViewHolder>() {
@@ -62,8 +64,7 @@ class ProductListAdapter(
             binding.addToCartButton.visibility =
                 if (product.isAvailable) View.VISIBLE else View.GONE
 
-            Glide.with(itemView.context)
-                .load(product.imageUrl)
+            glide.load(product.imageUrl)
                 .transition(DrawableTransitionOptions.withCrossFade())
                 .error(errorDrawable)
                 .listener(object : RequestListener<Drawable?> {

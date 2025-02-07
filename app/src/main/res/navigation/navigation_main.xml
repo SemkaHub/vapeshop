@@ -39,7 +39,7 @@
 
     <fragment
         android:id="@+id/profileFragment"
-        android:name="com.example.vapeshop.presentation.ui.fragment.ProfileFragment"
+        android:name="com.example.vapeshop.presentation.profile.ProfileFragment"
         tools:layout="@layout/fragment_profile" />
     <fragment
         android:id="@+id/checkoutFragment"

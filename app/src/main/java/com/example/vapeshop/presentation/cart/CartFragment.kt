@@ -4,20 +4,26 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.content.res.AppCompatResources.getDrawable
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.bumptech.glide.RequestManager
 import com.example.vapeshop.R
 import com.example.vapeshop.databinding.FragmentCartBinding
-import com.example.vapeshop.utils.viewBinding
+import com.example.vapeshop.presentation.common.utils.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import java.util.Locale
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class CartFragment : Fragment() {
+
+    @Inject
+    lateinit var glide: RequestManager
 
     private val binding by viewBinding(FragmentCartBinding::bind)
     private val viewModel: CartViewModel by activityViewModels()
@@ -50,7 +56,8 @@ class CartFragment : Fragment() {
     }
 
     private fun initRecyclerView() {
-        cartAdapter = CartAdapter(
+        val errorDrawable = getDrawable(requireContext(), R.drawable.load_drawable_error)
+        cartAdapter = CartAdapter(glide, errorDrawable,
             onIncreaseClick = { productId, quantity ->
                 viewModel.increaseItemQuantity(productId)
             },

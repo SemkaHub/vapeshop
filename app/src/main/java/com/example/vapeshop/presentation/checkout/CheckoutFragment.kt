@@ -7,12 +7,14 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.content.res.AppCompatResources.getDrawable
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.bumptech.glide.RequestManager
 import com.example.vapeshop.R
 import com.example.vapeshop.databinding.FragmentCheckoutBinding
 import com.example.vapeshop.domain.model.Address
@@ -22,12 +24,16 @@ import com.example.vapeshop.domain.model.Order
 import com.example.vapeshop.domain.model.PaymentMethod
 import com.example.vapeshop.domain.model.PaymentStatus
 import com.example.vapeshop.presentation.cart.CartViewModel
-import com.example.vapeshop.utils.viewBinding
+import com.example.vapeshop.presentation.common.utils.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class CheckoutFragment : Fragment() {
+
+    @Inject
+    lateinit var glide: RequestManager
 
     private val viewModel: CheckoutViewModel by viewModels()
     private val cartViewModel: CartViewModel by activityViewModels()
@@ -56,7 +62,8 @@ class CheckoutFragment : Fragment() {
     }
 
     private fun initRecyclerView() {
-        checkoutAdapter = CheckoutAdapter()
+        val errorDrawable = getDrawable(requireContext(), R.drawable.load_drawable_error)
+        checkoutAdapter = CheckoutAdapter(glide, errorDrawable)
         binding.productsRecycler.apply {
             adapter = checkoutAdapter
             layoutManager = LinearLayoutManager(requireContext())

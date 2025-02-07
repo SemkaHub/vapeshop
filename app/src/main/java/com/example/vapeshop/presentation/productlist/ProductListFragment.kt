@@ -19,18 +19,23 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
+import com.bumptech.glide.RequestManager
 import com.example.vapeshop.R
 import com.example.vapeshop.databinding.FragmentProductListBinding
 import com.example.vapeshop.presentation.cart.CartViewModel
-import com.example.vapeshop.utils.GridConfigCalculator
-import com.example.vapeshop.utils.SpacingItemDecoration
-import com.example.vapeshop.utils.viewBinding
+import com.example.vapeshop.presentation.common.utils.GridConfigCalculator
+import com.example.vapeshop.presentation.common.utils.SpacingItemDecoration
+import com.example.vapeshop.presentation.common.utils.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 import kotlin.math.roundToInt
 
 @AndroidEntryPoint
 class ProductListFragment : Fragment() {
+
+    @Inject
+    lateinit var glide: RequestManager
 
     private val binding by viewBinding(FragmentProductListBinding::bind)
     private val viewModel: ProductListViewModel by viewModels()
@@ -101,9 +106,10 @@ class ProductListFragment : Fragment() {
         // Изображение в случае ошибки загрузки картинки
         val errorDrawable = getDrawable(requireContext(), R.drawable.load_drawable_error)
 
-        productListAdapter = ProductListAdapter(cardWidth, errorDrawable) { product, quantity ->
-            cartViewModel.addItemToCart(product, quantity)
-        }
+        productListAdapter =
+            ProductListAdapter(cardWidth, glide, errorDrawable) { product, quantity ->
+                cartViewModel.addItemToCart(product, quantity)
+            }
         binding.productsRecyclerView.apply {
             adapter = productListAdapter
             layoutManager = GridLayoutManager(context, spanCount)

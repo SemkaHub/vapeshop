@@ -1,16 +1,20 @@
 package com.example.vapeshop.presentation.cart
 
+import android.graphics.drawable.Drawable
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
+import com.bumptech.glide.RequestManager
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.example.vapeshop.databinding.ItemCartBinding
 import com.example.vapeshop.domain.model.CartItem
 import com.example.vapeshop.presentation.cart.CartAdapter.MyDiffCallback
 import java.util.Locale
 
 class CartAdapter(
+    private val glide: RequestManager,
+    private val errorDrawable: Drawable?,
     private val onIncreaseClick: (String, Int) -> Unit,
     private val onDecreaseClick: (String, Int) -> Unit,
     private val onRemoveClick: (String) -> Unit
@@ -72,7 +76,9 @@ class CartAdapter(
                 cartPriceTextView.text =
                     String.format(Locale.getDefault(), "%.2f", cartItem.product.price)
                 quantityTextView.text = String.format(Locale.getDefault(), "%s", cartItem.quantity)
-                Glide.with(itemView.context).load(cartItem.product.imageUrl)
+                glide.load(cartItem.product.imageUrl)
+                    .transition(DrawableTransitionOptions.withCrossFade())
+                    .error(errorDrawable)
                     .into(cartImageView)
 
                 increaseButton.setOnClickListener {

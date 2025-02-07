@@ -1,4 +1,4 @@
-package com.example.vapeshop.presentation.ui.activity
+package com.example.vapeshop.presentation.main
 
 import android.content.Context
 import android.content.Intent

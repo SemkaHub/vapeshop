@@ -12,7 +12,7 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.core.widget.addTextChangedListener
 import com.example.vapeshop.R
 import com.example.vapeshop.databinding.ActivityAuthBinding
-import com.example.vapeshop.presentation.ui.activity.MainActivity
+import com.example.vapeshop.presentation.main.MainActivity
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

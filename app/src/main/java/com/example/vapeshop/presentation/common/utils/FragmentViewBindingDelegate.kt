@@ -1,4 +1,4 @@
-package com.example.vapeshop.utils
+package com.example.vapeshop.presentation.common.utils
 
 import android.view.View
 import androidx.fragment.app.Fragment

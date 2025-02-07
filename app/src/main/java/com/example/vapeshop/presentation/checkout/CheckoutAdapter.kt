@@ -1,14 +1,19 @@
 package com.example.vapeshop.presentation.checkout
 
+import android.graphics.drawable.Drawable
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
+import com.bumptech.glide.RequestManager
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.example.vapeshop.databinding.ItemOrderBinding
 import com.example.vapeshop.domain.model.CartItem
 import java.util.Locale
 
-class CheckoutAdapter : RecyclerView.Adapter<CheckoutAdapter.CheckoutViewHolder>() {
+class CheckoutAdapter(
+    private val glide: RequestManager,
+    private val errorDrawable: Drawable?,
+) : RecyclerView.Adapter<CheckoutAdapter.CheckoutViewHolder>() {
 
     private var products: List<CartItem> = emptyList()
 
@@ -43,7 +48,9 @@ class CheckoutAdapter : RecyclerView.Adapter<CheckoutAdapter.CheckoutViewHolder>
                 val totalPrice = item.product.price * item.quantity
                 orderPriceTextView.text = String.format(Locale.getDefault(), "%.2f", totalPrice)
                 quantityTextView.text = String.format(Locale.getDefault(), "%s", item.quantity)
-                Glide.with(itemView.context).load(item.product.imageUrl)
+                glide.load(item.product.imageUrl)
+                    .transition(DrawableTransitionOptions.withCrossFade())
+                    .error(errorDrawable)
                     .into(orderImageView)
             }
         }

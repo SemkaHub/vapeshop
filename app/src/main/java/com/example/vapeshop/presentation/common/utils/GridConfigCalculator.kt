@@ -1,4 +1,4 @@
-package com.example.vapeshop.utils
+package com.example.vapeshop.presentation.common.utils
 
 import kotlin.math.roundToInt
 

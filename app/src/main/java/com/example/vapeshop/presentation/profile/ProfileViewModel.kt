@@ -1,4 +1,4 @@
-package com.example.vapeshop.presentation.viewmodel
+package com.example.vapeshop.presentation.profile
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
