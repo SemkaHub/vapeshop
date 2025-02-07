@@ -4,6 +4,7 @@ import android.graphics.drawable.Drawable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestManager
@@ -48,8 +49,10 @@ class ProductListAdapter(
     override fun getItemCount(): Int = products.size
 
     fun setList(products: List<Product>) {
+        val diffCallback = ProductListDiffCallback(this.products, products)
+        val diffResult = DiffUtil.calculateDiff(diffCallback)
         this.products = products
-        notifyDataSetChanged()
+        diffResult.dispatchUpdatesTo(this)
     }
 
     inner class ProductViewHolder(private val binding: ItemProductBinding) :

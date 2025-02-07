@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.RequestManager
 import com.bumptech.glide.load.DataSource
@@ -50,8 +51,10 @@ class CategoryAdapter(
     override fun getItemCount(): Int = categories.size
 
     fun setList(categories: List<Category>) {
+        val diffCallback = CategoryDiffCallback(this.categories, categories)
+        val diffResult = DiffUtil.calculateDiff(diffCallback)
         this.categories = categories
-        notifyDataSetChanged()
+        diffResult.dispatchUpdatesTo(this)
     }
 
     inner class CategoryViewHolder(private val binding: ItemCategoryBinding) :
