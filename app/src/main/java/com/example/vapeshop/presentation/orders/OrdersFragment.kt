@@ -109,6 +109,6 @@ class OrdersFragment : Fragment() {
         hideAllViews()
         binding.swipeRefreshLayout.isRefreshing = false
         binding.ordersRecyclerView.visibility = View.VISIBLE
-        ordersAdapter.setList(orders)
+        ordersAdapter.setList(orders.sortedByDescending { it.timestamp })
     }
 }
