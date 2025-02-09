@@ -95,10 +95,10 @@ class CartFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.state.collect { state ->
                 when (state) {
-                    is CartState.Loading -> showLoading()
-                    is CartState.Content -> showContent(state)
-                    is CartState.Empty -> showEmptyState()
-                    is CartState.Error -> showError(state)
+                    is CartUiState.Loading -> showLoading()
+                    is CartUiState.Content -> showContent(state)
+                    is CartUiState.Empty -> showEmptyState()
+                    is CartUiState.Error -> showError(state)
                 }
             }
         }
@@ -111,7 +111,7 @@ class CartFragment : Fragment() {
         }
     }
 
-    private fun showContent(state: CartState.Content) {
+    private fun showContent(state: CartUiState.Content) {
         hideAllViews()
         binding.apply {
             swipeRefreshLayout.isRefreshing = false
@@ -137,7 +137,7 @@ class CartFragment : Fragment() {
         binding.emptyState.visibility = View.VISIBLE
     }
 
-    private fun showError(state: CartState.Error) {
+    private fun showError(state: CartUiState.Error) {
         hideAllViews()
         binding.swipeRefreshLayout.isRefreshing = false
         binding.errorState.visibility = View.VISIBLE

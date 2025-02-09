@@ -5,4 +5,10 @@
     <color name="red">#FF0000</color>
     <color name="transparent">#00000000</color>
     <color name="overlay_black">#88000000</color>
+    <color name="background_red">#FFFFCDD2</color>
+    <color name="dark_red">#FFD32F2F</color>
+    <color name="background_green">#FFB9F6CA</color>
+    <color name="dark_green">#FF2E7D32</color>
+    <color name="background_grey">#FFE0E0E0</color>
+    <color name="dark_grey">#FF424242</color>
 </resources>

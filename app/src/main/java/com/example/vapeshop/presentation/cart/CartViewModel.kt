@@ -29,8 +29,8 @@ class CartViewModel @Inject constructor(
     private val clearCartUseCase: ClearCartUseCase
 ) : ViewModel() {
 
-    private val _state = MutableStateFlow<CartState>(CartState.Loading)
-    val state: StateFlow<CartState> = _state.asStateFlow()
+    private val _state = MutableStateFlow<CartUiState>(CartUiState.Loading)
+    val state: StateFlow<CartUiState> = _state.asStateFlow()
 
     private val _isSyncing = MutableStateFlow(false)
     val isSyncing: StateFlow<Boolean> = _isSyncing.asStateFlow()
@@ -52,14 +52,14 @@ class CartViewModel @Inject constructor(
 
     fun loadCartItems() {
         viewModelScope.launch {
-            _state.value = CartState.Loading
+            _state.value = CartUiState.Loading
             try {
                 val cartItems = getCartUseCase()
                 _localCart.value = cartItems
                 updateState(cartItems)
             } catch (e: Exception) {
                 _state.value =
-                    CartState.Error(
+                    CartUiState.Error(
                         message = e.message.toString(),
                         retryAction = { loadCartItems() })
             }
@@ -106,9 +106,9 @@ class CartViewModel @Inject constructor(
 
     private fun updateState(cartItems: List<CartItem>) {
         _state.value = if (cartItems.isEmpty()) {
-            CartState.Empty
+            CartUiState.Empty
         } else {
-            CartState.Content(
+            CartUiState.Content(
                 items = cartItems,
                 totalPrice = calculateCartTotalUseCase(cartItems)
             )

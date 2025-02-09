@@ -17,6 +17,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.RequestManager
 import com.example.vapeshop.R
 import com.example.vapeshop.databinding.FragmentProfileBinding
@@ -59,6 +60,10 @@ class ProfileFragment : Fragment() {
 
             retryButton.setOnClickListener {
                 viewModel.getCurrentUser()
+            }
+
+            ordersButton.setOnClickListener {
+                findNavController().navigate(R.id.action_profileFragment_to_ordersFragment)
             }
         }
     }

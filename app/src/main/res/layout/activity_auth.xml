@@ -8,7 +8,6 @@
     android:padding="16dp"
     tools:context=".presentation.auth.AuthActivity">
 
-
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/emailTextInputLayout"
         android:layout_width="match_parent"

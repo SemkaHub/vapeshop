@@ -3,8 +3,8 @@ package com.example.vapeshop.data.repository
 import android.util.Log
 import com.example.vapeshop.data.local.dao.CartDao
 import com.example.vapeshop.data.local.dao.UserDao
-import com.example.vapeshop.data.mapper.toEntity
-import com.example.vapeshop.data.mapper.toUser
+import com.example.vapeshop.data.extensions.toEntity
+import com.example.vapeshop.data.extensions.toUser
 import com.example.vapeshop.domain.model.User
 import com.example.vapeshop.domain.repository.UserRepository
 import com.google.firebase.auth.FirebaseAuth

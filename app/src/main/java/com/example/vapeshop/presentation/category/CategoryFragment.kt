@@ -59,9 +59,9 @@ class CategoryFragment : Fragment() {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.categories.collect { state ->
                     when (state) {
-                        is CategoryState.Loading -> showLoading()
-                        is CategoryState.Content -> showContent(state)
-                        is CategoryState.Error -> showError(state)
+                        is CategoryUiState.Loading -> showLoading()
+                        is CategoryUiState.Content -> showContent(state)
+                        is CategoryUiState.Error -> showError(state)
                     }
                 }
             }
@@ -83,14 +83,14 @@ class CategoryFragment : Fragment() {
         }
     }
 
-    private fun showContent(state: CategoryState.Content) {
+    private fun showContent(state: CategoryUiState.Content) {
         hideAllViews()
         binding.swipeRefreshLayout.isRefreshing = false
         binding.categoriesRecyclerView.visibility = View.VISIBLE
         categoryAdapter.setList(state.categories)
     }
 
-    private fun showError(state: CategoryState.Error) {
+    private fun showError(state: CategoryUiState.Error) {
         hideAllViews()
         binding.swipeRefreshLayout.isRefreshing = false
         binding.errorState.visibility = View.VISIBLE

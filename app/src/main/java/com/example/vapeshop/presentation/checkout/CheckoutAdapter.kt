@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.RequestManager
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
-import com.example.vapeshop.databinding.ItemOrderBinding
+import com.example.vapeshop.databinding.ItemCheckoutBinding
 import com.example.vapeshop.domain.model.CartItem
 import java.util.Locale
 
@@ -21,7 +21,8 @@ class CheckoutAdapter(
         parent: ViewGroup,
         viewType: Int
     ): CheckoutViewHolder {
-        val binding = ItemOrderBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val binding =
+            ItemCheckoutBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return CheckoutViewHolder(binding)
     }
 
@@ -39,14 +40,14 @@ class CheckoutAdapter(
         this.products = products
     }
 
-    inner class CheckoutViewHolder(private val binding: ItemOrderBinding) :
+    inner class CheckoutViewHolder(private val binding: ItemCheckoutBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(item: CartItem) {
             with(binding) {
                 orderNameTextView.text = item.product.name
-                val totalPrice = item.product.price * item.quantity
-                orderPriceTextView.text = String.format(Locale.getDefault(), "%.2f", totalPrice)
+                orderPriceTextView.text =
+                    String.format(Locale.getDefault(), "%.2f", item.product.price)
                 quantityTextView.text = String.format(Locale.getDefault(), "%s", item.quantity)
                 glide.load(item.product.imageUrl)
                     .transition(DrawableTransitionOptions.withCrossFade())

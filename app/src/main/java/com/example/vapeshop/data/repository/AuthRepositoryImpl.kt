@@ -1,6 +1,6 @@
 package com.example.vapeshop.data.repository
 
-import com.example.vapeshop.data.mapper.toUser
+import com.example.vapeshop.data.extensions.toUser
 import com.example.vapeshop.domain.model.User
 import com.example.vapeshop.domain.repository.AuthRepository
 import com.google.firebase.auth.FirebaseAuth

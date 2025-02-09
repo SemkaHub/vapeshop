@@ -1,4 +1,4 @@
-package com.example.vapeshop.data.mapper
+package com.example.vapeshop.data.extensions
 
 import com.example.vapeshop.data.local.entity.UserEntity
 import com.example.vapeshop.domain.model.User

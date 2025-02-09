@@ -40,10 +40,21 @@
     <fragment
         android:id="@+id/profileFragment"
         android:name="com.example.vapeshop.presentation.profile.ProfileFragment"
-        tools:layout="@layout/fragment_profile" />
+        tools:layout="@layout/fragment_profile">
+        <action
+            android:id="@+id/action_profileFragment_to_ordersFragment"
+            app:destination="@id/ordersFragment" />
+    </fragment>
+
     <fragment
         android:id="@+id/checkoutFragment"
         android:name="com.example.vapeshop.presentation.checkout.CheckoutFragment"
         android:label="CheckoutFragment"
         tools:layout="@layout/fragment_checkout" />
+
+    <fragment
+        android:id="@+id/ordersFragment"
+        android:name="com.example.vapeshop.presentation.orders.OrdersFragment"
+        android:label="fragment_orders"
+        tools:layout="@layout/fragment_orders" />
 </navigation>

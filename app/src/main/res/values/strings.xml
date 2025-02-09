@@ -64,4 +64,16 @@
     <string name="online_payment_dialog_message">Оплата на сумму: %1$.2f₽</string>
     <string name="online_payment_dialog_confirm">Оплатить</string>
     <string name="quantity_multiplier">x</string>
+
+    <string name="empty_orders">У вас ещё не было заказов</string>
+    <string name="order_id">Номер заказа: %1$s</string>
+    <string name="order_date">От: %1$s</string>
+    <string name="processing_order_status">В ОБРАБОТКЕ</string>
+    <string name="shipped_order_status">ОТПРАВЛЕН</string>
+    <string name="delivered_order_status">ПОЛУЧЕН</string>
+    <string name="cancelled_order_status">ОТМЕНЁН</string>
+    <string name="pending_order_status">В ОЖИДАНИИ</string>
+    <string name="order_total_price">Сумма заказа: %1$s</string>
+    <string name="order_delivery">Доставка</string>
+    <string name="order_pickup">Самовывоз</string>
 </resources>

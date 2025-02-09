@@ -130,10 +130,10 @@ class ProductListFragment : Fragment() {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.products.collect { state ->
                     when (state) {
-                        is ProductListState.Loading -> showLoading()
-                        is ProductListState.Content -> showContent(state)
-                        is ProductListState.Empty -> showEmptyState()
-                        is ProductListState.Error -> showError(state)
+                        is ProductListUiState.Loading -> showLoading()
+                        is ProductListUiState.Content -> showContent(state)
+                        is ProductListUiState.Empty -> showEmptyState()
+                        is ProductListUiState.Error -> showError(state)
                     }
                 }
             }
@@ -147,7 +147,7 @@ class ProductListFragment : Fragment() {
         }
     }
 
-    private fun showContent(state: ProductListState.Content) {
+    private fun showContent(state: ProductListUiState.Content) {
         hideAllViews()
         binding.apply {
             swipeRefreshLayout.isRefreshing = false
@@ -165,7 +165,7 @@ class ProductListFragment : Fragment() {
         binding.emptyState.visibility = View.VISIBLE
     }
 
-    private fun showError(error: ProductListState.Error) {
+    private fun showError(error: ProductListUiState.Error) {
         hideAllViews()
         binding.swipeRefreshLayout.isRefreshing = false
         binding.errorState.visibility = View.VISIBLE

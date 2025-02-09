@@ -15,22 +15,22 @@ class ProductListViewModel @Inject constructor(
     private val getProductsUseCase: GetProductsUseCase
 ) : ViewModel() {
 
-    private val _products = MutableStateFlow<ProductListState>(ProductListState.Loading)
-    val products: StateFlow<ProductListState> = _products.asStateFlow()
+    private val _products = MutableStateFlow<ProductListUiState>(ProductListUiState.Loading)
+    val products: StateFlow<ProductListUiState> = _products.asStateFlow()
 
     fun getProducts(categoryId: String) {
         viewModelScope.launch {
             try {
-                _products.value = ProductListState.Loading
+                _products.value = ProductListUiState.Loading
                 val productList = getProductsUseCase(categoryId)
                 if (productList.isEmpty()) {
-                    _products.value = ProductListState.Empty
+                    _products.value = ProductListUiState.Empty
                 } else {
-                    _products.value = ProductListState.Content(productList)
+                    _products.value = ProductListUiState.Content(productList)
                 }
             } catch (e: Exception) {
                 _products.value =
-                    ProductListState.Error(e.message.toString()) { getProducts(categoryId) }
+                    ProductListUiState.Error(e.message.toString()) { getProducts(categoryId) }
             }
         }
     }

@@ -17,8 +17,8 @@ class CategoryViewModel @Inject constructor(
     private val categoryRepository: CategoryRepository
 ) : ViewModel() {
 
-    private val _categories = MutableStateFlow<CategoryState>(CategoryState.Loading)
-    val categories: StateFlow<CategoryState> = _categories.asStateFlow()
+    private val _categories = MutableStateFlow<CategoryUiState>(CategoryUiState.Loading)
+    val categories: StateFlow<CategoryUiState> = _categories.asStateFlow()
 
     init {
         loadCategories()
@@ -26,18 +26,18 @@ class CategoryViewModel @Inject constructor(
 
     fun loadCategories() {
         viewModelScope.launch {
-            _categories.value = CategoryState.Loading
+            _categories.value = CategoryUiState.Loading
             try {
                 val categoriesList = categoryRepository.getCategories()
                 if (categoriesList != emptyList<Category>()) {
-                    _categories.value = CategoryState.Content(categoriesList)
+                    _categories.value = CategoryUiState.Content(categoriesList)
                 } else {
                     throw Exception("Categories list is empty")
                 }
             } catch (e: Exception) {
                 Log.e("CategoryViewModel", "Error loading categories: ${e.message}", e)
                 _categories.value =
-                    CategoryState.Error(
+                    CategoryUiState.Error(
                         message = e.message.toString(),
                         retryAction = { loadCategories() })
             }
