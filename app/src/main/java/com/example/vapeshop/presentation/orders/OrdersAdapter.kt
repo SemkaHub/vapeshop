@@ -101,16 +101,16 @@ class OrdersAdapter(
         private fun setDeliveredStatus() {
             with(binding) {
                 orderStatus.statusFrame.setBackgroundColor(colors.backgroundDelivered)
-                orderStatus.statusTextView.setTextColor(colors.backgroundDelivered)
+                orderStatus.statusTextView.setTextColor(colors.textDelivered)
                 orderStatus.statusTextView.text = strings.orderStatus[OrderStatus.DELIVERED]
             }
         }
 
         private fun setCancelledStatus() {
             with(binding) {
-                orderStatus.statusFrame.setBackgroundColor(colors.backgroundDelivered)
-                orderStatus.statusTextView.setTextColor(colors.backgroundDelivered)
-                orderStatus.statusTextView.text = strings.orderStatus[OrderStatus.DELIVERED]
+                orderStatus.statusFrame.setBackgroundColor(colors.backgroundCancelled)
+                orderStatus.statusTextView.setTextColor(colors.textCancelled)
+                orderStatus.statusTextView.text = strings.orderStatus[OrderStatus.CANCELLED]
             }
         }
 
