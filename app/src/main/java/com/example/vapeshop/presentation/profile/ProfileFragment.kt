@@ -22,7 +22,6 @@ import com.bumptech.glide.RequestManager
 import com.example.vapeshop.R
 import com.example.vapeshop.databinding.FragmentProfileBinding
 import com.example.vapeshop.domain.model.User
-import com.example.vapeshop.domain.usecase.user.GetUserProfileUseCase
 import com.example.vapeshop.presentation.auth.AuthActivity
 import com.example.vapeshop.presentation.common.utils.viewBinding
 import com.example.vapeshop.presentation.profile.ProfileViewModel.ProfileUiState
@@ -114,7 +113,6 @@ class ProfileFragment : Fragment() {
 
     private fun renderState(state: ProfileUiState) {
         with(binding) {
-            progressBar.isVisible = state is ProfileUiState.Loading
             contentGroup.isVisible = state is ProfileUiState.Success
             errorGroup.isVisible = state is ProfileUiState.Error
 
@@ -128,11 +126,14 @@ class ProfileFragment : Fragment() {
     }
 
     private fun handleLoading() {
-        binding.swipeRefreshLayout.isRefreshing = true
+        if (!binding.swipeRefreshLayout.isRefreshing) {
+            binding.progressBar.isVisible = true
+        }
     }
 
     private fun handleSuccess(user: User) {
         binding.swipeRefreshLayout.isRefreshing = false
+        binding.progressBar.isVisible = false
         with(binding) {
             emailTextView.text = user.email
             nameTextView.text = user.name
@@ -141,6 +142,7 @@ class ProfileFragment : Fragment() {
 
     private fun handleError(message: String) {
         binding.swipeRefreshLayout.isRefreshing = false
+        binding.progressBar.isVisible = false
         with(binding) {
             errorMessageTextView.text = message
             retryButton.isVisible = true

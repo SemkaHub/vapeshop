@@ -4,7 +4,7 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.vapeshop.domain.model.Category
-import com.example.vapeshop.domain.repository.CategoryRepository
+import com.example.vapeshop.domain.usecase.category.GetCategoriesUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -14,7 +14,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class CategoryViewModel @Inject constructor(
-    private val categoryRepository: CategoryRepository
+    private val getCategoriesUseCase: GetCategoriesUseCase
 ) : ViewModel() {
 
     private val _categories = MutableStateFlow<CategoryUiState>(CategoryUiState.Loading)
@@ -28,7 +28,7 @@ class CategoryViewModel @Inject constructor(
         viewModelScope.launch {
             _categories.value = CategoryUiState.Loading
             try {
-                val categoriesList = categoryRepository.getCategories()
+                val categoriesList = getCategoriesUseCase()
                 if (categoriesList != emptyList<Category>()) {
                     _categories.value = CategoryUiState.Content(categoriesList)
                 } else {
