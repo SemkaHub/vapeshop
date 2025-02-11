@@ -26,35 +26,24 @@ class AuthViewModel @Inject constructor(
     private val _authUiState = MutableLiveData<AuthState>(AuthState.Initial)
     val authUiState: LiveData<AuthState> = _authUiState
 
-    override fun onCleared() {
-        super.onCleared()
-        _authUiState.value = AuthState.Initial
-    }
-
     fun loginUser(email: String, password: String) {
-        if (!validate(email, password)) return
-        setLoadingState()
-
-        viewModelScope.launch {
-            val result = loginUserUseCase(email, password)
-            result.fold(
-                onSuccess = {
-                    _authUiState.value = AuthState.Success
-                },
-                onFailure = { throwable ->
-                    val exception = throwable as? Exception ?: Exception(throwable)
-                    handleAuthError(exception)
-                }
-            )
-        }
+        executeAuthentication(email, password) { loginUserUseCase(email, password) }
     }
 
     fun registerUser(email: String, password: String) {
+        executeAuthentication(email, password) { registerUserUseCase(email, password) }
+    }
+
+    private fun executeAuthentication(
+        email: String,
+        password: String,
+        useCase: suspend () -> Result<Unit>
+    ) {
         if (!validate(email, password)) return
         setLoadingState()
 
         viewModelScope.launch {
-            val result = registerUserUseCase(email, password)
+            val result = useCase()
             result.fold(
                 onSuccess = {
                     _authUiState.value = AuthState.Success
