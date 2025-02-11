@@ -1,23 +1,26 @@
 package com.example.vapeshop.data.repository
 
 import android.util.Log
-import com.example.vapeshop.data.local.dao.CartDao
-import com.example.vapeshop.data.local.dao.UserDao
 import com.example.vapeshop.data.extensions.toEntity
 import com.example.vapeshop.data.extensions.toUser
+import com.example.vapeshop.data.local.dao.CartDao
+import com.example.vapeshop.data.local.dao.UserDao
 import com.example.vapeshop.domain.model.User
 import com.example.vapeshop.domain.repository.UserRepository
+import com.example.vapeshop.domain.usecase.user.GetUserProfileUseCase
 import com.google.firebase.auth.FirebaseAuth
 import javax.inject.Inject
 
 class UserRepositoryImpl @Inject constructor(
     private val firebaseAuth: FirebaseAuth,
     private val userDao: UserDao,
-    private val cartDao: CartDao
+    private val cartDao: CartDao,
+    private val getUserProfileUseCase: GetUserProfileUseCase
 ) : UserRepository {
 
     override suspend fun getCurrentUser(): User? {
         return try {
+            val userProfile = getUserProfileUseCase()
             firebaseAuth.currentUser?.let { firebaseUser ->
                 // Сначала пробуем получить из локальной БД
                 userDao.getUserById(firebaseUser.uid)?.toUser()

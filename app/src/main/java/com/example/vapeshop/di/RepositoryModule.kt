@@ -5,12 +5,14 @@ import com.example.vapeshop.data.repository.CartRepositoryImpl
 import com.example.vapeshop.data.repository.CategoryRepositoryImpl
 import com.example.vapeshop.data.repository.OrderRepositoryImpl
 import com.example.vapeshop.data.repository.ProductRepositoryImpl
+import com.example.vapeshop.data.repository.UserProfileRepositoryImpl
 import com.example.vapeshop.data.repository.UserRepositoryImpl
 import com.example.vapeshop.domain.repository.AuthRepository
 import com.example.vapeshop.domain.repository.CartRepository
 import com.example.vapeshop.domain.repository.CategoryRepository
 import com.example.vapeshop.domain.repository.OrderRepository
 import com.example.vapeshop.domain.repository.ProductRepository
+import com.example.vapeshop.domain.repository.UserProfileRepository
 import com.example.vapeshop.domain.repository.UserRepository
 import dagger.Binds
 import dagger.Module
@@ -45,4 +47,8 @@ abstract class RepositoryModule {
     @Binds
     @Singleton
     abstract fun bindProductRepository(impl: ProductRepositoryImpl): ProductRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindUserProfileRepository(impl: UserProfileRepositoryImpl): UserProfileRepository
 }

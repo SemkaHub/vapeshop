@@ -44,6 +44,9 @@
         <action
             android:id="@+id/action_profileFragment_to_ordersFragment"
             app:destination="@id/ordersFragment" />
+        <action
+            android:id="@+id/action_profileFragment_to_profileSettingsFragment"
+            app:destination="@id/profileSettingsFragment" />
     </fragment>
 
     <fragment
@@ -57,4 +60,8 @@
         android:name="com.example.vapeshop.presentation.orders.OrdersFragment"
         android:label="fragment_orders"
         tools:layout="@layout/fragment_orders" />
+    <fragment
+        android:id="@+id/profileSettingsFragment"
+        android:name="com.example.vapeshop.presentation.profilesettings.ProfileSettingsFragment"
+        android:label="ProfileSettingsFragment" />
 </navigation>

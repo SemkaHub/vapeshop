@@ -76,4 +76,11 @@
     <string name="order_total_price">Сумма заказа: %1$s</string>
     <string name="order_delivery">Доставка</string>
     <string name="order_pickup">Самовывоз</string>
+
+    <string name="profile_settings_name">Имя</string>
+    <string name="profile_settings_lastname">Фамилия</string>
+    <string name="profile_settings_phone_number">Номер телефона</string>
+    <string name="profile_settings_save_button">Сохранить</string>
+    <string name="profile_photo_click">Изменение фото профиля пока недоступно</string>
+    <string name="profile_settings_success">Данные успешно сохранены</string>
 </resources>

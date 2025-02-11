@@ -22,6 +22,7 @@ import com.bumptech.glide.RequestManager
 import com.example.vapeshop.R
 import com.example.vapeshop.databinding.FragmentProfileBinding
 import com.example.vapeshop.domain.model.User
+import com.example.vapeshop.domain.usecase.user.GetUserProfileUseCase
 import com.example.vapeshop.presentation.auth.AuthActivity
 import com.example.vapeshop.presentation.common.utils.viewBinding
 import com.example.vapeshop.presentation.profile.ProfileViewModel.ProfileUiState
@@ -64,6 +65,10 @@ class ProfileFragment : Fragment() {
 
             ordersButton.setOnClickListener {
                 findNavController().navigate(R.id.action_profileFragment_to_ordersFragment)
+            }
+
+            settingsButton.setOnClickListener {
+                findNavController().navigate(R.id.action_profileFragment_to_profileSettingsFragment)
             }
         }
     }
@@ -130,7 +135,7 @@ class ProfileFragment : Fragment() {
         binding.swipeRefreshLayout.isRefreshing = false
         with(binding) {
             emailTextView.text = user.email
-//            phoneTextView.text = user.phone
+            nameTextView.text = user.name
         }
     }
 

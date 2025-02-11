@@ -104,7 +104,10 @@ class MainActivity : AppCompatActivity() {
                     binding.toolbar.visibility = View.GONE
                 }
 
-                R.id.ordersFragment -> {
+                R.id.ordersFragment,
+                R.id.profileSettingsFragment -> {
+                    binding.bottomNavigationView.menu.findItem(R.id.profileFragment)?.isChecked =
+                        true
                     binding.toolbar.visibility = View.GONE
                 }
 
