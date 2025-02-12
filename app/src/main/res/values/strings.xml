@@ -83,4 +83,6 @@
     <string name="profile_settings_save_button">Сохранить</string>
     <string name="profile_photo_click">Изменение фото профиля пока недоступно</string>
     <string name="profile_settings_success">Данные успешно сохранены</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

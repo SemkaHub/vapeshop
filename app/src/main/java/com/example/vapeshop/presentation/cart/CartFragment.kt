@@ -124,10 +124,6 @@ class CartFragment : Fragment() {
 
             // Обновляем список
             cartAdapter.setList(state.items)
-
-            bottomBar.checkoutButton.setOnClickListener {
-                findNavController().navigate(R.id.action_cartFragment_to_checkoutFragment)
-            }
         }
     }
 
@@ -157,6 +153,10 @@ class CartFragment : Fragment() {
     private fun setupClickListeners() {
         binding.goToShopButton.setOnClickListener {
             findNavController().navigate(R.id.action_cartFragment_to_categoryFragment)
+        }
+
+        binding.bottomBar.checkoutButton.setOnClickListener {
+            findNavController().navigate(R.id.action_cartFragment_to_checkoutFragment)
         }
     }
 }

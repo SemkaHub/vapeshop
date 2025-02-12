@@ -119,7 +119,7 @@ class MainActivity : AppCompatActivity() {
                 R.id.productListFragment -> {
                     binding.bottomNavigationView.menu.findItem(R.id.categoryFragment)?.isChecked =
                         true
-                    binding.toolbar.visibility = View.VISIBLE
+                    binding.toolbar.visibility = View.GONE
                 }
             }
         }

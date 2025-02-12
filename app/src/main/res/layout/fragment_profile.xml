@@ -60,9 +60,7 @@
                     android:layout_marginStart="@dimen/margin_small"
                     android:layout_marginTop="@dimen/margin_large"
                     android:layout_marginEnd="@dimen/margin_small"
-                    android:backgroundTint="@color/black"
                     android:text="@string/profile_orders_button"
-                    android:textColor="@color/white"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/emailTextView" />
 
@@ -73,9 +71,7 @@
                     android:layout_marginStart="@dimen/margin_small"
                     android:layout_marginTop="@dimen/margin_small"
                     android:layout_marginEnd="@dimen/margin_small"
-                    android:backgroundTint="@color/black"
                     android:text="@string/profile_settings_button"
-                    android:textColor="@color/white"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/ordersButton" />
             </androidx.constraintlayout.widget.ConstraintLayout>

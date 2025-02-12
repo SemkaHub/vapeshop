@@ -58,15 +58,15 @@ class CartAdapter(
                     .into(cartImageView)
 
                 increaseButton.setOnClickListener {
-                    onIncreaseClick(cartItem.product.id.toString(), cartItem.quantity)
+                    onIncreaseClick(cartItem.product.id, cartItem.quantity)
                 }
 
                 decreaseButton.setOnClickListener {
-                    onDecreaseClick(cartItem.product.id.toString(), cartItem.quantity)
+                    onDecreaseClick(cartItem.product.id, cartItem.quantity)
                 }
 
                 removeButton.setOnClickListener {
-                    onRemoveClick(cartItem.product.id.toString())
+                    onRemoveClick(cartItem.product.id)
                 }
             }
         }
