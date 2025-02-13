@@ -58,3 +58,4 @@ google-services = { id = "com.google.gms.google-services", version.ref = "gms" }
 android-hilt = { id = "com.google.dagger.hilt.android", version.ref = "androidHilt" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 save-args = { id = "androidx.navigation.safeargs.kotlin", version.ref = "nav_version" }
+parcelize = { id = "kotlin-parcelize"}

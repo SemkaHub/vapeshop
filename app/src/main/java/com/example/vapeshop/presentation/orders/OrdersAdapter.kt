@@ -5,6 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.vapeshop.databinding.ItemOrderBinding
+import com.example.vapeshop.domain.model.CartItem
 import com.example.vapeshop.domain.model.DeliveryMethod
 import com.example.vapeshop.domain.model.Order
 import com.example.vapeshop.domain.model.OrderStatus
@@ -14,7 +15,8 @@ import java.util.Locale
 
 class OrdersAdapter(
     val strings: OrdersAdapterStrings,
-    val colors: OrdersStatusColors
+    val colors: OrdersStatusColors,
+    val onItemClick: (List<CartItem>) -> Unit = {}
 ) :
     RecyclerView.Adapter<OrdersAdapter.OrdersViewHolder>() {
 
@@ -60,6 +62,10 @@ class OrdersAdapter(
                 orderDeliveryMethod.text = when (order.deliveryMethod) {
                     DeliveryMethod.COURIER -> strings.orderDeliveryCourier
                     DeliveryMethod.PICKUP -> strings.orderDeliveryPickup
+                }
+
+                root.setOnClickListener {
+                    onItemClick(order.items)
                 }
             }
         }

@@ -1,4 +1,4 @@
-package com.example.vapeshop.presentation.checkout
+package com.example.vapeshop.presentation.common
 
 import android.graphics.drawable.Drawable
 import android.view.LayoutInflater
@@ -6,14 +6,14 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.RequestManager
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
-import com.example.vapeshop.databinding.ItemCheckoutBinding
+import com.example.vapeshop.databinding.ItemOrderProductBinding
 import com.example.vapeshop.domain.model.CartItem
 import java.util.Locale
 
-class CheckoutAdapter(
+class OrderProductAdapter(
     private val glide: RequestManager,
     private val errorDrawable: Drawable?,
-) : RecyclerView.Adapter<CheckoutAdapter.CheckoutViewHolder>() {
+) : RecyclerView.Adapter<OrderProductAdapter.CheckoutViewHolder>() {
 
     private var products: List<CartItem> = emptyList()
 
@@ -22,7 +22,7 @@ class CheckoutAdapter(
         viewType: Int
     ): CheckoutViewHolder {
         val binding =
-            ItemCheckoutBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+            ItemOrderProductBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return CheckoutViewHolder(binding)
     }
 
@@ -40,7 +40,7 @@ class CheckoutAdapter(
         this.products = products
     }
 
-    inner class CheckoutViewHolder(private val binding: ItemCheckoutBinding) :
+    inner class CheckoutViewHolder(private val binding: ItemOrderProductBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(item: CartItem) {

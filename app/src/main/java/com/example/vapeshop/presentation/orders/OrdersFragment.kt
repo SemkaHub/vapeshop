@@ -47,7 +47,10 @@ class OrdersFragment : Fragment() {
     private fun initRecyclerView() {
         val strings = resourceProvider.getOrdersAdapterStrings()
         val colors = resourceProvider.getOrdersAdapterColors()
-        ordersAdapter = OrdersAdapter(strings, colors)
+        ordersAdapter = OrdersAdapter(strings, colors) { products ->
+            val bottomSheet = OrderProductsBottomSheet.newInstance(products)
+            bottomSheet.show(childFragmentManager, bottomSheet.tag)
+        }
         binding.ordersRecyclerView.apply {
             adapter = ordersAdapter
             layoutManager = LinearLayoutManager(context)

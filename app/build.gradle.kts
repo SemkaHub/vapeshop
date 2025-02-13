@@ -5,6 +5,7 @@ plugins {
     alias(libs.plugins.android.hilt)
     alias(libs.plugins.ksp)
     alias(libs.plugins.save.args)
+    alias(libs.plugins.parcelize)
 }
 
 android {

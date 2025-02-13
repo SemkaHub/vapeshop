@@ -24,6 +24,7 @@ import com.example.vapeshop.domain.model.Order
 import com.example.vapeshop.domain.model.PaymentMethod
 import com.example.vapeshop.domain.model.PaymentStatus
 import com.example.vapeshop.presentation.cart.CartViewModel
+import com.example.vapeshop.presentation.common.OrderProductAdapter
 import com.example.vapeshop.presentation.common.utils.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -38,7 +39,7 @@ class CheckoutFragment : Fragment() {
     private val viewModel: CheckoutViewModel by viewModels()
     private val cartViewModel: CartViewModel by activityViewModels()
     private val binding by viewBinding(FragmentCheckoutBinding::bind)
-    private lateinit var checkoutAdapter: CheckoutAdapter
+    private lateinit var orderProductAdapter: OrderProductAdapter
     private var selectedDeliveryMethod: DeliveryMethod = DeliveryMethod.COURIER
     private var selectedPaymentMethod: PaymentMethod = PaymentMethod.ONLINE
 
@@ -63,9 +64,9 @@ class CheckoutFragment : Fragment() {
 
     private fun initRecyclerView() {
         val errorDrawable = getDrawable(requireContext(), R.drawable.load_drawable_error)
-        checkoutAdapter = CheckoutAdapter(glide, errorDrawable)
+        orderProductAdapter = OrderProductAdapter(glide, errorDrawable)
         binding.productsRecycler.apply {
-            adapter = checkoutAdapter
+            adapter = orderProductAdapter
             layoutManager = LinearLayoutManager(requireContext())
         }
     }
@@ -74,7 +75,7 @@ class CheckoutFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             cartViewModel.localCart.collect { cartItems ->
                 // Обновляем список товаров в адаптере
-                checkoutAdapter.setList(cartItems)
+                orderProductAdapter.setList(cartItems)
 
                 updateTotalPrice(cartItems)
             }

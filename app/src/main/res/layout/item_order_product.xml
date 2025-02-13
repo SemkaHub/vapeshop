@@ -26,9 +26,11 @@
         <!-- Product Title -->
         <TextView
             android:id="@+id/orderNameTextView"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/margin_small"
+            android:ellipsize="end"
+            android:maxLines="1"
             android:textSize="@dimen/text_large"
             app:layout_constraintStart_toEndOf="@+id/orderImageView"
             app:layout_constraintTop_toTopOf="@id/orderImageView"
