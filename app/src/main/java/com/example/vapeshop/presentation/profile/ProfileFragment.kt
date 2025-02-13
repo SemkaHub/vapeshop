@@ -1,16 +1,10 @@
 package com.example.vapeshop.presentation.profile
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
-import androidx.core.view.MenuHost
-import androidx.core.view.MenuProvider
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -24,8 +18,6 @@ import com.example.vapeshop.databinding.FragmentProfileBinding
 import com.example.vapeshop.domain.model.User
 import com.example.vapeshop.presentation.auth.AuthActivity
 import com.example.vapeshop.presentation.common.utils.viewBinding
-import com.example.vapeshop.presentation.profile.ProfileViewModel.ProfileUiState
-import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -47,12 +39,11 @@ class ProfileFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setupUI()
+        setupOnClickListeners()
         initObservers()
-        setupSignOutMenu()
     }
 
-    private fun setupUI() {
+    private fun setupOnClickListeners() {
         with(binding) {
             swipeRefreshLayout.setOnRefreshListener {
                 viewModel.getCurrentUser()
@@ -69,23 +60,16 @@ class ProfileFragment : Fragment() {
             settingsButton.setOnClickListener {
                 findNavController().navigate(R.id.action_profileFragment_to_profileSettingsFragment)
             }
-        }
-    }
 
-    private fun setupSignOutMenu() {
-        val menuHost = requireActivity() as MenuHost
-        menuHost.addMenuProvider(object : MenuProvider {
-            override fun onCreateMenu(
-                menu: Menu, menuInflater: MenuInflater
-            ) {
-                menuInflater.inflate(R.menu.sign_out_menu, menu)
-            }
-
-            override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+            logoutButton.setOnClickListener {
                 showConfirmationDialog()
-                return true
             }
-        }, viewLifecycleOwner, Lifecycle.State.RESUMED)
+
+            goToAuthButton.setOnClickListener {
+                val intent = AuthActivity.newIntent(requireContext())
+                startActivity(intent)
+            }
+        }
     }
 
     private fun showConfirmationDialog() {
@@ -107,63 +91,55 @@ class ProfileFragment : Fragment() {
                 }
             }
         }
-
-        viewModel.getCurrentUser()
     }
 
     private fun renderState(state: ProfileUiState) {
         with(binding) {
             contentGroup.isVisible = state is ProfileUiState.Success
             errorGroup.isVisible = state is ProfileUiState.Error
+            unAuthorizedGroup.isVisible = state is ProfileUiState.UnAuthorized
+
+            // Отключить SwipeRefreshLayout для неавторизованного состояния
+            swipeRefreshLayout.isEnabled = !unAuthorizedGroup.isVisible
 
             when (state) {
-                is ProfileUiState.Loading -> handleLoading()
-                is ProfileUiState.Success -> handleSuccess(state.user)
-                is ProfileUiState.Error -> handleError(state.message)
-                is ProfileUiState.UnAuthorized -> navigateToAuth()
+                is ProfileUiState.Loading -> showLoading()
+                is ProfileUiState.Success -> showSuccess(state.user)
+                is ProfileUiState.Error -> showError(state.message)
+                is ProfileUiState.UnAuthorized -> showUnAuthorized()
             }
         }
     }
 
-    private fun handleLoading() {
+    private fun showLoading() {
         if (!binding.swipeRefreshLayout.isRefreshing) {
             binding.progressBar.isVisible = true
         }
     }
 
-    private fun handleSuccess(user: User) {
-        binding.swipeRefreshLayout.isRefreshing = false
-        binding.progressBar.isVisible = false
+    private fun showSuccess(user: User) {
         with(binding) {
+            hideLoadingIndicator()
             emailTextView.text = user.email
             nameTextView.text = user.name
         }
     }
 
-    private fun handleError(message: String) {
-        binding.swipeRefreshLayout.isRefreshing = false
-        binding.progressBar.isVisible = false
+    private fun showError(message: String) {
         with(binding) {
+            hideLoadingIndicator()
             errorMessageTextView.text = message
             retryButton.isVisible = true
         }
-        showErrorSnackbar(message)
     }
 
-    private fun showErrorSnackbar(message: String) {
-        Snackbar.make(
-            binding.root,
-            message,
-            Snackbar.LENGTH_LONG
-        ).setAction("Retry") {
-            viewModel.getCurrentUser()
-        }.show()
+    private fun showUnAuthorized() {
+        hideLoadingIndicator()
+        binding.unAuthorizedGroup.isVisible = true
     }
 
-    private fun navigateToAuth() {
-        val intent = Intent(requireActivity(), AuthActivity::class.java)
-        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-        startActivity(intent)
-        requireActivity().finish()
+    private fun hideLoadingIndicator() {
+        binding.progressBar.isVisible = false
+        binding.swipeRefreshLayout.isRefreshing = false
     }
 }

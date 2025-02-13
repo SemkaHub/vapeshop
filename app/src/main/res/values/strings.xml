@@ -17,13 +17,15 @@
 
     <string name="hint_search">Поиск</string>
 
-    <string name="hint_logout">Выход</string>
     <string name="sign_out_title">Выход из аккаунта</string>
     <string name="sign_out_message">Вы уверены, что хотите выйти из аккаунта?</string>
+    <string name="go_to_auth_button">Авторизоваться</string>
+    <string name="un_authorized_message">Вы не вошли в аккаунт</string>
 
     <string name="profile_email_label">Адрес электронной почты: %1$s</string>
     <string name="profile_orders_button">Мои заказы</string>
     <string name="profile_settings_button">Настройки</string>
+    <string name="button_logout">Выход</string>
 
     <string name="confirm">Подтвердить</string>
     <string name="cancel">Отменить</string>

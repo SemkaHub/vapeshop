@@ -3,12 +3,12 @@ package com.example.vapeshop.presentation.main
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.view.View
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.isVisible
 import androidx.core.view.updatePadding
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
@@ -97,29 +97,29 @@ class MainActivity : AppCompatActivity() {
                 R.id.categoryFragment,
                 R.id.cartFragment -> {
                     binding.bottomNavigationView.menu.findItem(destination.id)?.isChecked = true
-                    binding.toolbar.visibility = View.GONE
+                    binding.toolbar.isVisible = false
                 }
 
                 R.id.checkoutFragment -> {
-                    binding.toolbar.visibility = View.GONE
+                    binding.toolbar.isVisible = false
                 }
 
                 R.id.ordersFragment,
                 R.id.profileSettingsFragment -> {
                     binding.bottomNavigationView.menu.findItem(R.id.profileFragment)?.isChecked =
                         true
-                    binding.toolbar.visibility = View.GONE
+                    binding.toolbar.isVisible = false
                 }
 
                 R.id.profileFragment -> {
                     binding.bottomNavigationView.menu.findItem(destination.id)?.isChecked = true
-                    binding.toolbar.visibility = View.VISIBLE
+                    binding.toolbar.isVisible = false
                 }
 
                 R.id.productListFragment -> {
                     binding.bottomNavigationView.menu.findItem(R.id.categoryFragment)?.isChecked =
                         true
-                    binding.toolbar.visibility = View.GONE
+                    binding.toolbar.isVisible = false
                 }
             }
         }

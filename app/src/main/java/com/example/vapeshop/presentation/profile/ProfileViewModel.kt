@@ -2,7 +2,6 @@ package com.example.vapeshop.presentation.profile
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.vapeshop.domain.model.User
 import com.example.vapeshop.domain.usecase.user.GetCurrentUserUseCase
 import com.example.vapeshop.domain.usecase.user.GetUserProfileUseCase
 import com.example.vapeshop.domain.usecase.user.SignOutUseCase
@@ -26,6 +25,10 @@ class ProfileViewModel @Inject constructor(
 
     private var currentJob: Job? = null
 
+    init {
+        getCurrentUser()
+    }
+
     fun getCurrentUser() {
         // Отменяем предыдущий запрос если он есть
         currentJob?.cancel()
@@ -38,9 +41,11 @@ class ProfileViewModel @Inject constructor(
                 if (user != null) {
                     _profileUiState.emit(
                         ProfileUiState.Success(
-                            user.copy(
-                                name = userProfile?.firstName
-                            )
+                            if (userProfile != null) {
+                                user.copy(
+                                    name = userProfile.firstName
+                                )
+                            } else user
                         )
                     )
                 } else {
@@ -67,12 +72,5 @@ class ProfileViewModel @Inject constructor(
     override fun onCleared() {
         super.onCleared()
         currentJob?.cancel()
-    }
-
-    sealed class ProfileUiState {
-        object Loading : ProfileUiState()
-        data class Success(val user: User) : ProfileUiState()
-        data class Error(val message: String) : ProfileUiState()
-        object UnAuthorized : ProfileUiState()
     }
 }

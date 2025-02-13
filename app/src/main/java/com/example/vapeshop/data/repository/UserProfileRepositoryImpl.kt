@@ -21,12 +21,11 @@ class UserProfileRepositoryImpl @Inject constructor(
     }
 
     override suspend fun getUserProfile(): UserProfile? {
-        return try {
-            val uid = firebaseAuth.currentUser?.uid ?: throw Exception("User not authenticated")
-            val snapshot = firestore.collection("users").document(uid).get().await()
+        val profile = firebaseAuth.currentUser?.let { firebaseUser ->
+            val snapshot =
+                firestore.collection("users").document(firebaseUser.uid).get().await()
             snapshot.toObject(UserProfile::class.java)
-        } catch (e: Exception) {
-            throw Exception("Failed to get user settings", e)
         }
+        return profile
     }
 }
