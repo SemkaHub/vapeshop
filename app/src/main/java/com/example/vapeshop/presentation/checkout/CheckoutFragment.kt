@@ -23,6 +23,7 @@ import com.example.vapeshop.domain.model.DeliveryMethod
 import com.example.vapeshop.domain.model.Order
 import com.example.vapeshop.domain.model.PaymentMethod
 import com.example.vapeshop.domain.model.PaymentStatus
+import com.example.vapeshop.presentation.auth.AuthActivity
 import com.example.vapeshop.presentation.cart.CartViewModel
 import com.example.vapeshop.presentation.common.OrderProductAdapter
 import com.example.vapeshop.presentation.common.utils.viewBinding
@@ -45,8 +46,7 @@ class CheckoutFragment : Fragment() {
 
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         return inflater.inflate(R.layout.fragment_checkout, container, false)
     }
@@ -116,9 +116,7 @@ class CheckoutFragment : Fragment() {
     private fun setupPickupPoints() {
         val pickupPoints = listOf("Пункт 1", "Пункт 2", "Пункт 3")
         val adapter = ArrayAdapter(
-            requireContext(),
-            android.R.layout.simple_spinner_item,
-            pickupPoints
+            requireContext(), android.R.layout.simple_spinner_item, pickupPoints
         ).apply {
             setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         }
@@ -132,9 +130,7 @@ class CheckoutFragment : Fragment() {
             return false
         }
 
-        if (selectedDeliveryMethod == DeliveryMethod.PICKUP &&
-            binding.pickupAddressSpinner.selectedItem == null
-        ) {
+        if (selectedDeliveryMethod == DeliveryMethod.PICKUP && binding.pickupAddressSpinner.selectedItem == null) {
             val errorMessage = getString(R.string.pickup_point_error)
             Toast.makeText(requireContext(), errorMessage, Toast.LENGTH_SHORT).show()
             return false
@@ -166,16 +162,13 @@ class CheckoutFragment : Fragment() {
         val message = getString(R.string.online_payment_dialog_message)
         val positiveButton = getString(R.string.online_payment_dialog_confirm)
         val negativeButton = getString(R.string.cancel)
-        AlertDialog.Builder(requireContext())
-            .setTitle(title)
+        AlertDialog.Builder(requireContext()).setTitle(title)
             .setMessage(String.format(message, order.totalPrice))
             .setPositiveButton(positiveButton) { _, _ ->
                 lifecycleScope.launch {
                     completeOrder(order.copy(paymentStatus = PaymentStatus.PAID))
                 }
-            }
-            .setNegativeButton(negativeButton, null)
-            .show()
+            }.setNegativeButton(negativeButton, null).show()
     }
 
     private fun completeOrder(order: Order) {
@@ -189,11 +182,25 @@ class CheckoutFragment : Fragment() {
                 findNavController().navigateUp()
             } catch (e: Exception) {
                 val errorMessage = getString(R.string.order_failed)
-                Toast.makeText(context, errorMessage + e.message, Toast.LENGTH_SHORT).show()
+                if (e.message == "User not authenticated") showAuthorizationDialog()
+                else Toast.makeText(context, errorMessage + e.message, Toast.LENGTH_SHORT).show()
             } finally {
                 showProcessing(false)
             }
         }
+    }
+
+    private fun showAuthorizationDialog() {
+        val title = getString(R.string.authorization_dialog_title)
+        val message = getString(R.string.authorization_dialog_message)
+        val positiveButton = getString(R.string.authorization_dialog_confirm)
+        val negativeButton = getString(R.string.cancel)
+        AlertDialog.Builder(requireContext()).setTitle(title)
+            .setMessage(message)
+            .setPositiveButton(positiveButton) { _, _ ->
+                val intent = AuthActivity.newIntent(requireContext())
+                startActivity(intent)
+            }.setNegativeButton(negativeButton, null).show()
     }
 
     private fun showProcessing(isProcessing: Boolean) {
