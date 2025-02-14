@@ -42,7 +42,10 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_small"
                 android:layout_marginTop="@dimen/margin_medium"
+                android:layout_marginEnd="@dimen/margin_small"
+                android:gravity="center"
                 android:text="@string/empty_product_list"
                 android:textSize="@dimen/text_title" />
 
@@ -72,7 +75,10 @@
                 android:id="@+id/errorTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_small"
                 android:layout_marginTop="@dimen/margin_medium"
+                android:layout_marginEnd="@dimen/margin_small"
+                android:gravity="center"
                 android:text="@string/error_load"
                 android:textSize="@dimen/text_title" />
 
