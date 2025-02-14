@@ -26,7 +26,7 @@ class CartViewModel @Inject constructor(
     private val addToCartUseCase: AddToCartUseCase,
     private val observeCartSyncStateUseCase: ObserveCartSyncStateUseCase,
     private val calculateCartTotalUseCase: CalculateCartTotalUseCase,
-    private val clearCartUseCase: ClearCartUseCase
+    private val clearCartUseCase: ClearCartUseCase,
 ) : ViewModel() {
 
     private val _state = MutableStateFlow<CartUiState>(CartUiState.Loading)

@@ -46,7 +46,7 @@ class CheckoutFragment : Fragment() {
 
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?,
     ): View {
         return inflater.inflate(R.layout.fragment_checkout, container, false)
     }
@@ -130,7 +130,9 @@ class CheckoutFragment : Fragment() {
             return false
         }
 
-        if (selectedDeliveryMethod == DeliveryMethod.PICKUP && binding.pickupAddressSpinner.selectedItem == null) {
+        if (selectedDeliveryMethod == DeliveryMethod.PICKUP &&
+            binding.pickupAddressSpinner.selectedItem == null
+        ) {
             val errorMessage = getString(R.string.pickup_point_error)
             Toast.makeText(requireContext(), errorMessage, Toast.LENGTH_SHORT).show()
             return false

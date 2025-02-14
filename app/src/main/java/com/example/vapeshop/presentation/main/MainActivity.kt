@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.view.ViewCompat
@@ -20,6 +21,10 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
+    private lateinit var binding: ActivityMainBinding
+    private lateinit var navController: NavController
+    private val viewModel: MainViewModel by viewModels()
+
     companion object {
         fun newIntent(context: Context): Intent {
             return Intent(context, MainActivity::class.java).apply {
@@ -27,9 +32,6 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
-
-    private lateinit var binding: ActivityMainBinding
-    private lateinit var navController: NavController
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,8 +43,17 @@ class MainActivity : AppCompatActivity() {
         supportActionBar?.setDisplayShowTitleEnabled(false)
 
         setupNavigation()
+        setupCartCountObserver()
     }
 
+    private fun setupCartCountObserver() {
+        viewModel.cartItemCount.observe(this) { count ->
+            binding.bottomNavigationView.getOrCreateBadge(R.id.cartFragment).apply {
+                isVisible = count > 0
+                number = count
+            }
+        }
+    }
 
     override fun onResume() {
         super.onResume()
@@ -95,7 +106,8 @@ class MainActivity : AppCompatActivity() {
             // Обновляем выбранный пункт в BottomNavigationView
             when (destination.id) {
                 R.id.categoryFragment,
-                R.id.cartFragment -> {
+                R.id.cartFragment,
+                    -> {
                     binding.bottomNavigationView.menu.findItem(destination.id)?.isChecked = true
                     binding.toolbar.isVisible = false
                 }
@@ -105,7 +117,8 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 R.id.ordersFragment,
-                R.id.profileSettingsFragment -> {
+                R.id.profileSettingsFragment,
+                    -> {
                     binding.bottomNavigationView.menu.findItem(R.id.profileFragment)?.isChecked =
                         true
                     binding.toolbar.isVisible = false

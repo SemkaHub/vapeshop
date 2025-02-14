@@ -5,6 +5,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.example.vapeshop.data.local.entity.CartItemEntity
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface CartDao {
@@ -20,6 +21,9 @@ interface CartDao {
 
     @Query("DELETE FROM cart WHERE productId = :productId")
     suspend fun deleteCartItemById(productId: String)
+
+    @Query("SELECT SUM(quantity) FROM cart")
+    fun getCartItemCount(): Flow<Int?>
 
     @Query("DELETE FROM cart")
     suspend fun clearCart()

@@ -11,6 +11,7 @@ interface CartRepository {
     suspend fun decreaseQuantity(productId: String): List<CartItem>
     suspend fun removeFromCart(productId: String): List<CartItem>
     suspend fun getLocalCart(): List<CartItem>
+    fun getCartItemCount(): Flow<Int>
     fun observeSyncState(): Flow<Boolean>
     suspend fun clearCart()
 }

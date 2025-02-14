@@ -43,7 +43,7 @@ class ProductListFragment : Fragment() {
     private lateinit var productListAdapter: ProductListAdapter
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?,
     ): View? {
         return inflater.inflate(R.layout.fragment_product_list, container, false)
     }
@@ -69,7 +69,7 @@ class ProductListFragment : Fragment() {
         val menuHost = requireActivity() as MenuHost
         menuHost.addMenuProvider(object : MenuProvider {
             override fun onCreateMenu(
-                menu: Menu, menuInflater: MenuInflater
+                menu: Menu, menuInflater: MenuInflater,
             ) {
                 menuInflater.inflate(R.menu.search_menu, menu)
 

@@ -16,6 +16,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
@@ -23,7 +24,7 @@ import javax.inject.Inject
 class CartRepositoryImpl @Inject constructor(
     private val localDataSource: CartDao,
     private val firebaseAuth: FirebaseAuth,
-    private val firestore: FirebaseFirestore
+    private val firestore: FirebaseFirestore,
 ) : CartRepository {
 
     private val syncStateFlow = MutableStateFlow(false)
@@ -90,6 +91,9 @@ class CartRepositoryImpl @Inject constructor(
             )
         }
     }
+
+    override fun getCartItemCount(): Flow<Int> =
+        localDataSource.getCartItemCount().map { it ?: 0 }
 
     override suspend fun increaseQuantity(productId: String): List<CartItem> {
         // Локальное обновление
