@@ -5,7 +5,7 @@ import com.example.vapeshop.domain.model.Product
 import kotlinx.coroutines.flow.Flow
 
 interface CartRepository {
-    suspend fun addToCart(product: Product, quantity: Int = 1)
+    suspend fun addItemToCart(product: Product, quantity: Int = 1)
     suspend fun getCart(): List<CartItem>
     suspend fun increaseQuantity(productId: String): List<CartItem>
     suspend fun decreaseQuantity(productId: String): List<CartItem>

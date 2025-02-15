@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.vapeshop.domain.model.CartItem
 import com.example.vapeshop.domain.model.Product
-import com.example.vapeshop.domain.usecase.cart.AddToCartUseCase
+import com.example.vapeshop.domain.usecase.cart.AddItemToCartUseCase
 import com.example.vapeshop.domain.usecase.cart.CalculateCartTotalUseCase
 import com.example.vapeshop.domain.usecase.cart.ClearCartUseCase
 import com.example.vapeshop.domain.usecase.cart.GetCartUseCase
@@ -23,7 +23,7 @@ class CartViewModel @Inject constructor(
     private val getCartUseCase: GetCartUseCase,
     private val updateCartItemQuantityUseCase: UpdateCartItemQuantityUseCase,
     private val removeCartItemUseCase: RemoveCartItemUseCase,
-    private val addToCartUseCase: AddToCartUseCase,
+    private val addItemToCartUseCase: AddItemToCartUseCase,
     private val observeCartSyncStateUseCase: ObserveCartSyncStateUseCase,
     private val calculateCartTotalUseCase: CalculateCartTotalUseCase,
     private val clearCartUseCase: ClearCartUseCase,
@@ -68,8 +68,7 @@ class CartViewModel @Inject constructor(
 
     fun addItemToCart(product: Product, quantity: Int) {
         viewModelScope.launch {
-            addToCartUseCase(product, quantity)
-            loadCartItems()
+            addItemToCartUseCase(product, quantity)
         }
     }
 

@@ -33,7 +33,7 @@ class CartRepositoryImpl @Inject constructor(
 
     override fun observeSyncState(): Flow<Boolean> = syncStateFlow.asStateFlow()
 
-    override suspend fun addToCart(product: Product, quantity: Int) {
+    override suspend fun addItemToCart(product: Product, quantity: Int) {
         syncJob?.cancel()
         // Локальное обновление корзины
         updateLocalCart(product, quantity)
