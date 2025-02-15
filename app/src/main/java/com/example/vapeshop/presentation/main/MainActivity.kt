@@ -16,6 +16,7 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.example.vapeshop.R
 import com.example.vapeshop.databinding.ActivityMainBinding
+import com.example.vapeshop.presentation.cart.CartViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -24,6 +25,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var navController: NavController
     private val viewModel: MainViewModel by viewModels()
+    private val cartViewModel: CartViewModel by viewModels()
 
     companion object {
         fun newIntent(context: Context): Intent {
@@ -44,6 +46,11 @@ class MainActivity : AppCompatActivity() {
 
         setupNavigation()
         setupCartCountObserver()
+        loadCartFormServer()
+    }
+
+    private fun loadCartFormServer() {
+        cartViewModel.loadCartItems()
     }
 
     private fun setupCartCountObserver() {

@@ -23,8 +23,18 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:visibility="gone"
+            android:layout_marginBottom="@dimen/cart_bottom_bar_height"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             tools:listitem="@layout/item_cart"
+            tools:visibility="visible" />
+
+        <include
+            android:id="@+id/bottomBar"
+            layout="@layout/cart_bottom_bar"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/cart_bottom_bar_height"
+            android:layout_gravity="bottom"
+            android:visibility="gone"
             tools:visibility="visible" />
 
         <!-- Empty State -->
@@ -85,13 +95,5 @@
                 android:layout_marginTop="@dimen/margin_medium"
                 android:text="@string/button_retry" />
         </LinearLayout>
-
-        <include
-            android:id="@+id/bottomBar"
-            layout="@layout/cart_bottom_bar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
-            android:visibility="gone" />
     </FrameLayout>
 </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
