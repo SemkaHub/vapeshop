@@ -43,6 +43,12 @@ class ProfileFragment : Fragment() {
         initObservers()
     }
 
+    override fun onResume() {
+        super.onResume()
+        // Обновляем профиль при возврате на экран
+        viewModel.getCurrentUserFromLocal()
+    }
+
     private fun setupOnClickListeners() {
         with(binding) {
             swipeRefreshLayout.setOnRefreshListener {

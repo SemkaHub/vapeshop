@@ -24,9 +24,11 @@ class ProfileSettingsFragment : Fragment() {
     private val viewModel: ProfileSettingsViewModel by viewModels()
     private val binding by viewBinding(FragmentProfileSettingsBinding::bind)
 
+    private lateinit var userProfile: UserProfile
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View? {
         return inflater.inflate(R.layout.fragment_profile_settings, container, false)
     }
@@ -43,8 +45,10 @@ class ProfileSettingsFragment : Fragment() {
                 val firstName = firstNameEditText.text.toString()
                 val lastName = lastNameEditText.text.toString()
                 val phone = phoneEditText.text.toString()
-                val userProfile = UserProfile(firstName, lastName, phone)
-                viewModel.updateProfile(userProfile)
+                val profile = UserProfile(
+                    firstName, lastName, phone, userProfile.profilePhotoUrl, userProfile.address
+                )
+                viewModel.updateProfile(profile)
             }
 
             profilePhotoImageView.setOnClickListener {
@@ -65,6 +69,7 @@ class ProfileSettingsFragment : Fragment() {
                         ProfileSettingsUiState.Initial -> return@collect
                         ProfileSettingsUiState.Loading -> showLoading()
                         ProfileSettingsUiState.Success -> showSuccessMessage()
+                        is ProfileSettingsUiState.Content -> showContent(state.userProfile)
                         is ProfileSettingsUiState.Error -> showErrorMessage(state.message)
                     }
                 }
@@ -86,6 +91,17 @@ class ProfileSettingsFragment : Fragment() {
             getString(R.string.profile_settings_success),
             Toast.LENGTH_SHORT
         ).show()
+    }
+
+    private fun showContent(userProfile: UserProfile) {
+        with(binding) {
+            progressBar.visibility = View.GONE
+            setFieldsEnabled(true)
+            firstNameEditText.setText(userProfile.firstName)
+            lastNameEditText.setText(userProfile.lastName)
+            phoneEditText.setText(userProfile.phoneNumber)
+            this@ProfileSettingsFragment.userProfile = userProfile
+        }
     }
 
     private fun showErrorMessage(message: String) {

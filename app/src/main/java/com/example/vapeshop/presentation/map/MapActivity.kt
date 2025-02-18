@@ -5,6 +5,7 @@ import android.util.Log
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.widget.addTextChangedListener
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
@@ -143,6 +144,12 @@ class MapActivity : AppCompatActivity() {
         binding.saveButton.setOnClickListener {
             val addressString = binding.addressEditText.text.toString()
             viewModel.saveAddress(addressString)
+        }
+
+        binding.addressEditText.addTextChangedListener {
+            binding.addressInputLayout.error = null
+            binding.addressInputLayout.isErrorEnabled = false
+            binding.saveButton.isEnabled = true
         }
     }
 
