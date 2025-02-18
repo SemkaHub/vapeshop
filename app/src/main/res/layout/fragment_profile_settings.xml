@@ -18,49 +18,108 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <!-- Имя -->
-    <EditText
-        android:id="@+id/firstNameEditText"
-        android:layout_width="0dp"
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/firstNameTextInputLayout"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin_small"
         android:layout_marginTop="@dimen/margin_medium"
-        android:hint="@string/profile_settings_name"
+        android:layout_marginEnd="@dimen/margin_small"
+        android:hint="@string/hint_profile_settings_name"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/profilePhotoImageView" />
+        app:layout_constraintTop_toBottomOf="@id/profilePhotoImageView"
+        app:layout_constraintVertical_chainStyle="packed">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/firstNameEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </com.google.android.material.textfield.TextInputLayout>
 
     <!-- Фамилия -->
-    <EditText
-        android:id="@+id/lastNameEditText"
-        android:layout_width="0dp"
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/lastNameTextInputLayout"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin_small"
         android:layout_marginTop="@dimen/margin_small"
-        android:hint="@string/profile_settings_lastname"
+        android:layout_marginEnd="@dimen/margin_small"
+        android:hint="@string/hint_profile_settings_lastname"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/firstNameEditText" />
+        app:layout_constraintTop_toBottomOf="@id/firstNameTextInputLayout"
+        app:layout_constraintVertical_chainStyle="packed">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/lastNameEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </com.google.android.material.textfield.TextInputLayout>
 
     <!-- Номер телефона -->
-    <EditText
-        android:id="@+id/phoneEditText"
-        android:layout_width="0dp"
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/phoneTextInputLayout"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin_small"
         android:layout_marginTop="@dimen/margin_small"
-        android:hint="@string/profile_settings_phone_number"
-        android:inputType="phone"
+        android:layout_marginEnd="@dimen/margin_small"
+        android:hint="@string/hint_profile_settings_phone_number"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/lastNameEditText" />
+        app:layout_constraintTop_toBottomOf="@id/lastNameTextInputLayout"
+        app:layout_constraintVertical_chainStyle="packed">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/phoneEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="number" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <!-- Адресс -->
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/addressTextInputLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin_small"
+        android:layout_marginTop="@dimen/margin_small"
+        android:layout_marginEnd="@dimen/margin_small"
+        android:hint="@string/hint_profile_settings_address"
+        app:layout_constraintEnd_toStartOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/phoneTextInputLayout"
+        app:layout_constraintVertical_chainStyle="packed">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/addressEditText"
+            android:drawableEnd="@drawable/edit_24px"
+            android:layout_width="match_parent"
+            android:focusable="false"
+            android:clickable="true"
+            android:cursorVisible="false"
+            android:longClickable="false"
+            android:inputType="none"
+            android:layout_height="wrap_content" />
+    </com.google.android.material.textfield.TextInputLayout>
 
     <!-- Кнопка сохранения -->
     <Button
         android:id="@+id/saveButton"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin_small"
         android:layout_marginTop="@dimen/margin_medium"
+        android:layout_marginEnd="@dimen/margin_small"
         android:text="@string/profile_settings_save_button"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/phoneEditText" />
+        app:layout_constraintTop_toBottomOf="@id/addressTextInputLayout" />
 
     <!-- Индикатор сохранения -->
     <ProgressBar
@@ -72,5 +131,4 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -39,8 +39,18 @@ class ProfileSettingsFragment : Fragment() {
         initObservers()
     }
 
+    override fun onResume() {
+        super.onResume()
+        viewModel.getUserProfile()
+    }
+
     private fun setupUI() {
         with(binding) {
+            addressEditText.keyListener = null
+            addressEditText.setOnClickListener {
+                findNavController().navigate(R.id.action_profileSettingsFragment_to_mapActivity)
+            }
+
             saveButton.setOnClickListener {
                 val firstName = firstNameEditText.text.toString()
                 val lastName = lastNameEditText.text.toString()
@@ -100,6 +110,11 @@ class ProfileSettingsFragment : Fragment() {
             firstNameEditText.setText(userProfile.firstName)
             lastNameEditText.setText(userProfile.lastName)
             phoneEditText.setText(userProfile.phoneNumber)
+            val address = userProfile.address
+            if (address != null) {
+                val addressString = "${address.city}, ${address.street}, ${address.apartment}"
+                addressEditText.setText(addressString)
+            }
             this@ProfileSettingsFragment.userProfile = userProfile
         }
     }

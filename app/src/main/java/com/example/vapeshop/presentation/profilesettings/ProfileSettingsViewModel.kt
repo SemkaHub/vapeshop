@@ -24,11 +24,7 @@ class ProfileSettingsViewModel @Inject constructor(
     val profileSettingsUiState: StateFlow<ProfileSettingsUiState> =
         _profileSettingsUiState.asStateFlow()
 
-    init {
-        getUserProfile()
-    }
-
-    private fun getUserProfile() {
+    fun getUserProfile() {
         viewModelScope.launch {
             try {
                 _profileSettingsUiState.value = ProfileSettingsUiState.Loading
