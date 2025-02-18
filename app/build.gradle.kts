@@ -1,3 +1,13 @@
+import java.util.Properties
+
+val localProperties = Properties().apply {
+    val localPropsFile = rootProject.file("local.properties")
+    if (localPropsFile.exists()) {
+        load(localPropsFile.inputStream())
+    }
+}
+val yandexApiKey: String = localProperties.getProperty("yandexMapApiKey") ?: ""
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -20,21 +30,14 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        resValue("string", "yandex_api_key", yandexApiKey)
     }
 
     buildFeatures {
         viewBinding = true
     }
 
-    buildTypes {
-        release {
-            isMinifyEnabled = false
-            proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
-            )
-        }
-    }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
@@ -68,6 +71,7 @@ dependencies {
     implementation(libs.nav.fragment.ktx)
     implementation(libs.nav.ui.ktx)
     implementation(libs.circle.imageview)
+    implementation(libs.yandex.maps)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

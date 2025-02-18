@@ -16,6 +16,6 @@
     <dimen name="error_image_size">100dp</dimen>
     <dimen name="toolbar_elevation">4dp</dimen>
     <dimen name="corner_radius">8dp</dimen>
-    <dimen name="card_elevation">4dp</dimen>
+    <dimen name="card_elevation">16dp</dimen>
     <dimen name="cart_bottom_bar_height">75dp</dimen>
 </resources>

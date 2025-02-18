@@ -1,4 +1,4 @@
-package com.example.vapeshop.presentation.common
+package com.example.vapeshop.presentation.common.adapter
 
 import android.graphics.drawable.Drawable
 import android.view.LayoutInflater

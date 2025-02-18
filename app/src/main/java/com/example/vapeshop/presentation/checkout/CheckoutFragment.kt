@@ -25,7 +25,7 @@ import com.example.vapeshop.domain.model.PaymentMethod
 import com.example.vapeshop.domain.model.PaymentStatus
 import com.example.vapeshop.presentation.auth.AuthActivity
 import com.example.vapeshop.presentation.cart.CartViewModel
-import com.example.vapeshop.presentation.common.OrderProductAdapter
+import com.example.vapeshop.presentation.common.adapter.OrderProductAdapter
 import com.example.vapeshop.presentation.common.utils.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -44,6 +44,8 @@ class CheckoutFragment : Fragment() {
     private var selectedDeliveryMethod: DeliveryMethod = DeliveryMethod.COURIER
     private var selectedPaymentMethod: PaymentMethod = PaymentMethod.ONLINE
 
+    private var address: String? = null
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?,
@@ -60,6 +62,7 @@ class CheckoutFragment : Fragment() {
         setupDeliveryOptions()
         setupPaymentOptions()
         setupPickupPoints()
+        setupFragmentResultListener()
     }
 
     private fun initRecyclerView() {
@@ -93,11 +96,13 @@ class CheckoutFragment : Fragment() {
                 R.id.courierRadio -> {
                     selectedDeliveryMethod = DeliveryMethod.COURIER
                     binding.pickupAddressContainer.visibility = View.GONE
+                    binding.deliveryAddressContainer.visibility = View.VISIBLE
                 }
 
                 R.id.pickupRadio -> {
                     selectedDeliveryMethod = DeliveryMethod.PICKUP
                     binding.pickupAddressContainer.visibility = View.VISIBLE
+                    binding.deliveryAddressContainer.visibility = View.GONE
                 }
             }
         }
@@ -130,10 +135,10 @@ class CheckoutFragment : Fragment() {
             return false
         }
 
-        if (selectedDeliveryMethod == DeliveryMethod.PICKUP &&
-            binding.pickupAddressSpinner.selectedItem == null
+        if (selectedDeliveryMethod == DeliveryMethod.COURIER &&
+            binding.selectedAddressTextView.visibility == View.GONE
         ) {
-            val errorMessage = getString(R.string.pickup_point_error)
+            val errorMessage = getString(R.string.delivery_address_error)
             Toast.makeText(requireContext(), errorMessage, Toast.LENGTH_SHORT).show()
             return false
         }
@@ -151,7 +156,12 @@ class CheckoutFragment : Fragment() {
             deliveryMethod = selectedDeliveryMethod,
             paymentMethod = selectedPaymentMethod,
             deliveryAddress = if (selectedDeliveryMethod == DeliveryMethod.COURIER) {
-                Address("TODO", "TODO", "TODO")
+                val addressObject = address?.split(",")?.map { it.trim() }
+                Address(
+                    city = addressObject?.get(0).toString(),
+                    street = addressObject?.get(1).toString(),
+                    apartment = addressObject?.get(2).toString()
+                )
             } else null,
             pickupPointId = if (selectedDeliveryMethod == DeliveryMethod.PICKUP) {
                 binding.pickupAddressSpinner.selectedItem.toString()
@@ -227,6 +237,22 @@ class CheckoutFragment : Fragment() {
                     Toast.makeText(context, errorMessage + e.message, Toast.LENGTH_SHORT).show()
                 }
             }
+        }
+
+        binding.selectAddressTextView.setOnClickListener {
+            val bottomSheet = SelectDeliveryAddressBottomSheet.newInstance()
+            bottomSheet.show(childFragmentManager, bottomSheet.tag)
+        }
+    }
+
+    private fun setupFragmentResultListener() {
+        childFragmentManager.setFragmentResultListener(
+            SelectDeliveryAddressBottomSheet.REQUEST_KEY,
+            viewLifecycleOwner
+        ) { _, bundle ->
+            address = bundle.getString(SelectDeliveryAddressBottomSheet.ADDRESS_KEY)
+            binding.selectedAddressTextView.text = address
+            binding.selectedAddressTextView.visibility = View.VISIBLE
         }
     }
 }

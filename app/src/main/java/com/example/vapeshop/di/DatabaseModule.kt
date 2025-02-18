@@ -5,6 +5,7 @@ import androidx.room.Room
 import com.example.vapeshop.data.local.AppDatabase
 import com.example.vapeshop.data.local.dao.CartDao
 import com.example.vapeshop.data.local.dao.UserDao
+import com.example.vapeshop.data.local.dao.UserProfileDao
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -34,4 +35,9 @@ object DatabaseModule {
     @Provides
     @Singleton
     fun provideCartDao(appDatabase: AppDatabase): CartDao = appDatabase.cartDao()
+
+    @Provides
+    @Singleton
+    fun provideUserProfileDao(appDatabase: AppDatabase): UserProfileDao =
+        appDatabase.userProfileDao()
 }

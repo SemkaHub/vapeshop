@@ -52,7 +52,11 @@
     <string name="checkout_delivery_title">Способ получения</string>
     <string name="checkout_courier">Курьер</string>
     <string name="checkout_pickup">Самовывоз</string>
-    <string name="checkout_pickup_address">Адрес самовывоза</string>
+    <string name="checkout_pickup_address">Пункт выдачи</string>
+    <string name="checkout_delivery_address">Адрес доставки</string>
+    <string name="checkout_delivery_hint">Выбрать адресс</string>
+    <string name="delivery_address_error">Выберите адрес доставки</string>
+    <string name="select_new_address">Выбрать новый адресс</string>
     <string name="checkout_payment_title">Способ оплаты</string>
     <string name="checkout_payment_online">Онлайн</string>
     <string name="checkout_payment_pickup">При получении</string>
@@ -87,6 +91,9 @@
     <string name="profile_settings_save_button">Сохранить</string>
     <string name="profile_photo_click">Изменение фото профиля пока недоступно</string>
     <string name="profile_settings_success">Данные успешно сохранены</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="save_address_button">Сохранить адрес</string>
+    <string name="address_hint">Адрес</string>
+    <string name="incorrect_address_error">Выберите корректный адрес</string>
+    <string name="no_apartment_error">Введите номер дома</string>
 </resources>

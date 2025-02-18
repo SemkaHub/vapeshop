@@ -2,8 +2,10 @@ package com.example.vapeshop.presentation.profile
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.vapeshop.domain.model.UserProfile
 import com.example.vapeshop.domain.usecase.user.GetCurrentUserUseCase
-import com.example.vapeshop.domain.usecase.user.GetUserProfileUseCase
+import com.example.vapeshop.domain.usecase.user.GetUserProfileFromLocalUseCase
+import com.example.vapeshop.domain.usecase.user.GetUserProfileFromServerUseCase
 import com.example.vapeshop.domain.usecase.user.SignOutUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
@@ -17,7 +19,8 @@ import javax.inject.Inject
 class ProfileViewModel @Inject constructor(
     private val getCurrentUserUseCase: GetCurrentUserUseCase,
     private val signOutUseCase: SignOutUseCase,
-    private val getUserProfileUseCase: GetUserProfileUseCase
+    private val getUserProfileFromLocalUseCase: GetUserProfileFromLocalUseCase,
+    private val getUserProfileFromServerUseCase: GetUserProfileFromServerUseCase,
 ) : ViewModel() {
 
     private val _profileUiState = MutableStateFlow<ProfileUiState>(ProfileUiState.Loading)
@@ -26,10 +29,18 @@ class ProfileViewModel @Inject constructor(
     private var currentJob: Job? = null
 
     init {
-        getCurrentUser()
+        getCurrentUser { getUserProfileFromLocalUseCase() }
     }
 
-    fun getCurrentUser() {
+    fun getCurrentUserFromLocal() {
+        getCurrentUser { getUserProfileFromLocalUseCase() }
+    }
+
+    fun getUserProfileFromServer() {
+        getCurrentUser { getUserProfileFromServerUseCase() }
+    }
+
+    private fun getCurrentUser(useCase: suspend () -> UserProfile?) {
         // Отменяем предыдущий запрос если он есть
         currentJob?.cancel()
 
@@ -37,7 +48,7 @@ class ProfileViewModel @Inject constructor(
             try {
                 _profileUiState.emit(ProfileUiState.Loading)
                 val user = getCurrentUserUseCase()
-                val userProfile = getUserProfileUseCase()
+                val userProfile = useCase()
                 if (user != null) {
                     _profileUiState.emit(
                         ProfileUiState.Success(

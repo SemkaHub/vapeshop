@@ -11,4 +11,5 @@
     <color name="dark_green">#FF2E7D32</color>
     <color name="background_grey">#FFE0E0E0</color>
     <color name="dark_grey">#FF424242</color>
+    <color name="link_color">#0000FF</color>
 </resources>

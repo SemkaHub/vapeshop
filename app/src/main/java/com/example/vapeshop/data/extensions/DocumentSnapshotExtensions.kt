@@ -27,11 +27,18 @@ fun DocumentSnapshot.toOrder(): Order? {
         return null
     }
 
-    val deliveryAddress = get("deliveryAddress") as? Address ?: Address(
-        city = "",
-        street = "",
-        apartment = ""
-    )
+    var deliveryAddress: Address?
+    try {
+        val deliveryAddressMap = get("deliveryAddress") as Map<*, *>
+        deliveryAddress = Address(
+            city = deliveryAddressMap["city"] as String,
+            street = deliveryAddressMap["street"] as String,
+            apartment = deliveryAddressMap["apartment"] as String
+        )
+    } catch (e: Exception) {
+        deliveryAddress = null
+    }
+
 
     val paymentMethodString = getString("paymentMethod") ?: ""
     val paymentMethod = try {

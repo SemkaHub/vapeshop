@@ -34,7 +34,7 @@ class ProfileFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View = inflater.inflate(R.layout.fragment_profile, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -46,11 +46,11 @@ class ProfileFragment : Fragment() {
     private fun setupOnClickListeners() {
         with(binding) {
             swipeRefreshLayout.setOnRefreshListener {
-                viewModel.getCurrentUser()
+                viewModel.getUserProfileFromServer()
             }
 
             retryButton.setOnClickListener {
-                viewModel.getCurrentUser()
+                viewModel.getUserProfileFromServer()
             }
 
             ordersButton.setOnClickListener {

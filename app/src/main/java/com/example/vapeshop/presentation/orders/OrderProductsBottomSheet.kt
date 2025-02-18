@@ -11,7 +11,7 @@ import com.bumptech.glide.RequestManager
 import com.example.vapeshop.R
 import com.example.vapeshop.databinding.FragmentOrderProductsBinding
 import com.example.vapeshop.domain.model.CartItem
-import com.example.vapeshop.presentation.common.OrderProductAdapter
+import com.example.vapeshop.presentation.common.adapter.OrderProductAdapter
 import com.example.vapeshop.presentation.common.utils.viewBinding
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import dagger.hilt.android.AndroidEntryPoint

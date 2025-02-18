@@ -4,10 +4,10 @@ import com.example.vapeshop.domain.model.UserProfile
 import com.example.vapeshop.domain.repository.UserProfileRepository
 import javax.inject.Inject
 
-class GetUserProfileUseCase @Inject constructor(
+class GetUserProfileFromServerUseCase @Inject constructor(
     private val userProfileRepository: UserProfileRepository
 ) {
     suspend operator fun invoke(): UserProfile? {
-        return userProfileRepository.getUserProfile()
+        return userProfileRepository.getUserProfileFromServer()
     }
 }

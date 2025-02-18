@@ -5,6 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.vapeshop.databinding.ItemOrderBinding
+import com.example.vapeshop.domain.model.Address
 import com.example.vapeshop.domain.model.CartItem
 import com.example.vapeshop.domain.model.DeliveryMethod
 import com.example.vapeshop.domain.model.Order
@@ -16,7 +17,7 @@ import java.util.Locale
 class OrdersAdapter(
     val strings: OrdersAdapterStrings,
     val colors: OrdersStatusColors,
-    val onItemClick: (List<CartItem>) -> Unit = {}
+    val onItemClick: (List<CartItem>) -> Unit = {},
 ) :
     RecyclerView.Adapter<OrdersAdapter.OrdersViewHolder>() {
 
@@ -24,7 +25,7 @@ class OrdersAdapter(
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
-        viewType: Int
+        viewType: Int,
     ): OrdersViewHolder {
         val binding =
             ItemOrderBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -47,7 +48,7 @@ class OrdersAdapter(
 
     inner class OrdersViewHolder(
         private val binding: ItemOrderBinding,
-        private val strings: OrdersAdapterStrings
+        private val strings: OrdersAdapterStrings,
     ) :
         RecyclerView.ViewHolder(binding.root) {
 
@@ -60,14 +61,18 @@ class OrdersAdapter(
                     String.format(strings.orderDate, getStringDate(order.timestamp))
                 orderTotalPrice.text = String.format(strings.orderTotalPrice, order.totalPrice)
                 orderDeliveryMethod.text = when (order.deliveryMethod) {
-                    DeliveryMethod.COURIER -> strings.orderDeliveryCourier
-                    DeliveryMethod.PICKUP -> strings.orderDeliveryPickup
+                    DeliveryMethod.COURIER -> getAddressString(order.deliveryAddress)
+                    DeliveryMethod.PICKUP -> order.pickupPointId
                 }
 
                 root.setOnClickListener {
                     onItemClick(order.items)
                 }
             }
+        }
+
+        private fun getAddressString(address: Address?): String {
+            return "${address?.city}, ${address?.street}, ${address?.apartment}"
         }
 
         private fun setOrderStatus(status: OrderStatus) {

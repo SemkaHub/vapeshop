@@ -1,7 +1,7 @@
 package com.example.vapeshop.domain.model
 
 data class Address(
-    val street: String,
-    val city: String,
+    val city: String?,
+    val street: String?,
     val apartment: String?,
 )

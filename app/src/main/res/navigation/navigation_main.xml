@@ -53,7 +53,11 @@
         android:id="@+id/checkoutFragment"
         android:name="com.example.vapeshop.presentation.checkout.CheckoutFragment"
         android:label="CheckoutFragment"
-        tools:layout="@layout/fragment_checkout" />
+        tools:layout="@layout/fragment_checkout" >
+        <action
+            android:id="@+id/action_checkoutFragment_to_mapActivity"
+            app:destination="@id/mapActivity" />
+    </fragment>
 
     <fragment
         android:id="@+id/ordersFragment"
@@ -63,5 +67,13 @@
     <fragment
         android:id="@+id/profileSettingsFragment"
         android:name="com.example.vapeshop.presentation.profilesettings.ProfileSettingsFragment"
-        android:label="ProfileSettingsFragment" />
+        android:label="ProfileSettingsFragment" >
+        <action
+            android:id="@+id/action_profileSettingsFragment_to_mapActivity"
+            app:destination="@id/mapActivity" />
+    </fragment>
+    <activity
+        android:id="@+id/mapActivity"
+        android:name="com.example.vapeshop.presentation.map.MapActivity"
+        android:label="MapActivity" />
 </navigation>
