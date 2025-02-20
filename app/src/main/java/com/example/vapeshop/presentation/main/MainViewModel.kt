@@ -22,7 +22,11 @@ class MainViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             getUserProfileFromServerUseCase()
-            getCartFromServerUseCase()
+            try {
+                getCartFromServerUseCase()
+            } catch (_: Exception) {
+                // If user not authenticated, do nothing
+            }
         }
     }
 
