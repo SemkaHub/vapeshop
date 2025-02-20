@@ -7,6 +7,7 @@ import com.example.vapeshop.domain.model.Product
 import com.example.vapeshop.domain.usecase.cart.AddItemToCartUseCase
 import com.example.vapeshop.domain.usecase.cart.CalculateCartTotalUseCase
 import com.example.vapeshop.domain.usecase.cart.ClearCartUseCase
+import com.example.vapeshop.domain.usecase.cart.DebounceSyncCartUseCase
 import com.example.vapeshop.domain.usecase.cart.GetCartUseCase
 import com.example.vapeshop.domain.usecase.cart.ObserveCartSyncStateUseCase
 import com.example.vapeshop.domain.usecase.cart.RemoveCartItemUseCase
@@ -27,6 +28,7 @@ class CartViewModel @Inject constructor(
     private val observeCartSyncStateUseCase: ObserveCartSyncStateUseCase,
     private val calculateCartTotalUseCase: CalculateCartTotalUseCase,
     private val clearCartUseCase: ClearCartUseCase,
+    private val debounceSyncCartUseCase: DebounceSyncCartUseCase
 ) : ViewModel() {
 
     private val _state = MutableStateFlow<CartUiState>(CartUiState.Loading)
@@ -69,12 +71,14 @@ class CartViewModel @Inject constructor(
     fun addItemToCart(product: Product, quantity: Int) {
         viewModelScope.launch {
             addItemToCartUseCase(product, quantity)
+            debounceSyncCartUseCase()
         }
     }
 
     fun increaseItemQuantity(productId: String) {
         viewModelScope.launch {
             val updatedCart = updateCartItemQuantityUseCase(productId, increase = true)
+            debounceSyncCartUseCase()
             _localCart.value = updatedCart
             updateState(updatedCart)
         }
@@ -83,6 +87,7 @@ class CartViewModel @Inject constructor(
     fun decreaseItemQuantity(productId: String) {
         viewModelScope.launch {
             val updatedCart = updateCartItemQuantityUseCase(productId, increase = false)
+            debounceSyncCartUseCase()
             _localCart.value = updatedCart
             updateState(updatedCart)
         }
@@ -91,6 +96,7 @@ class CartViewModel @Inject constructor(
     fun removeItemFromCart(productId: String) {
         viewModelScope.launch {
             val updatedCart = removeCartItemUseCase(productId)
+            debounceSyncCartUseCase()
             _localCart.value = updatedCart
             updateState(updatedCart)
         }
@@ -99,6 +105,7 @@ class CartViewModel @Inject constructor(
     fun clearCart() {
         viewModelScope.launch {
             clearCartUseCase()
+            debounceSyncCartUseCase()
             loadCartItems()
         }
     }
