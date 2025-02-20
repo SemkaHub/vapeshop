@@ -51,7 +51,7 @@ class CartFragment : Fragment() {
 
     private fun setupSwipeRefresh() {
         binding.swipeRefreshLayout.setOnRefreshListener {
-            viewModel.loadCartItems()
+            viewModel.loadCartFromServer()
         }
     }
 

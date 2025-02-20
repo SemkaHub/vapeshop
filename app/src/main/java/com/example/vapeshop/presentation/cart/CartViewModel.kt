@@ -8,6 +8,7 @@ import com.example.vapeshop.domain.usecase.cart.AddItemToCartUseCase
 import com.example.vapeshop.domain.usecase.cart.CalculateCartTotalUseCase
 import com.example.vapeshop.domain.usecase.cart.ClearCartUseCase
 import com.example.vapeshop.domain.usecase.cart.DebounceSyncCartUseCase
+import com.example.vapeshop.domain.usecase.cart.GetCartFromServerUseCase
 import com.example.vapeshop.domain.usecase.cart.GetCartUseCase
 import com.example.vapeshop.domain.usecase.cart.ObserveCartSyncStateUseCase
 import com.example.vapeshop.domain.usecase.cart.RemoveCartItemUseCase
@@ -28,7 +29,8 @@ class CartViewModel @Inject constructor(
     private val observeCartSyncStateUseCase: ObserveCartSyncStateUseCase,
     private val calculateCartTotalUseCase: CalculateCartTotalUseCase,
     private val clearCartUseCase: ClearCartUseCase,
-    private val debounceSyncCartUseCase: DebounceSyncCartUseCase
+    private val debounceSyncCartUseCase: DebounceSyncCartUseCase,
+    private val getCartFromServerUseCase: GetCartFromServerUseCase,
 ) : ViewModel() {
 
     private val _state = MutableStateFlow<CartUiState>(CartUiState.Loading)
@@ -49,6 +51,12 @@ class CartViewModel @Inject constructor(
             observeCartSyncStateUseCase().collect { isSyncing ->
                 _isSyncing.value = isSyncing
             }
+        }
+    }
+
+    fun loadCartFromServer() {
+        viewModelScope.launch {
+            getCartFromServerUseCase()
         }
     }
 
