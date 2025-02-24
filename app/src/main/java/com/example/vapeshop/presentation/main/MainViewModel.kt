@@ -21,8 +21,8 @@ class MainViewModel @Inject constructor(
     // Загружаем профиль пользователя и корзину с сервера при запуске приложения
     init {
         viewModelScope.launch {
-            getUserProfileFromServerUseCase()
             try {
+                getUserProfileFromServerUseCase()
                 getCartFromServerUseCase()
             } catch (_: Exception) {
                 // If user not authenticated, do nothing

@@ -55,8 +55,10 @@ class CartViewModel @Inject constructor(
     }
 
     fun loadCartFromServer() {
+        _state.value = CartUiState.Loading
         viewModelScope.launch {
             getCartFromServerUseCase()
+            loadCartItems()
         }
     }
 
